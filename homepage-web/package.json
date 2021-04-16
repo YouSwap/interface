@@ -1,0 +1,60 @@
+{
+  "name": "YouSwap",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve --mode development",
+    "pord": "vue-cli-service serve --mode production",
+    "buildDev": "vue-cli-service build --mode development",
+    "build": "vue-cli-service build --mode production",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@ethersproject/bignumber": "^5.0.15",
+    "bignumber.js": "^9.0.1",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.15.1",
+    "ethers": "^5.0.31",
+    "graphql": "^15.5.0",
+    "graphql-request": "^3.4.0",
+    "js-cookie": "^2.2.1",
+    "vconsole": "^3.4.0",
+    "vue": "^2.6.11",
+    "vue-i18n": "^8.23.0",
+    "vue-router": "^3.5.1",
+    "vue-simple-progress": "^1.1.1",
+    "vuex": "^3.6.2",
+    "youswap-header": "^1.1.12"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "less": "^4.1.1",
+    "less-loader": "^5.0.0",
+    "style-resources-loader": "^1.4.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
