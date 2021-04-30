@@ -1,26 +1,21 @@
 <template>
   <div class="head-container">
-    <div class="head-wrap">
-      <youswap-header
-        :home="home"
-        :swap="swap"
-        :pool="pool"
-        :liquidity="liquidity"
-        :chart="chart"
-        :bridge="bridge"
-        :homeUrl="homeUrl"
-        :swapUrl="swapUrl"
-        :poolUrl="poolUrl"
-        :liquidityUrl="liquidityUrl"
-        :chartUrl="chartUrl"
-        :briderUrl="briderUrl"
-        :actived="actived">
-      </youswap-header>
+    <div class="header-wrapper">
+      <img height="20px" :src="logoUrl" alt="">
+      <ul>
+        <li><a :href="homeUrl">{{ $t('navs')[0] }}</a></li>
+        <!-- <li @click="handleLinkInvite"><a>{{ $t('navs')[5] }}</a></li>-->
+        <li><a :href="swapUrl">{{ $t('navs')[1] }}</a></li>
+        <li><a :href="poolUrl">{{ $t('navs')[2] }}</a></li>
+        <li><a class="active" href="/">{{ $t('navs')[3] }}</a></li>
+        <li><a :href="chartUrl">{{ $t('navs')[4] }}</a></li>
+        <li><a :href="acrossChainUrl">{{ $t('navs')[7] }}</a></li>
+        <!-- <li><a :href="idoUrl">{{ $t('navs')[6] }}</a></li> -->
+      </ul>
       <div class="slogn-wrap">
         <p>{{$t('liquidity')[0]}}</p>
         <p>{{$t('liquidity')[1]}}</p>
       </div>
-
     </div>
   </div>
 </template>
@@ -34,30 +29,8 @@ export default {
       idoUrl: process.env.VUE_APP_IDO_URL,
       swapUrl: process.env.VUE_APP_SWAP_URL,
       poolUrl: process.env.VUE_APP_POOL_URL,
-      liquidityUrl: process.env.VUE_APP_LIQUIDITY_URL,
       chartUrl: process.env.VUE_APP_CHART_URL,
-      acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL,
-      actived: 3
-    }
-  },
-  computed: {
-    home () {
-      return this.$t('navs')[0]
-    },
-    swap () {
-      return this.$t('navs')[1]
-    },
-    pool () {
-      return this.$t('navs')[3]
-    },
-    liquidity () {
-      return this.$t('navs')[2]
-    },
-    chart () {
-      return this.$t('navs')[4]
-    },
-    bridge () {
-      return this.$t('navs')[7]
+      acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL
     }
   },
   methods: {
@@ -75,12 +48,35 @@ export default {
     height: 192px;
     background: url('../../assets/image/bg@2x.png') center no-repeat;
     background-size: 100% 100%;
-    .head-wrap {
-      width: 100%;
-      height: fit-content;
+    .header-wrapper {
+      padding: 31px 30px 0 20px;
       display: flex;
       align-items: center;
-      padding: 0 0 0 20px;
+      position: relative;
+      img {
+        width: 22px;
+        height: 22px;
+      }
+      ul {
+        display: flex;
+        li {
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          line-height: 20px;
+          margin-left: 13px;
+          opacity: 0.6;
+        }
+        a {
+          color: #BFC6CB;
+        }
+        a:hover {
+          color: #fff;
+        }
+        .active {
+          color: #fff;
+        }
+      }
       .slogn-wrap {
         position: absolute;
         left: 50%;

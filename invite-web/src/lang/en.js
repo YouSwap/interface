@@ -3,7 +3,7 @@ export default {
         'Connect Wallet',
         'Copied!',
         'No ethereum wallet detected',
-        'Pool'
+        'Liquidity'
     ],
     header: [
         'Home',
@@ -184,5 +184,12 @@ export default {
         Harvest: 'Harvesting...'
     },
     hopes:'Coming soon',
-    startblock: 'Height from start block'
+    startblock: 'Height from start block',
+    section: [
+        '主流区',
+        '开拓区',
+        '联盟区',
+        '倍数',
+        'Search'
+    ]
 };

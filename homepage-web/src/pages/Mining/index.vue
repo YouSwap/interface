@@ -4,38 +4,37 @@
       :balance="balance" 
       :isConnected="isConnected"
       :account="account"
+      :title="$t('title')"
+      :titleDesc="$t('titleDesc')"
       @connectWallet="connectWallet"/>
     <div class="content-wrapper">
       <div class="content-center">
+        <PledgeCard :pledgeObj="pledgeObj" :totalUSDT="totalUSDT" :realTimeDeflationRate="realTimeDeflationRate"/>
         <div class="content-top">
-          <PledgeCard :pledgeObj="pledgeObj" :totalUSDT="totalUSDT" :realTimeDeflationRate="realTimeDeflationRate"/>
           <div class="list-card">
             <YouDestory :dataObj="youObj"/>
-            
           </div>
           <div class="list-card" style="margin-left: 20px;">
             <YouHouse :dataObj="liqualityObj"/>
-            
           </div>
         </div>
         <div class="content-bottom-max">
-          <AuditCard />
           <div class="list-card">
-            <DigProduct class="dig-max" :digObj="youDigObj" :digImgUrl="digImgUrl1"/>
-            <ExchangeCard :exchangeObj="exchangeObj1"/>
+            <DigProduct :digObj="exchangeObj" digImgUrl="1"/>
           </div>
           <div class="list-card">
-            <DigProduct :digObj="liqualityDigObj" :digImgUrl="digImgUrl2"/>
-            <DigProduct class="dig-min" :digObj="youDigObj" :digImgUrl="digImgUrl1"/>
-            <ExchangeCard :exchangeObj="exchangeObj2"/>
+            <DigProduct :digObj="youDigObj"/>
           </div>
         </div>
+        <AuditCard v-if="IsPC()" />
+        <partner v-if="IsPC()" /> 
         <div class="content-bottom-min">
-          <DigProduct class="dig-min" :digObj="youDigObj" :digImgUrl="digImgUrl1"/>
-          <DigProduct :digObj="liqualityDigObj" :digImgUrl="digImgUrl2"/>
-          <ExchangeCard :exchangeObj="exchangeObj2"/>
-          <ExchangeCard :exchangeObj="exchangeObj1"/>
+          <DigProduct class="dig-min" :digObj="exchangeObj" digImgUrl="1"/>
+          <DigProduct :digObj="youDigObj" digImgUrl="2"/>
+          <!-- <ExchangeCard :exchangeObj="exchangeObj2"/>
+          <ExchangeCard :exchangeObj="exchangeObj1"/> -->
           <AuditCard />
+          <partner />
         </div>
       </div>
       <MobileFooter 
@@ -60,7 +59,7 @@ import YouHouse from '../../components/YouHouseCard'
 import YouDestory from '../../components/YouDestoryCard'
 import DigProduct from '../../components/DigProduct'
 import AuditCard from '../../components/AuditCard'
-import ExchangeCard from '../../components/ExchangeCard'
+import partner from '../../components/partner'
 import MobileFooter from '../../components/MobileFooter'
 import MobileChain from '../../components/MobileChain'
 import PcFooter from '../../components/PcFooter'
@@ -68,6 +67,7 @@ import { request, gql } from 'graphql-request'
 import { ethers } from 'ethers'
 import youabi from '../../youabi.json'
 import abi from '../../abi-mining.json'
+import abiUSDT from '../../abi-usdt.json'
 import { getDecimalsCoin, getShowAddress } from '../../utils'
 export default {
   components: {
@@ -76,7 +76,7 @@ export default {
     YouHouse,
     DigProduct,
     AuditCard,
-    ExchangeCard,
+    partner,
     MobileFooter,
     MobileChain,
     PcFooter,
@@ -120,21 +120,13 @@ export default {
       },
       youDigObj: {
         title: '当前挖矿产出',
-        count: '--'
-      },
-      liqualityDigObj: {
-        title: '挖矿产出市值',
-        count: '--'
-      },
-      exchangeObj1: {
-        title1: '24H交易额',
-        content1: '--',
-        title2: '累积交易总额',
+        content: '--',
+        title2: '挖矿产出市值',
         content2: '--'
       },
-      exchangeObj2: {
-        title1: '24H手续费',
-        content1: '--',
+      exchangeObj: {
+        title: '累积交易总额',
+        content: '--',
         title2: '累积手续费',
         content2: '--'
       },
@@ -146,8 +138,8 @@ export default {
       totolList: [],     //流动性总额 YOU价格列表
       currentBlockNumber: '', // 当前块高
       isShowNet: false,
-      youPrice: 0,
-      totalUSDT: '--'
+      totalUSDT: '--',
+      decimalsList: []
     }
   },
   computed: {
@@ -169,6 +161,21 @@ export default {
     },
   },
   methods: {
+    // 判断是否是PC端
+    IsPC() {
+      let userAgentInfo = navigator.userAgent;
+      let Agents = ["Android", "iPhone",
+                  "SymbianOS", "Windows Phone",
+                  "iPad", "iPod"];
+      let flag = true;
+      for (var v = 0; v < Agents.length; v++) {
+          if (userAgentInfo.indexOf(Agents[v]) > 0) {
+              flag = false;
+              break;
+          }
+      }
+      return flag;
+    },
     /**
      * 检测网络
      */
@@ -177,7 +184,12 @@ export default {
         this.$message.error(this.$t('NoWallet'))
         return
       }
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
       provider.getNetwork().then(Network => {
         if (Network.chainId != process.env.VUE_APP_HECO_CHAINID) {
           this.$message.error(this.$t('networkError'))
@@ -270,6 +282,7 @@ export default {
      */
     accountChanged() {
       let that = this
+      if (!window.ethereum) return
       window.ethereum.on('accountsChanged', (accounts) => {
         if (accounts.length === 0) {
           console.log('Please connect to MetaMask.');
@@ -298,7 +311,6 @@ export default {
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_requestAccounts' })
         .then((accounts) => {
-          console.log('连接钱包返回结果：====', accounts)
           if (accounts.length === 0) {
             console.log('Please connect to MetaMask.');
           } else {
@@ -323,14 +335,19 @@ export default {
           }
         })
       } else {
-        console.log('')
+        window.open('https://metamask.io/', '_self')
       }
     },
     /**
      * 获取当前块高
      */
     getBlockHigh() {
-      const provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
       // const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider.getBlockNumber().then(BlockNumber => {
         this.currentBlockNumber = BlockNumber
@@ -351,7 +368,12 @@ export default {
      */
     async getContract() {
       const contractAddress = process.env.VUE_APP_YOU_CONTRACT_ADDRESS
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
       const contract = new ethers.Contract(contractAddress, youabi, provider)
       // let contractWithSigner = contract.connect(provider.getSigner())
       return contract
@@ -360,7 +382,12 @@ export default {
      * 封装请求
      */
     sendRequest(param, cb) {
-      let provider = new ethers.providers.Web3Provider(window.ethereum)
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
       provider.provider.sendAsync(param, function(err, res){
         if (!err && res.error) err = new Error('EthQuery - RPC Error - '+res.error.message)
         if (err) return cb(err)
@@ -401,6 +428,8 @@ export default {
         pools{
           id
           pool
+          tab
+          type
           lpaddress
           poolname
           startblockheight
@@ -445,7 +474,8 @@ export default {
         const pools = []
         if (res) {
           res.pools.forEach(item => {
-            that.getTotole(item.lpaddress);
+            that.getDecimals(item.lpaddress)
+            that.getTotole(item.lpaddress, item.type);
             that.getYOU(item)
             pools.push(item)
           })
@@ -459,6 +489,11 @@ export default {
                   pool.totalSupply = totolList.totalSupply
                 }
               })
+              that.decimalsList.forEach(decimals => {
+                if (pool.lpaddress.toString() === decimals.id.toString()) {
+                  pool.decimals = decimals.decimals
+                }
+              })
               that.getYouList.forEach(youList => {
                 if (pool.lpaddress.toString() === youList.lpaddress.toString()) {
                   pool.youPrice = youList.youPrice
@@ -467,17 +502,18 @@ export default {
             })
             let liquidityLists = []
             pools.forEach(pool => {
-              if (pool.reserveUSD) {
-                if (process.env.VUE_APP_YOU_CONTRACT_ADDRESS === pool.lpaddress) {
-                  totol+= this.youPrice * (pool.staketotaldnow / 10**6)
-                } else {
-                  totol+= (pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10**18))
-                }
-              }
-              if (pool.lpaddress === process.env.VUE_APP_YOU_CONTRACT_ADDRESS) {
-                pool.decimals = 6
+              const endblockheigh = Number(pool.startblockheight) + Number(Math.ceil(pool.rewardtotal / pool.rewardperblock))
+              if (this.currentBlockNumber >= endblockheigh) {
+                pool.isfinshed = true
               } else {
-                pool.decimals = 18
+                pool.isfinshed = false
+              }
+              if (pool.reserveUSD) {
+                if (pool.type == 2) { // 2为单币种，1为币对
+                  totol += pool.reserveUSD * (pool.staketotaldnow / 10**pool.decimals)
+                } else {
+                  totol += (pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10**pool.decimals))
+                }
               }
               liquidityLists.push(pool)
             })
@@ -488,9 +524,9 @@ export default {
               let productCount = 0
               // 计算当前挖矿产出
               productCount = getDecimalsCoin(1.388888888*(this.currentBlockNumber - this.liqualityObj.totalLists[0].startblockheight), 3)
-              this.youDigObj.count = Number(productCount) > 0 ? productCount : '0'
+              this.youDigObj.content = Number(productCount) > 0 ? productCount : '0'
               // this.youDigObj.count = Number(productCount) >  2399999.99999998 ?  2399999.99999998 : productCount
-              this.liqualityDigObj.count = getDecimalsCoin(this.youDigObj.count*this.pledgeObj.nowPrice, 3)
+              this.youDigObj.content2 = getDecimalsCoin(this.youDigObj.content*this.pledgeObj.nowPrice, 3)
             }
           }, 3000)
           
@@ -500,11 +536,36 @@ export default {
       })
     },
     /**
+     * 获取矿池精度
+     */
+    getDecimals(lpaddress) {
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
+      const contractLP = new ethers.Contract(
+        lpaddress,
+        abiUSDT,
+        provider
+      );
+      contractLP.decimals().then((res) => {
+          if (res) {
+            const list =  {
+              id: lpaddress,
+              decimals: res,
+            }
+            this.decimalsList.push(list)
+          }
+        });
+    },
+    /**
      * 获取流动性总额、You的价格
      */
-    getTotole(lpaddress) {
+    getTotole(lpaddress, type) {
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
-      const tokenOrPair = process.env.VUE_APP_YOU_CONTRACT_ADDRESS == lpaddress ? 0 : 1
+      const tokenOrPair = type == 2 ? 0 : 1
       const query = tokenOrPair ?gql`
         {
           pair (id: "${lpaddress}"){
@@ -542,7 +603,12 @@ export default {
      * YOU的收益数量
      */
     getYOU(item) { 
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      let provider
+      if (!window.ethereum) {
+        provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
+      } else {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      }
       const contract = new ethers.Contract(
         process.env.VUE_APP_MINING_CONTRACT,
         abi,
@@ -584,7 +650,6 @@ export default {
         // 当前价格
         if (res.bundle && res.token) {
           that.pledgeObj.nowPrice = res.bundle.ethPrice*res.token.derivedETH;
-          that.youPrice = that.pledgeObj.nowPrice
           // that.getDigProduct();
         }
         this.getList(); // 流动性挖矿列表
@@ -635,8 +700,8 @@ export default {
       }`
       request(endpoint, query).then((res) => {
         if (res.allPoolInfo) {
-          this.youDigObj.count = res.allPoolInfo.rewardstotal/1e18;
-          this.liqualityDigObj.count = this.youDigObj.count*this.pledgeObj.nowPrice
+          this.youDigObj.content = res.allPoolInfo.rewardstotal/1e18;
+          this.youDigObj.content2 = this.youDigObj.content*this.pledgeObj.nowPrice
         }
       }).catch((err) => {
         console.log(err)
@@ -699,12 +764,12 @@ export default {
       this.loading = true
       request(endpoint, query).then((res) => {
         if (res.total[0]) {
-          this.exchangeObj1.content2 = getDecimalsCoin((res.total[0].totalVolumeUSD), 3)
-          this.exchangeObj2.content2 = getDecimalsCoin((res.total[0].totalVolumeUSD*0.003), 3)
+          this.exchangeObj.content = getDecimalsCoin((res.total[0].totalVolumeUSD), 3)
+          this.exchangeObj.content2 = getDecimalsCoin((res.total[0].totalVolumeUSD*0.003), 3)
         }
         if (res.total[0] && res.day[0]) {
-          this.exchangeObj1.content1 = getDecimalsCoin((res.total[0].totalVolumeUSD - res.day[0].totalVolumeUSD), 3)
-          this.exchangeObj2.content1 = getDecimalsCoin((this.exchangeObj1.content1*0.003), 3)
+          // this.exchangeObj.content = getDecimalsCoin((res.total[0].totalVolumeUSD - res.day[0].totalVolumeUSD), 3)
+          // this.exchangeObj.content2 = getDecimalsCoin((content*0.003), 3)
         }
       }).catch((err) => {
         console.log(err)
@@ -733,7 +798,7 @@ export default {
       display: none;
     }
     .content-center {
-      width: 1200px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -742,9 +807,9 @@ export default {
       .content-top {
         display: flex;
         .list-card {
+          width: 590px;
           display: flex;
           flex-direction: column;
-          margin-left: 20px;
           .dig-min {
             display: none;
           }
@@ -756,9 +821,9 @@ export default {
         display: flex;
         justify-content: space-between;
         .list-card {
+          width: 590px;
           display: flex;
           flex-direction: column;
-          margin-left: 20px;
           .dig-min {
             display: none;
           }
@@ -785,29 +850,34 @@ export default {
   .mining-container {
     width: 100%;
     .content-wrapper {
+      background-color: #F8FCFF;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding-bottom: 0;
+      padding-top: 20px;
+      z-index: 1111;
+      border-radius: 20px 20px 0px 0px;
       .footer {
         display: flex;
       }
       .content-center {
-        width:90vw;
+        width:92%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-bottom: 83px;
+        padding-bottom: 20px;
         .content-top {
           display: flex;
           flex-direction: column;
           align-items: center;
           .list-card {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            margin-top: 15px;
+            margin-top: 0;
             margin-left: 0 !important;
             .dig-max {
               display: none;
@@ -825,14 +895,11 @@ export default {
         }
         .content-bottom-min {
           display: block !important;
-          margin-top: 20px;
+          margin-top: 0;
           display: flex;
           justify-content: space-between;
         }
       }
-    }
-    .pc-footer {
-      display: none;
     }
   }
 }

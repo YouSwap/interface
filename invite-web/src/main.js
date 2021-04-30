@@ -19,7 +19,6 @@ Vue.prototype.$notify = Notification
 import { message } from './assets/script/resetMessage'
 Vue.prototype.$message = message
 import './assets/style/customElement.css'
-import YouswapHeader from 'youswap-header'
 
 import i18n from "./lang"; // 引入国际化
 
@@ -27,7 +26,6 @@ import i18n from "./lang"; // 引入国际化
 // new vconsole();
 
 Vue.config.productionTip = false
-Vue.use(YouswapHeader)
 
 new Vue({
   router,

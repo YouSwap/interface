@@ -146,7 +146,9 @@ export default {
     bottom: 0;
     width: 100%;
     height: 68px;
-    background: #0B304A;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5), 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
+    border-radius: 8px 8px 0px 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;

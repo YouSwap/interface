@@ -3,7 +3,7 @@ export default {
         '连接钱包',
         '复制成功！',
         '未检测到钱包',
-        '挖矿'
+        '流动性挖矿'
     ],
     header: [
         '首页',
@@ -184,5 +184,12 @@ export default {
         Harvest: '领取中...'
     },
     hopes:'敬请期待',
-    startblock: '剩余开始块高'
+    startblock: '剩余开始块高',
+    section: [
+        '主流区',
+        '开拓区',
+        '联盟区',
+        '倍数',
+        '搜索'
+    ]
 };

@@ -1,11 +1,13 @@
 <template>
   <div class="net-wrapper">
-    <div class="blank" @click="hideHandle"></div>
+    <div class="blank"
+         @click="hideHandle"></div>
     <div class="inner">
       <div class="title">{{$t('network.switch')}}</div>
       <div class="net-list">
         <p class="active"><i></i><a :href="youswapHECO">{{$t('network.heco')}}</a></p>
         <p><i></i><a :href="youswapETH">{{$t('network.eth')}}</a></p>
+        <p><i></i><a :href="youswapBSC">{{$t('network.bsc')}}</a></p>
       </div>
     </div>
   </div>
@@ -18,14 +20,15 @@ export default {
   data () {
     return {
       youswapETH: process.env.VUE_APP_YOUSWAP_ETH,
-      youswapHECO: process.env.VUE_APP_YOUSWAP_HECO
+      youswapHECO: process.env.VUE_APP_YOUSWAP_HECO,
+      youswapBSC: process.env.VUE_APP_YOUSWAP_BSC
     }
   },
-  mounted() {
+  mounted () {
 
   },
   methods: {
-    hideHandle() {
+    hideHandle () {
       this.$emit('close')
     }
   }
@@ -57,7 +60,7 @@ export default {
       font-size: 16px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
-      color: #06263C;
+      color: #06263c;
     }
     .net-list {
       p {
@@ -67,7 +70,7 @@ export default {
         line-height: 50px;
       }
       p:first-child {
-        border-bottom: 1px solid #F8F8F8;
+        border-bottom: 1px solid #f8f8f8;
       }
       i {
         width: 4px;
@@ -75,20 +78,23 @@ export default {
         display: inline-block;
         margin-right: 10px;
         border-radius: 50%;
-        background: #BFC6CB;
+        background: #bfc6cb;
       }
       a {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
-        color: #06263C;
+        color: #06263c;
         line-height: 20px;
       }
       .active {
         i {
-          background: #35BDB1;
+          background: #35bdb1;
         }
       }
     }
   }
+}
+.disabled a {
+  color: #bfc6cb !important;
 }
 </style>

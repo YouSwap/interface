@@ -14,7 +14,7 @@
           <input style="font-size: 16px; width: 122px" type="text" placeholder="0.0" v-model="amount" @input="amount = mustNum(amount)">
           <div class="content-right">
             <el-button class="maxBtn"  @click="maxNumber">Max</el-button>
-            <span>{{list_info.poolname}} <span v-if="lpaddress !== list_info.lpaddress">LP</span></span>
+            <span>{{list_info.poolname}} <span v-if="list_info.type == 1">LP</span></span>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
       </div>
       <div class="link-wrap">
         <span>
-          <a v-if="lpaddress === list_info.lpaddress" :href="swapTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} </a>
+          <a v-if="list_info.type == 2" :href="swapTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} </a>
           <a v-else :href="lpTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} LP</a>
         </span>
       </div>

@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode development",
-    "pord": "vue-cli-service serve --mode production",
-    "buildDev": "vue-cli-service build --mode development",
+    "prod": "vue-cli-service serve --mode production",
+    "preprod": "vue-cli-service serve --mode preprod",
     "build": "vue-cli-service build --mode production",
+    "buildDev": "vue-cli-service build --mode development",
+    "buildPre": "vue-cli-service build --mode preprod",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@ethersproject/bignumber": "^5.0.15",
+    "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
@@ -20,11 +23,13 @@
     "js-cookie": "^2.2.1",
     "vconsole": "^3.4.0",
     "vue": "^2.6.11",
+    "vue-count-to": "^1.0.13",
     "vue-i18n": "^8.23.0",
+    "vue-pdf": "^4.2.0",
     "vue-router": "^3.5.1",
     "vue-simple-progress": "^1.1.1",
     "vuex": "^3.6.2",
-    "youswap-header": "^1.1.12"
+    "youswap-header": "^1.1.16"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

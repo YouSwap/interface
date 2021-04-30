@@ -14,11 +14,14 @@ import YouswapHeader from 'youswap-header'
 
 // import vconsole from "vconsole";
 // new vconsole();
+import { post, get } from './assets/script/http'
+Vue.prototype.$get = get
+Vue.prototype.$post = post
 
 Vue.use(Vuex);
 Vue.use(VueI18n)
 const i18n = new VueI18n({
-  locale: Cookies.get('lan') || 'en', // set locale
+  locale: Cookies.get('lang') || 'en', // set locale
   messages: {
     zh: require('./lan/zh.js'), // 中文语言包
     en: require('./lan/en.js') // 英文语言包

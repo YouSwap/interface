@@ -6,20 +6,19 @@
         <span>{{$t('liquidity')[0]}}</span>
         <p>{{$t('liquidity')[1]}}</p>
       </div>
-      <youswap-header
-        :home="home"
-        :swap="swap"
-        :pool="pool"
-        :liquidity="liquidity"
-        :chart="chart"
-        :bridge="bridge"
-        :homeUrl="homeUrl"
-        :swapUrl="swapUrl"
-        :poolUrl="poolUrl"
-        :liquidityUrl="liquidityUrl"
-        :chartUrl="chartUrl"
-        :bridgeUrl="bridgeUrl"
-        :actived="actived"></youswap-header>
+      <div class="head-left">
+        <img class="logo-img" :src="logoUrl" alt="">
+        <ul>
+          <li style="margin-left: 20px;"><a :href="homeUrl">{{ $t('navs')[0] }}</a></li>
+          <!-- <li @click="handleLinkInvite"><a>{{ $t('navs')[5] }}</a></li>-->
+          <li><a :href="swapUrl">{{ $t('navs')[1] }}</a></li>
+          <li><a :href="poolUrl">{{ $t('navs')[2] }}</a></li>
+          <li><a class="active" href="/">{{ $t('navs')[3] }}</a></li>
+          <li><a :href="chartUrl">{{ $t('navs')[4] }}</a></li>
+          <li><a :href="acrossChainUrl">{{ $t('navs')[7] }}</a></li>
+          <!-- <li><a :href="idoUrl">{{ $t('navs')[6] }}</a></li> -->
+        </ul>
+      </div>
       <div class="head-right">
         <template v-if="!isConnected">
           <a href="javascript:;" class="connect" @click="connectWallet">{{$t('connect')[0]}}</a>
@@ -67,10 +66,8 @@ export default {
       idoUrl: process.env.VUE_APP_IDO_URL,
       swapUrl: process.env.VUE_APP_SWAP_URL,
       poolUrl: process.env.VUE_APP_POOL_URL,
-      liquidityUrl: process.env.VUE_APP_LIQUIDITY_URL,
       chartUrl: process.env.VUE_APP_CHART_URL,
-      acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL,
-      actived: 3
+      acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL
     }
   },
   props: {
@@ -83,25 +80,7 @@ export default {
     ...mapState({
       account: state => state.account,
       balance: state => state.balance
-    }),
-    home () {
-      return this.$t('navs')[0]
-    },
-    swap () {
-      return this.$t('navs')[1]
-    },
-    pool () {
-      return this.$t('navs')[3]
-    },
-    liquidity () {
-      return this.$t('navs')[2]
-    },
-    chart () {
-      return this.$t('navs')[4]
-    },
-    bridge () {
-      return this.$t('navs')[7]
-    }
+    })
   },
   mounted () {
     this.initLangHandle()
@@ -225,10 +204,12 @@ export default {
     background: url('../assets/image/top-bg.png') center no-repeat;
     background-size: 100% 100%;
     position: relative;
+    background-color: #F8FCFF;
   }
   .head-container {
     height: 68px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 0 30px;
   }
@@ -256,11 +237,10 @@ export default {
     color: #92A0A5;
   }
   .head-left {
-    height: 30px;
+    height: 60px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     cursor: pointer;
-    margin-top: 15px;
   }
   .head-left > img:hover {
     transform: rotate(-5deg);

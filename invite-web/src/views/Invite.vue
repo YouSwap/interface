@@ -355,7 +355,7 @@ export default {
       homeUrl: process.env.VUE_APP_HOME_URL,
       idoUrl: process.env.VUE_APP_IDO_URL,
       swapUrl: process.env.VUE_APP_SWAP_URL,
-      poolUrl: process.env.VUE_APP_LIQUIDITY_URL,
+      poolUrl: process.env.VUE_APP_POOL_URL,
       chartUrl: process.env.VUE_APP_CHART_URL,
       acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL,
       selfReward: 0

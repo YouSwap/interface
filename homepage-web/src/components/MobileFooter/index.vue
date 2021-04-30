@@ -17,7 +17,7 @@
       </template>
     </div>
     <div class="footer-right">
-      <div class="net-box" @click="showNetHandle">{{$t('network.heco')}}</div>
+      <div class="net-box" :class="nothing? 'nothing': ''" @click="showNetHandle">{{$t('network.heco')}}</div>
       <div class="language-wrapper" @click="handleLanguageChange">
         {{languageText}}
       </div>
@@ -38,13 +38,17 @@ export default {
       lightUrl: require('../../assets/light.png'),
       languageText: '',
       loading: false,
+      nothing: false
     }
   },
   mounted() {
-    if (Cookies.get('lan') === 'ZH') {
+    if (this.$route.path === '/acrossChain') {
+      this.nothing = true
+    }
+    if (Cookies.get('lang') === 'ZH') {
       this.languageText = 'ZH'
       this.$i18n.locale = 'zh'
-    } else if(Cookies.get('lan') === 'EN') {
+    } else if(Cookies.get('lang') === 'EN') {
       this.languageText = 'EN'
       this.$i18n.locale = 'en'
     } else {
@@ -72,13 +76,13 @@ export default {
       if (this.languageText === 'EN') {
         this.$i18n.locale = "zh"
         this.languageText = "ZH"
-        Cookies.set('lan', "ZH", {domain: "wbfexchina.top"})
+        Cookies.set('lang', "ZH", {domain: `${process.env.VUE_APP_DOMAIN}`})
         this.$store.commit('lan', "ZH")
         // location.reload();
       } else if (this.languageText === 'ZH') {
         this.$i18n.locale = "en"
         this.languageText = "EN"
-        Cookies.set('lan', "EN", {domain: "wbfexchina.top"})
+        Cookies.set('lang', "EN", {domain: `${process.env.VUE_APP_DOMAIN}`})
         this.$store.commit('lan', "EN")
         // location.reload();
       }
@@ -149,7 +153,7 @@ export default {
           padding: 0 6px;
           box-sizing: border-box;
           font-size: 16px;
-          font-family: DINPro-Medium, DINPro;
+          font-family: DINPro-Medium, DINPro, PingFang SC;
           font-weight: 500;
           color: #06263C;
         }
@@ -162,7 +166,7 @@ export default {
           box-shadow: 0px 0px 4px 0px rgba(157, 157, 158, 0.5);
           border-radius: 6px;
           font-size: 16px;
-          font-family: DINPro-Medium, DINPro;
+          font-family: DINPro-Medium, DINPro, PingFang SC;
           font-weight: 500;
           color: #06263C;
         }
@@ -251,5 +255,8 @@ export default {
         cursor: pointer;
       }
     }
+  }
+  .nothing{
+    display: none!important;
   }
 </style>

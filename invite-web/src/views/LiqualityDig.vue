@@ -18,16 +18,19 @@
            style="margin-top: 40px"
           />
           <div class="tab-wrapper">
-            <div class="tab">
+            <!-- <div class="tab">
               <div class="progress" :class="tabActiveIndex === 0 ? 'active' : ''" @click="handleProgress">{{$t('tabs')[0]}}</div>
               <div class="over" :class="tabActiveIndex === 1 ? 'active' : ''" @click="handleOver">{{$t('tabs')[1]}}</div>
-            </div>
-            <div class="radio-wrapper">
-              <span>{{$t('liquidity')[2]}}</span>
-              <div class="switch-container">
-                <input id="switch" type="checkbox" class="switch" @click="handleChecked"/>
-                <label for="switch"></label>
-              </div>
+            </div> -->
+            <div class="tab-box">
+              <div class="list"
+                v-for="(item, index) in tabList"
+                :key="index"
+                :class="curTab == item.id ? 'cur' : ''"
+                @click="switchTabHandle(item)"
+                >
+                  <span>{{item.name}}</span>
+                </div>
             </div>
           </div>
           <div v-if="blockbetween > 0" class="startHeight">
@@ -48,22 +51,26 @@
     </div>
     <div class="h5-container" v-if="platform === 1">
       <MobileHeader />
-      <div class="content-wrapper">
-        <div class="total-value">
-          {{$t('pledgeTotole')}} {{getDecimalsCoinFn(totolUSDT, 6)}} USDT
+      <div class="top-box">
+        <div class="bg-box">
+          <div class="total-value">
+            {{$t('pledgeTotole')}} {{getDecimalsCoinFn(totolUSDT, 6)}} USDT
+          </div>
         </div>
+      </div>
+      <div class="content-wrapper">
         <div class="tips">
           <span>{{$t('inviteDig')[6]}}</span>
           <span @click="handleLinkDetail">{{$t('inviteDig')[7]}}</span>
         </div>
         <div class="invote-card">
           <div class="invote-item">
-            <img :src="yaoqingUrl" alt="">
+            <img :src="yaoqingH5Url" alt="">
             <span class="item-top">{{$t('inviteDig')[0]}}</span>
             <span class="item-bottom">{{inviteNum}}</span>
           </div>
           <div class="invote-item" style="margin-top: 30px">
-            <img :src="shouyiUrl" alt="">
+            <img :src="shouyiH5Url" alt="">
             <div class="item-top-box">
               <span>{{$t('inviteDig')[1]}}</span>
               <div>
@@ -116,16 +123,15 @@
           </div>
         </div>
         <div class="tab-wrapper">
-          <div class="tab">
-            <div class="progress" :class="tabActiveIndex === 0 ? 'active' : ''" @click="handleProgress">{{$t('tabs[0]')}}</div>
-            <div class="over" :class="tabActiveIndex === 1 ? 'active' : ''" @click="handleOver">{{$t('tabs[1]')}}</div>
-          </div>
-          <div class="radio-wrapper">
-            <span>{{$t('liquidity')[2]}}</span>
-            <div class="switch-container">
-              <input id="switch" type="checkbox" class="switch" @click="handleChecked"/>
-              <label for="switch"></label>
-            </div>
+          <div class="tab-box">
+            <div class="list"
+              v-for="(item, index) in tabList"
+              :key="index"
+              :class="curTab == item.id ? 'cur' : ''"
+              @click="switchTabHandle(item)"
+              >
+                <span>{{item.name}}</span>
+              </div>
           </div>
         </div>
         <div v-if="blockbetween > 0" class="startHeight">
@@ -217,7 +223,6 @@ export default {
   },
   data () {
     return {
-      tabActiveIndex: 0,
       checkValue: false,
       cardLists: [],
       lang: 'en',
@@ -231,17 +236,13 @@ export default {
       platform: 2,
       yaoqingUrl: require('../assets/image/yaoqing@2x.png'),
       shouyiUrl: require('../assets/image/shouyi@2x.png'),
-      questionUrl: require('../assets/image/question.png'),
+      yaoqingH5Url: require('../assets/image/yaoqing-h5.png'),
+      shouyiH5Url: require('../assets/image/shouyi-h5.png'),
+      questionUrl: require('../assets/image/question-h5.png'),
       ifStakedShow: false,
       allowanceList: [], // 是否授权列表
       totolList: [],     //流动性总额 YOU价格列表
       getYouList: [],     //YOU的收益列表
-      finishedList: [],  //结束列表
-      progressList: [],   // 进行中的列表
-      myList: [],         // 我的池子
-      myprogressList: [], //我的进行中的池子
-      myfinishedList: [],  // 我的结束的池子
-      checked: false,
       loading: false,
       ifUnStakedShow: false,
       isShowShareToast: false,
@@ -253,6 +254,21 @@ export default {
       blockImg: require('../assets/image/block.png'),
       blockImgW: require('../assets/image/blockWhite.png'),
       youPrice: 0,
+      curTab: 0,
+      tabList: [
+        {
+          name: '主流区',
+          id: 0
+        },
+        {
+          name: '开拓区',
+          id: 1
+        },
+        {
+          name: '联盟区',
+          id: 2
+        }
+      ]
     }
   },
   computed: {
@@ -320,63 +336,6 @@ export default {
       this.$router.push('invite');
     },
     /**
-     * 点击进行中
-     */
-    handleProgress() {
-      this.tabActiveIndex = 0
-      if (this.checked) {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.myfinishedList
-        } else {
-          this.cardLists = this.myprogressList
-        }
-      } else {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.finishedList
-        } else {
-          this.cardLists = this.progressList
-        }
-      }
-    },
-    /**
-     * 点击已结束
-     */
-    handleOver () {
-      this.tabActiveIndex = 1
-      if (this.checked) {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.myfinishedList
-        } else {
-          this.cardLists = this.myprogressList
-        }
-      } else {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.finishedList
-        } else {
-          this.cardLists = this.progressList
-        }
-      }
-    },
-    /**
-     * 单选按钮切换
-     */
-    handleChecked (e) {
-      this.checked = e.target.checked
-      if (this.checked) {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.myfinishedList
-        } else {
-          this.cardLists = this.myprogressList
-        }
-      } else {
-        if (this.tabActiveIndex) {
-          this.cardLists = this.finishedList
-        } else {
-          this.cardLists = this.progressList
-        }
-      }
-    },
-    /**
      * 判断平台
      */
     initPlatform() {
@@ -416,6 +375,7 @@ export default {
         pools(orderBy: priority, orderDirection: "asc"){
           id
           pool
+          type
           lpaddress
           poolname
           startblockheight
@@ -499,10 +459,6 @@ export default {
             })
             console.log('totol', totol)
             this.totolUSDT = totol
-            const finishedList = [];
-            const progressList = [];
-            const myfinishedList = [];
-            const myprogressList= [];
             pools.forEach(pool => {
               if (pool.lpaddress === process.env.VUE_APP_YOU_ADDRESS) {
                 pool.decimals = 6
@@ -519,24 +475,8 @@ export default {
               } else {
                 pool.isfinshed = false
               }
-              if (pool.isfinshed) {
-                finishedList.push(pool)
-              } else {
-                progressList.push(pool)
-              }
-              if (pool.user.length > 0) {
-                if (pool.isfinshed) {
-                  myfinishedList.push(pool)
-                } else {
-                  myprogressList.push(pool)
-                }
-              }
             })
-            this.finishedList = finishedList
-            this.progressList = progressList
-            this.myprogressList = myprogressList;
-            this.myfinishedList = myfinishedList;
-            this.cardLists = this.progressList
+            this.cardLists = pools
             this.loading = false;
           }, 3000)
           
@@ -1151,7 +1091,7 @@ export default {
       }
       .tab-wrapper {
         width: 100%;
-        margin-top: 71px;
+        margin: 71px 0 40px;
         position: relative;
         display: flex;
         justify-content: center;
@@ -1200,74 +1140,31 @@ export default {
           }
         }
       }
-      .radio-wrapper {
+      .tab-box {
+        height: 33px;
         display: flex;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        align-items: center;
-        transform: translateY(-50%);
-        & > span {
-          font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #06263C;
-          line-height: 20px;
-          opacity: 0.5;
-          margin-right: 13px;
-        }
-        .switch-container {
-          height: 15px;
-          width: 30px;
-          .switch {
-            display: none;
-          }
-          label {
-            display: block;
-            background-color: #EEEEEE;
-            height: 100%;
-            width: 100%;
+        &>div {
+          position: relative;
+          margin: 0 30px;
+          span {
+            display: inline-block;
+            font-size: 24px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            color: #06263C;
             cursor: pointer;
-            border-radius: 25px;
-          }
-          label:before {
-            content: '';
-            display: block;
-            border-radius: 25px;
-            height: 100%;
-            width: 15px;
-            background-color: white;
-            opacity: 1;
-            box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.08);
-            -webkit-transition: all 0.2s ease;
-          }
-          label:after {
-            position: relative;
-            top: -15px;
-            left: 15px;
-            content: '';
-            display: block;
-            border-radius: 25px;
-            height: 100%;
-            width: 15px;
-            background-color: white;
-            opacity: 0;
-            box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.08);
-            -webkit-transition: all 0.2s ease;
-          }
-          #switch:checked~label:after {
-            opacity: 1;
-          }
-          #switch:checked~label:before {
-            opacity: 0;
-          }
-          #switch:checked~label {
-            background-color: #0C979C;
           }
         }
-      }
-      .digcard-wrapper {
-        margin-top: 30px;
+        .cur:after {
+          position: absolute;
+          left: 0;
+          bottom: -14px;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 4px;
+          background: #35BDB1;
+          border-radius: 3px;
+        }
       }
       .startHeight {
         display: flex;
@@ -1288,14 +1185,21 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #06263C;
   position: relative;
+  background: #F8FCFF;
   padding-bottom: 60px;
   overflow-x: hidden;
-  .content-wrapper {
-    width: 90vw;
-    display: flex;
-    flex-direction: column;
+  .top-box {
+    width: 100%;
+    height: 40px;
+    
+    background: #06263c;
+    
+    .bg-box {
+      padding: 20px 15px 0;
+      background: #F8FCFF;
+      border-radius: 20px 20px 0px 0px;
+    }
     .total-value {
       width: 100%;
       height: 40px;
@@ -1310,34 +1214,36 @@ export default {
       font-weight: 500;
       color: #FFFFFF;
       line-height: 21px;
-      margin-top: -20px;
       z-index: 11;
     }
+  }
+  .content-wrapper {
+    width: 92vw;
+    display: flex;
+    flex-direction: column;
     .tips {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
-      color: #FFFFFF;
+      color: #82929D;
       line-height: 24px;
       margin-top: 30px;
-      & > span:first-child {
-        opacity: 0.6;
-      }
       & > span:last-child {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: #0D989D;
+        color: #35BDB1;
         line-height: 16px;
         text-decoration: underline;
       }
     }
     .invote-card {
       width: 100%;
-      padding: 30px 20px 30px 20px;
-      background-color: #0B304A;
-      border-radius: 16px;
-      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
       .invote-item {
         display: flex;
         flex-direction: column;
@@ -1354,9 +1260,8 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #FFFFFF;
+          color: #6A7D8A;
           line-height: 20px;
-          opacity: 0.5;
         }
         .item-top-box {
           display: flex;
@@ -1365,9 +1270,8 @@ export default {
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #FFFFFF;
+            color: #82929D;
             line-height: 20px;
-            opacity: 0.5;
           }
           .toast-box {
             position: relative;
@@ -1413,7 +1317,7 @@ export default {
           font-size: 20px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #FFFFFF;
+          color: #06263C;
           line-height: 20px;
         }
       }
@@ -1431,7 +1335,7 @@ export default {
               font-size: 14px;
               font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;
-              color: #FFFFFF;
+              color: #82929D;
               line-height: 20px;
             }
             .en-version {
@@ -1498,106 +1402,49 @@ export default {
             text-align: center;
           }
           .bottom-btn.disabled {
-            background: rgba(255, 255, 255, .5);
-            color: rgba(6, 38, 60, 1);
+            background: #F1F2F5;
+            color: rgba(6, 38, 60, .2);
           }
         }
       }
     }
     .tab-wrapper {
       width: 100%;
-      margin-top: 35px;
+      margin: 25px 0 10px;
       display: flex;
+      justify-content: center;
       position: relative;
-      .tab {
+      .tab-box {
         display: flex;
-        align-items: center;
-        .progress, .over {
-          width: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #FFFDFA;
-          line-height: 20px;
-        }
-        .over {
-          margin-left: 30px;
-        }
-        .active {
-          font-size: 20px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #0D989D;
-          line-height: 20px;
-        }
-      }
-      .radio-wrapper {
-        display: flex;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        align-items: center;
-        transform: translateY(-50%);
-        & > span {
-          font-size: 14px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #FFFDFA;
-          line-height: 20px;
-          opacity: 0.5;
-          margin-right: 13px;
-        }
-        .switch-container {
-          height: 15px;
-          width: 30px;
-          .switch {
-            display: none;
-          }
-          label {
-            display: block;
-            background-color: #EEEEEE;
-            height: 100%;
-            width: 100%;
+        &>div {
+          position: relative;
+          margin: 0 10px;
+          span {
+            display: inline-block;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            color: #06263C;
             cursor: pointer;
-            border-radius: 25px;
           }
-          label:before {
-            content: '';
-            display: block;
-            border-radius: 25px;
-            height: 100%;
-            width: 15px;
-            background-color: white;
-            opacity: 1;
-            box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.08);
-            -webkit-transition: all 0.2s ease;
+        }
+        .cur {
+          span {
+            font-size: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #35BDB1;
           }
-          label:after {
-            position: relative;
-            top: -15px;
-            left: 15px;
-            content: '';
-            display: block;
-            border-radius: 25px;
-            height: 100%;
-            width: 15px;
-            background-color: white;
-            opacity: 0;
-            box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.08);
-            -webkit-transition: all 0.2s ease;
-          }
-          #switch:checked~label:after {
-            opacity: 1;
-          }
-          #switch:checked~label:before {
-            opacity: 0;
-          }
-          #switch:checked~label {
-            background-color: #0C979C;
-          }
+        }
+        .cur:after {
+          position: absolute;
+          left: 0;
+          bottom: -8px;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 2px;
+          background: #35BDB1;
+          border-radius: 3px;
         }
       }
     }

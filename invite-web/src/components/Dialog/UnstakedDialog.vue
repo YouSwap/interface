@@ -14,7 +14,7 @@
           <input style="font-size: 20px" type="text" v-model="amount" @input="amount = mustNum(amount)" placeholder="0.0">
           <div class="content-right">
             <el-button class="maxBtn"  @click="maxNumber">Max</el-button>
-            <span>{{list_info.poolname}} <span v-if="lpaddress !== list_info.lpaddress">LP</span></span>
+            <span>{{list_info.poolname}} <span v-if="list_info.type == 1">LP</span></span>
           </div>
         </div>
       </div>

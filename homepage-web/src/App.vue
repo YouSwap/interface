@@ -5,10 +5,23 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 export default {
   name: 'App',
   data() {
     return {}
+  },
+  mounted() {
+    if (Cookies.get('lang') === 'ZH') {
+      this.$i18n.locale = 'zh'
+      Cookies.set('lang', "ZH", {domain: `${process.env.VUE_APP_DOMAIN}`})
+    } else if(Cookies.get('lang') === 'EN') {
+      this.$i18n.locale = 'en'
+      Cookies.set('lang', "EN", {domain: `${process.env.VUE_APP_DOMAIN}`})
+    } else {
+      this.$i18n.locale = "en"
+      Cookies.set('lang', "EN", {domain: `${process.env.VUE_APP_DOMAIN}`})
+    }
   }
 }
 </script>
@@ -19,6 +32,6 @@ export default {
   #app {
     background-color: #F8FCFF;
     width: 100%;
-    height: 100%;
+    // height: 100%;
   }
 </style>

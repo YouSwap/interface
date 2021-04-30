@@ -63,7 +63,7 @@ export default {
   mounted () {
     // 获取当前块高
     this.getBlockHigh();
-    const defaultLan = Cookies.get('lan') || 'en'
+    const defaultLan = Cookies.get('lang') || 'en'
     this.options.forEach(item => {
       if (defaultLan === item.lan) {
         this.language = item.value
@@ -133,7 +133,7 @@ export default {
       this.options.forEach(item => {
         if (item.value === value) {
           this.$i18n.locale = item.lan
-          Cookies.set('lan', item.lan, {domain: "wbfexchina.top"})
+          Cookies.set('lang', item.lan, {domain: `${process.env.VUE_APP_DOMAIN}`})
           this.$store.commit('lan', item.lan)
           location.reload();
         }
