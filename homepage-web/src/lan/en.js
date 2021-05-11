@@ -118,7 +118,7 @@ module.exports = {
   qualification: '',
   RemainingBlockchain: 'Remaining blockchain',
   Private: 'Private',
-  liquidity: 'Liquidity',
+  liquidity: 'Invite',
   LiquidityDig: 'Pool',
   Quatation: 'Chart',
   CurrentTVL: 'TVL(USDT)',
@@ -134,7 +134,7 @@ module.exports = {
   "APY": 'APY',
   "当前挖矿产出": 'Minted (YOU)',
   "挖矿产出市值": 'Mining Output (USDT)',
-  "YOU审计机构": 'Audit agency',
+  "YOU审计机构": 'Audit Agency',
   "24H交易额": 'Platform 24h volume (USDT)',
   "累积交易总额": 'Cumulative Volume (USDT)',
   "24H手续费": 'Platform 24h Fee (USDT)',
@@ -212,5 +212,10 @@ module.exports = {
   Preview: 'Preview',
   Next: 'Next',
   Action: 'Action',
-  docs: 'Docs'
+  dealTitle: 'Trading',
+  dealDes: 'Reward YOU for each trade',
+  stackTitle: 'Staking',
+  stackDes: 'Stake token to earn YOU',
+  docs: 'Docs',
+  navDocs: 'Docs'
 }

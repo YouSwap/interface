@@ -6,19 +6,9 @@
         <div class="title1">{{title}}</div>
         <div class="title2">{{titleDesc}}</div>
       </div>
-      <youswap-header :home="home"
-                      :swap="swap"
-                      :liquidity="liquidity"
-                      :pool="pool"
-                      :chart="chart"
-                      :bridge="bridge"
-                      :homeUrl="homeUrl"
-                      :swapUrl="swapUrl"
-                      :liquidityUrl="liquidityUrl"
-                      :poolUrl="poolUrl"
-                      :chartUrl="chartUrl"
-                      :bridgeUrl="bridgeUrl"
-                      :actived="actived"></youswap-header>
+      <youswap-header :nowEnv="nowEnv"
+                      :actived="actived"
+                      :chainId="chainId" />
       <div class="head-right">
         <template v-if="!isConnected">
           <a href="javascript:;"
@@ -64,6 +54,7 @@
 <script>
 import Cookies from 'js-cookie'
 import loading from '../loading'
+// import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -81,13 +72,9 @@ export default {
       youswapETH: process.env.VUE_APP_YOUSWAP_ETH,
       youswapHECO: process.env.VUE_APP_YOUSWAP_HECO,
       youswapBSC: process.env.VUE_APP_YOUSWAP_BSC,
-      homeUrl: process.env.VUE_APP_HOME_URL,
-      swapUrl: process.env.VUE_APP_SWAP_URL,
-      liquidityUrl: process.env.VUE_APP_LIQUIDITY_URL,
-      poolUrl: process.env.VUE_APP_POOL_URL,
-      chartUrl: process.env.VUE_APP_CHART_URL,
-      bridgeUrl: process.env.VUE_APP_ACROSSCHAIN_URL,
       actived: 0,
+      chainId: '128',
+      nowEnv: process.env.VUE_APP_ENV,
       nothing: ''
     }
   },
@@ -112,29 +99,12 @@ export default {
       this.$store.commit('lan', "EN")
     }
   },
-  computed: {
-    isEnglish () {
-      return Cookies.get('lang') === 'EN'
-    },
-    home () {
-      return this.$t('Home')
-    },
-    swap () {
-      return this.$t('Swap')
-    },
-    liquidity () {
-      return this.$t('liquidity')
-    },
-    pool () {
-      return this.$t('LiquidityDig')
-    },
-    chart () {
-      return this.$t('Quatation')
-    },
-    bridge () {
-      return this.$t('crossChain')
-    }
-  },
+
+  // computed: {
+  //   ...mapState({
+  //     chainId: state => state.chainid
+  //   }),
+  // },
   methods: {
     /**
      * 连接钱包
@@ -401,6 +371,7 @@ export default {
       left: 0;
       top: 43px;
       width: 100%;
+      height: 76px;
       background: #fff;
       border-radius: 8px;
       a {

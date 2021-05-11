@@ -50,7 +50,8 @@ export default {
     inviteNum: 0, // 邀请数量
     benefit: 0,
     platform: 2,
-    coin: 'ETH'
+    coin: 'ETH',
+    chainid: ""
   },
   mutations: {
     setCoin (state, data) {
@@ -71,67 +72,70 @@ export default {
     setPlatform (state, data) {
       state.platform = data
     },
-    [HA_HA](state, result) {
+    setChainid (state, data) {
+      state.chainid = data
+    },
+    [HA_HA] (state, result) {
       state.haha = result;
     },
-    [totalUsdtAmountOfPriIEO](state, result) {
+    [totalUsdtAmountOfPriIEO] (state, result) {
       state.totalUsdtAmountOfPriIEO = result;
     },
-    [upperLimitYouOfPriIEO](state, result) {
+    [upperLimitYouOfPriIEO] (state, result) {
       state.upperLimitYouOfPriIEO = result;
     },
-    [startHeightOfPriIEO](state, result) {
+    [startHeightOfPriIEO] (state, result) {
       state.startHeightOfPriIEO = result;
     },
-    [endHeightOfPriIEO](state, result) {
+    [endHeightOfPriIEO] (state, result) {
       state.endHeightOfPriIEO = result;
     },
-    [startTime](state, result) {
+    [startTime] (state, result) {
       state.startTime = result;
     },
-    [endTime](state, result) {
+    [endTime] (state, result) {
       state.endTime = result;
     },
-    [status](state, result) {
+    [status] (state, result) {
       state.status = result;
     },
-    [_youAddress](state, result) {
+    [_youAddress] (state, result) {
       state._youAddress = result;
     },
-    [isInWhiteList](state, result) {
+    [isInWhiteList] (state, result) {
       state.isInWhiteList = result;
     },
-    [youPriceOfPriIEO](state, result) {
+    [youPriceOfPriIEO] (state, result) {
       state.youPriceOfPriIEO = result;
     },
-    [supplyYouForPriIEO](state, result) {
+    [supplyYouForPriIEO] (state, result) {
       state.supplyYouForPriIEO = result;
     },
-    [usdtBalanceOf](state, result) {
+    [usdtBalanceOf] (state, result) {
       state.usdtBalanceOf = result;
     },
-    [holders](state, result) {
+    [holders] (state, result) {
       state.holders = result;
     },
-    [transfers](state, result) {
+    [transfers] (state, result) {
       state.transfers = result;
     },
-    [totalSupply](state, result) {
+    [totalSupply] (state, result) {
       state.totalSupply = result;
     },
-    [lan](state, result) {
+    [lan] (state, result) {
       state.lan = result;
     },
-    [isNotConnect](state, result) {
+    [isNotConnect] (state, result) {
       state.isNotConnect = result;
     },
-    [RemainingBlockchain](state, result) {
+    [RemainingBlockchain] (state, result) {
       state.RemainingBlockchain = result;
     },
-    [startBlock](state, result) {
+    [startBlock] (state, result) {
       state.startBlock = result;
     },
-    [endBlock](state, result) {
+    [endBlock] (state, result) {
       state.endBlock = result;
     },
   }

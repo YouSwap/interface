@@ -56,7 +56,7 @@ const LineWrapper = styled.div`
   height: 1px;
   border-bottom: 1px dashed #06263C
   opacity: 0.08;
-  margin: 30px 0;
+  margin: calc(30px - 1rem) 0 30px 0;
 `
 
 const InfoLink = styled(ExternalLink)`
@@ -441,7 +441,7 @@ export default function Swap() {
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
-                  (wrapType === WrapType.WRAP ? t('wrap') : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                  (wrapType === WrapType.WRAP ? t('swap') : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
@@ -491,7 +491,7 @@ export default function Swap() {
                   <Text fontSize={16} fontWeight={500}>
                     {priceImpactSeverity > 3 && !isExpertMode
                       ? t('impactHigh')
-                      : `${priceImpactSeverity > 2 ? t('swapAnyway') : t('swap')}`}
+                      : t('swap') + `${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>
@@ -519,7 +519,7 @@ export default function Swap() {
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
                       ? t('Price Impact Too High')
-                      : `${priceImpactSeverity > 2 ? t('swapAnyway') : t('swap')}`}
+                      : t('swap') + `${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
             )}

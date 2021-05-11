@@ -30,7 +30,7 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/sdk": "git+https://github.com/695790456zzn/youswap-sdk.git#bsc_prod_v1.1.0",
+    "@uniswap/sdk": "git+https://github.com/695790456zzn/youswap-sdk.git#heco_prod_v1.0.1",
     "@uniswap/token-lists": "^1.0.0-beta.19",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -100,6 +100,7 @@
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
   },
   "scripts": {
+    "start:local": "dotenv -e .env.local react-scripts start",
     "start": "dotenv -e .env.development react-scripts start",
     "start:prod": "dotenv -e .env.production react-scripts start",
     "start:pre": "dotenv -e .env.preprod react-scripts start",

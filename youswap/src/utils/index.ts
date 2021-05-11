@@ -32,7 +32,7 @@ export function getEtherscanLink(
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
   // const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[128]}etherscan.io`
-  const prefix = `https://bscscan.com/`
+  const prefix = `https://hecoinfo.com`
 
   switch (type) {
     case 'transaction': {

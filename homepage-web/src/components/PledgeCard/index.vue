@@ -7,10 +7,17 @@
              class="img-title"
              :src="titleImg"
              alt="">
-        <div class="card-title">{{$t('pledgeTotal')}} <countTo :startVal="startVal"
-                   :endVal='TotalTvlAmount'
-                   :decimals="2"
-                   :duration='500'></countTo> USDT</div>
+        <div class="card-title">{{$t('pledgeTotal')}}
+          <template v-if="TotalTvlAmount == '--'">
+            --
+          </template>
+          <template v-else>
+            <countTo :startVal="startVal"
+                     :endVal='TotalTvlAmount'
+                     :decimals="2"
+                     :duration='500'></countTo>
+          </template> USDT
+        </div>
       </div>
       <div class="dataList">
         <div class="list"
@@ -22,10 +29,16 @@
             <span>{{$t('pledgeCurrer')}} <span v-if="!IsPC()">(USDT)</span></span>
           </div>
           <div class="countTo">
-            <countTo :startVal="startVal"
-                     :endVal='list.number'
-                     :decimals="2"
-                     :duration='500'></countTo> <span v-if="IsPC()">USDT</span>
+            <template v-if="list.number == '--'">
+              --
+            </template>
+            <template v-else>
+              <countTo :startVal="startVal"
+                       :endVal='list.number'
+                       :decimals="2"
+                       :duration='500'></countTo>
+            </template>
+            <span v-if="IsPC()">USDT</span>
           </div>
         </div>
       </div>
@@ -40,6 +53,7 @@
         <div class="item-right">
           <span v-show="pledgeNowPrice !== '--'">$</span>
           <span>{{pledgeNowPrice}}</span>
+          <!-- <span>0.52</span> -->
         </div>
       </div>
 
@@ -95,10 +109,10 @@ export default {
   data () {
     return {
       titleImg: require('../../assets/index-title.png'),
-      EthTvlAmount: 0,
-      HecoTvlAmount: 0,
-      BSCTvlAmount: 0,
-      TotalTvlAmount: 0,
+      EthTvlAmount: '--',
+      HecoTvlAmount: '--',
+      BSCTvlAmount: '--',
+      TotalTvlAmount: '--',
       startVal: 0,
     }
   },

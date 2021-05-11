@@ -113,11 +113,11 @@ function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  {t('Add')} {currencyToAdd.symbol} {t('to')} Metamask <StyledLogo src={MetaMaskLogo} />
+                  Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
                 </RowFixed>
               ) : (
                 <RowFixed>
-                  {t('Add')} {currencyToAdd.symbol}{' '}
+                  Added {currencyToAdd.symbol}{' '}
                   <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
@@ -125,7 +125,7 @@ function TransactionSubmittedContent({
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
-              {t('Close')}
+              Close
             </Text>
           </ButtonPrimary>
         </AutoColumn>
@@ -156,7 +156,7 @@ export function ConfirmationModalContent({
         </RowBetween>
         {topContent()}
       </Section>
-      <BottomSection style={{ paddingTop: '0px' }} gap="12px">{bottomContent()}</BottomSection>
+      <BottomSection style={{paddingTop: '0px'}} gap="12px">{bottomContent()}</BottomSection>
     </Wrapper>
   )
 }

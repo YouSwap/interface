@@ -1,256 +1,116 @@
 <template>
-  <div class="invite" @click="hideLangHandle">
-    <div class="pc-wrap" v-if="platform == 2">
+  <div class="invite"
+       @click="hideLangHandle">
+    <div class="pc-wrap"
+         v-if="platform == 2">
       <header>
-        <div class="header-left">
-          <a :href="homeUrl" class="logo">
-            <div><img src="../assets/image/youlogo.svg" alt=""></div>
-          </a>
-          <div class="nav">
-            <a :href="homeUrl">{{$t('header')[0]}}</a>
-            <a :href="swapUrl">{{ $t('navs')[1] }}</a>
-            <a :href="poolUrl">{{ $t('navs')[2] }}</a>
-            <a class="active" href="/">{{ $t('navs')[3] }}</a>
-            <a :href="chartUrl">{{ $t('navs')[4] }}</a>
-            <a :href="acrossChainUrl">{{ $t('navs')[7] }}</a>
-            <!-- <a :href="idoUrl">{{ $t('navs')[6] }}</a> -->
-          </div>
-        </div>
+        <youswap-header :nowEnv="nowEnv"
+                        :actived="actived"
+                        :chainId="headChainId"></youswap-header>
         <div class="header-right">
           <template v-if="!isConnected">
-            <a href="javascript:;" class="connect" @click="connectWallet">{{$t('connect')[0]}}</a>
+            <a href="javascript:;"
+               class="connect"
+               @click="connectWallet">{{$t('connect')[0]}}</a>
           </template>
           <template v-else>
             <div class="account">
               <div class="account-num">{{balance}}{{this.$store.state.coin}}</div>
               <template v-if="loading">
-                <div class="loading-box"><span>Pending</span><loading></loading></div>
+                <div class="loading-box"><span>Pending</span>
+                  <loading></loading>
+                </div>
               </template>
               <template v-else>
-                <div class="address" :title="account">{{shortenAddress(account, 4)}}</div>
+                <div class="address"
+                     :title="account">{{shortenAddress(account, 4)}}</div>
               </template>
             </div>
           </template>
           <!-- <div class="theme"></div> -->
-          <div class="language-wrapper" @click="changeLangHandle">
+          <div class="language-wrapper"
+               @click="changeLangHandle">
             {{langTxt}}
           </div>
         </div>
       </header>
       <div class="content">
         <div class="info">
-          <h1 class="title">{{$t('invite')[0]}}</h1>
-          <div class="desc">{{$t('desc')[0]}}<br/>
-          {{$t('desc')[1]}}<br/>
-          {{$t('desc')[2]}}<br/>
-          {{$t('desc')[3]}}<br/>
-          {{$t('desc')[4]}}</div>
-        </div>
-        <div class="about">
-          <div class="count">
-            <div class="block-title">
-              {{$t('inviteDig')[1]}}<span>{{inviteBenefit}}</span> YOU
-              <a class="toast-box">
-                <img src="../assets/image/icon-question.png" alt="">
-                <div>
-                  {{$t('inviteDig')[8]}}
-                  <i></i>
-                </div>
-              </a>
-              <!-- {{$t('invite')[1]}}<span>{{totalNum}}</span>{{$t('invite')[2]}} -->
+          <div class="info-left">
+            <h1 class="title">{{$t('invite')[0]}}</h1>
+            <div class="desc">{{$t('exchangeDig')[0]}}<br />
+              {{$t('exchangeDig')[1]}}<br />
+              {{$t('exchangeDig')[2]}}<br />
+              {{$t('exchangeDig')[3]}}<br />
             </div>
-            <div class="num-box">
-              <div class="num-left">
-                <span>{{$t('invite')[3]}}</span>
-                <p>{{levelOneNum}}{{$t('invite')[2]}}</p>
-              </div>
-              <div class="num-right">
-                <span>{{$t('invite')[4]}}</span>
-                <p>{{levelTwoNum}}{{$t('invite')[2]}}</p>
-              </div>
-            </div>
-            <div class="list">
-              <div>{{$t('invite')[5]}}
-                <a class="toast-box">
-                  <img src="../assets/image/icon-question.png" alt="">
-                  <div>
-                    {{$t('notice')[0]}}
-                    <i></i>
-                  </div>
-                </a>
-              </div>
-              <a href="javascript:;" :class="account ? '' : 'disabled'" @click="getInviteUrlHandle">
-                <template v-if="account">
-                  {{$t('invite')[7]}}
-                </template>
-                <template v-else>
-                  {{$t('invite')[17]}}
-                </template>
-              </a>
-              <!-- <p class="warn" v-if="isShowWarn">{{$t('invite')[17]}}</p> -->
-            </div>
-            <div class="list">
-              <div>{{$t('invite')[6]}}
-                <a class="toast-box">
-                  <img src="../assets/image/icon-question.png" alt="">
-                  <div class="activate-tip">
-                    {{$t('notice')[1]}}
-                    <i></i>
-                  </div>
-                </a>
-              </div>
-              <a href="javascript:;" :class="account ? '' : 'disabled'" @click="activateHandle">
-                <template v-if="account">
-                  {{$t('invite')[8]}}
-                </template>
-                <template v-else>
-                  {{$t('index')[0]}}
-                </template>
-              </a>
-            </div>
-            <p class="tip" v-if="isShowTip">
-              <template v-if="isInvited">
-                {{$t('invite')[14]}} {{selfReward}}
-              </template>
-            </p>
-          </div>
-          <div class="my-invite">
-            <MyInvitation
-            :account="account"
-            :platform="platform"
-            @submit="showInviteHandle"
-            @showSelfReward="showSelfRewardHandle"
-            ></MyInvitation>
-          </div>
-        </div>
-        <div class="intro">
-          <h2>{{$t('intro')[0]}}</h2>
-          <div class="question">
-            <span>{{$t('intro')[1]}}</span>
-            <p>{{$t('intro')[2]}}</p>
-            <p>{{$t('intro')[3]}}</p>
-          </div>
-          <div class="question">
-            <span>{{$t('intro')[4]}}</span>
-            <p>{{$t('intro')[5]}}</p>
-            <p>{{$t('intro')[6]}}</p>
-            <p>{{$t('intro')[7]}}</p>
-            <p>{{$t('intro')[8]}}</p>
-          </div>
-          <div class="question">
-            <span>{{$t('intro')[9]}}</span>
-            <p>{{$t('intro')[10]}}</p>
-            <p>{{$t('intro')[11]}}</p>
-            <p>{{$t('intro')[12]}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="h5-wrap" v-if="platform == 1">
-      <header>
-        <div class="header-left">
-          <a :href="homeUrl" class="logo">
-            <img src="../assets/image/logoPhone.png" alt="">
-          </a>
-          <div class="nav">
-            <a :href="homeUrl">{{$t('header')[0]}}</a>
-            <a :href="swapUrl">{{ $t('navs')[1] }}</a>
-            <a :href="poolUrl">{{ $t('navs')[2] }}</a>
-            <a class="active" href="/">{{ $t('navs')[3] }}</a>
-            <a :href="chartUrl">{{ $t('navs')[4] }}</a>
-            <a :href="acrossChainUrl">{{ $t('navs')[7] }}</a>
-            <!-- <a :href="idoUrl">{{ $t('navs')[6] }}</a> -->
-          </div>
-        </div>
-      </header>
-      <div class="content">
-        <div class="info">
-          <h1 class="title">{{$t('invite')[0]}}</h1>
-          <div class="desc">{{$t('desc')[0]}}</div>
-        </div>
-        <div class="rule">
-          <img src="../assets/image/icon-mine.png" alt="">
-          <h3>{{$t('desc')[1]}}</h3>
-          <h3>{{$t('desc')[2]}}</h3>
-          <h3>{{$t('desc')[3]}}</h3>
-          <p>{{$t('desc')[4]}}</p>
-        </div>
-        <div class="count">
-          <div class="block-title">
-            {{$t('inviteDig')[1]}}<span>{{inviteBenefit}}</span> YOU
-            <a class="toast-box">
-              <img src="../assets/image/icon-question-h5.png" alt="">
-              <div>
-                {{$t('inviteDig')[8]}}
-                <i></i>
-              </div>
-            </a>
-            <!-- {{$t('invite')[1]}}<span>{{totalNum}}</span>{{$t('invite')[2]}} -->
-          </div>
-          <div class="num-box">
-            <div class="num-left">
-              <span>{{$t('invite')[3]}}</span>
-              <p>{{levelOneNum}}{{$t('invite')[2]}}</p>
-            </div>
-            <p class="divide" :class="lang == 'en' ? 'divide-en' : ''"></p>
-            <div class="num-right">
-              <span>{{$t('invite')[4]}}</span>
-              <p>{{levelTwoNum}}{{$t('invite')[2]}}</p>
-            </div>
-          </div>
-          <div class="list">
-            <div>{{$t('invite')[5]}}
-              <a class="toast-box">
-                <img src="../assets/image/icon-question-h5.png" alt="">
-                <div>
-                  {{$t('notice')[0]}}
-                  <i></i>
-                </div>
-              </a>
-            </div>
-            <a href="javascript:;" :class="account ? '' : 'disabled'" @click="getInviteUrlHandle">
+            <a href="javascript:;"
+               class="btn-poster"
+               :class="[account ? '' : 'disabled', lang == 'en' ? 'en-version' : '']"
+               @click="getInviteUrlHandle">
               <template v-if="account">
-                {{$t('invite')[7]}}
+                <span>
+                  {{$t('exchangeDig')[4]}}
+                </span>
+                <img src="../assets/image/btn-arrow.png"
+                     alt="">
               </template>
               <template v-else>
                 {{$t('invite')[17]}}
               </template>
             </a>
-            <!-- <p class="warn" v-if="isShowWarn">{{$t('invite')[17]}}</p> -->
           </div>
-          <div class="list">
-            <div>{{$t('invite')[6]}}
-              <a class="toast-box">
-                <img src="../assets/image/icon-question-h5.png" alt="">
-                <div class="activate-tip">
-                  {{$t('notice')[1]}}
-                  <i></i>
-                </div>
-              </a>
+          <div class="info-right">
+            <img src="../assets/image/banner.png"
+                 alt="">
+          </div>
+        </div>
+        <div class="my-benefit">
+          <h3>{{$t('exchangeDig')[5]}}</h3>
+          <div class="benefit-content">
+            <div class="chart">
+              <div id="chart-box"></div>
             </div>
-            <a href="javascript:;" :class="account ? '' : 'disabled'" @click="activateHandle">
-              <template v-if="account">
+            <div class="list-box">
+              <div class="list-top">
+                <div>
+                  <span><template v-if="selfBenefitPlus != '--'">$</template>{{getDecimalsCoinFn(selfBenefitPlus, 2)}}</span>
+                  <p>{{$t('exchangeDig')[7]}}
+                    <a class="toast-box">
+                      <img src="../assets/image/question-pc.png"
+                           alt="">
+                      <div>
+                        {{$t('exchangeDig')[10]}}
+                        <i></i>
+                      </div>
+                    </a>
+                  </p>
+                </div>
+                <div class="second">
+                  <span><template v-if="invitePledgeBenefit != '--'">$</template>{{getDecimalsCoinFn(invitePledgeBenefit, 2)}}</span>
+                  <p>{{$t('exchangeDig')[8]}}</p>
+                </div>
+                <div class="third">
+                  <span><template v-if="inviteExchangeBenefit != '--'">$</template>{{getDecimalsCoinFn(inviteExchangeBenefit, 2)}}</span>
+                  <p>{{$t('exchangeDig')[9]}}</p>
+                </div>
+              </div>
+              <p>{{$t('exchangeDig')[11]}}</p>
+              <a href="javascript:;"
+                 :class="[account ? '' : 'disabled']"
+                 @click="activateHandle">
+                <template v-if="account">
                   {{$t('invite')[8]}}
                 </template>
                 <template v-else>
                   {{$t('index')[0]}}
                 </template>
-            </a>
+              </a>
+            </div>
           </div>
-          <!-- <p class="tip" v-if="isShowTip">{{$t('invite')[12]}}{{userAddress}}{{$t('invite')[13]}}</p> -->
-          <p class="tip" v-if="isShowTip">
-              <template v-if="isInvited">
-                {{$t('invite')[14]}} {{selfReward}}
-              </template>
-            </p>
         </div>
-        <div class="my-invite">
-          <MyInvitation
-          :account="account"
-          :platform="platform"
-          @submit="showInviteHandle"
-          @showSelfReward="showSelfRewardHandle"
-          ></MyInvitation>
+        <div class="my-invitation">
+          <MyInvitation :account="account"
+                        :platform="platform"></MyInvitation>
         </div>
         <div class="intro">
           <h2>{{$t('intro')[0]}}</h2>
@@ -267,37 +127,179 @@
             <p>{{$t('intro')[8]}}</p>
           </div>
           <div class="question">
-            <span>{{$t('intro')[9]}}</span>
+            <p>{{$t('intro')[9]}}</p>
             <p>{{$t('intro')[10]}}</p>
             <p>{{$t('intro')[11]}}</p>
             <p>{{$t('intro')[12]}}</p>
           </div>
+          <div class="question">
+            <p>{{$t('intro')[13]}}</p>
+            <p>{{$t('intro')[14]}}</p>
+            <p>{{$t('intro')[15]}}</p>
+            <p>{{$t('intro')[16]}}</p>
+          </div>
         </div>
-        <MobileFooter
-          :isConnected="isConnected"/>
+      </div>
+    </div>
+    <div class="h5-wrap"
+         v-if="platform == 1">
+      <header>
+        <youswap-header :nowEnv="nowEnv"
+                        :actived="actived"
+                        :chainId="headChainId" />
+      </header>
+      <div class="content">
+        <div class="info">
+          <div class="info-left">
+            <h1 class="title">{{$t('invite')[0]}}</h1>
+            <div class="desc">
+              <p class="ellipsis2">{{$t('exchangeDig')[0]}}</p>
+              <a class="toast-box">
+                <span><i>...</i><strong>{{$t('exchangeDig')[18]}}</strong></span>
+                <div>
+                  {{$t('exchangeDig')[0]}}<br />
+                  {{$t('exchangeDig')[1]}}<br />
+                  {{$t('exchangeDig')[2]}}<br />
+                  {{$t('exchangeDig')[3]}}<br />
+                  <!-- <i></i> -->
+                </div>
+              </a>
+            </div>
+            <a href="javascript:;"
+               class="btn-poster"
+               :class="[account ? '' : 'disabled', lang == 'en' ? 'en-version' : '']"
+               @click="getInviteUrlHandle">
+              <template v-if="account">
+                <span>
+                  {{$t('exchangeDig')[4]}}
+                </span>
+                <img src="../assets/image/btn-arrow.png"
+                     alt="">
+              </template>
+              <template v-else>
+                {{$t('invite')[17]}}
+              </template>
+            </a>
+          </div>
+          <div class="info-right">
+            <img src="../assets/image/banner-h5.png"
+                 alt="">
+          </div>
+        </div>
+        <!-- <div class="rule">
+          <img src="../assets/image/icon-mine.png"
+               alt="">
+          <h3>{{$t('exchangeDig')[1]}}</h3>
+          <h3>{{$t('exchangeDig')[2]}}</h3>
+          <h3>{{$t('exchangeDig')[3]}}</h3>
+        </div> -->
+        <div class="main-content">
+          <div class="my-benefit">
+            <h3>{{$t('exchangeDig')[5]}}</h3>
+            <div class="benefit-content">
+              <div class="chart">
+                <div id="chart-box"></div>
+              </div>
+              <div class="list-box">
+                <div class="list-top">
+                  <div>
+                    <p>{{$t('exchangeDig')[7]}}
+                      <a class="toast-box">
+                        <img src="../assets/image/question-h5.png"
+                             alt="">
+                        <div>
+                          {{$t('exchangeDig')[10]}}
+                          <i></i>
+                        </div>
+                      </a>
+                    </p>
+                    <span><template v-if="selfBenefitPlus != '--'">$</template>{{getDecimalsCoinFn(selfBenefitPlus, 2)}}</span>
+                  </div>
+                  <div class="second">
+                    <p>{{$t('exchangeDig')[8]}}</p>
+                    <span><template v-if="invitePledgeBenefit != '--'">$</template>{{getDecimalsCoinFn(invitePledgeBenefit, 2)}}</span>
+                  </div>
+                  <div class="third">
+                    <p>{{$t('exchangeDig')[9]}}</p>
+                    <span><template v-if="inviteExchangeBenefit != '--'">$</template>{{getDecimalsCoinFn(inviteExchangeBenefit, 2)}}</span>
+                  </div>
+                </div>
+                <p>{{$t('inviteDig')[3]}}
+                  <a class="toast-box">
+                    <img src="../assets/image/question-h5.png"
+                         alt="">
+                    <div>
+                      {{$t('exchangeDig')[11]}}
+                      <i></i>
+                    </div>
+                  </a>
+                </p>
+                <a href="javascript:;"
+                   :class="[account ? '' : 'disabled']"
+                   @click="activateHandle">
+                  <template v-if="account">
+                    {{$t('invite')[8]}}
+                  </template>
+                  <template v-else>
+                    {{$t('index')[0]}}
+                  </template>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="my-invitation">
+            <MyInvitation :account="account"
+                          :platform="platform"></MyInvitation>
+          </div>
+          <div class="intro">
+            <h2>{{$t('intro')[0]}}</h2>
+            <div class="question">
+              <span>{{$t('intro')[1]}}</span>
+              <p>{{$t('intro')[2]}}</p>
+              <p>{{$t('intro')[3]}}</p>
+            </div>
+            <div class="question">
+              <span>{{$t('intro')[4]}}</span>
+              <p>{{$t('intro')[5]}}</p>
+              <p>{{$t('intro')[6]}}</p>
+              <p>{{$t('intro')[7]}}</p>
+              <p>{{$t('intro')[8]}}</p>
+            </div>
+            <div class="question">
+              <p>{{$t('intro')[9]}}</p>
+              <p>{{$t('intro')[10]}}</p>
+              <p>{{$t('intro')[11]}}</p>
+              <p>{{$t('intro')[12]}}</p>
+            </div>
+            <div class="question">
+              <p>{{$t('intro')[13]}}</p>
+              <p>{{$t('intro')[14]}}</p>
+              <p>{{$t('intro')[15]}}</p>
+              <p>{{$t('intro')[16]}}</p>
+            </div>
+          </div>
+        </div>
+        <MobileFooter :isConnected="isConnected" />
       </div>
     </div>
     <template v-if="isShowInviteUrl">
-      <InviteUrl
-        :account="account"
-        :platform="platform" 
-        @cancel="closeInviteUrlHandle"></InviteUrl>
+      <InviteUrl :account="account"
+                 :platform="platform"
+                 @cancel="closeInviteUrlHandle"></InviteUrl>
     </template>
     <div v-show="isShowActivate">
-      <Activate 
-        :platform="platform"
-        :account="account"
-        @updateAccount="updateAccountHandle"
-        @cancel="closeActivateHandle"></Activate>
+      <Activate :platform="platform"
+                :account="account"
+                @updateAccount="updateAccountHandle"
+                @cancel="closeActivateHandle"></Activate>
     </div>
     <div v-show="isShowShare">
-      <ShareDialog
-        :platform="platform"
-        :account="account"
-        :shareAddress="shareAddress"
-        @connect="connectWallet"
-        @inviteSucc="invitedSuccHandle"
-        @cancel="closeShareHandle"></ShareDialog>
+      <ShareDialog :platform="platform"
+                   :account="account"
+                   :shareAddress="shareAddress"
+                   @connect="connectWallet"
+                   @inviteSucc="invitedSuccHandle"
+                   @cancel="closeShareHandle"></ShareDialog>
     </div>
   </div>
 </template>
@@ -317,6 +319,11 @@ import loading from '../components/loading';
 import MobileFooter from '../components/MobileFooter'
 
 import { request, gql } from 'graphql-request';
+import Cookies from 'js-cookie'
+import * as echarts from 'echarts'
+
+import abiMining from '../abi-mining.json'
+import { getDecimalsCoin } from '../utils'
 
 
 export default {
@@ -347,27 +354,33 @@ export default {
       isShowWarn: false,
       account: '',
       balance: '',
-      levelOneNum: '--',
-      levelTwoNum: '--',
-      totalNum: 0,
       dataList: [],
       loading: false,
-      homeUrl: process.env.VUE_APP_HOME_URL,
-      idoUrl: process.env.VUE_APP_IDO_URL,
-      swapUrl: process.env.VUE_APP_SWAP_URL,
-      poolUrl: process.env.VUE_APP_POOL_URL,
-      chartUrl: process.env.VUE_APP_CHART_URL,
-      acrossChainUrl: process.env.VUE_APP_ACROSSCHAIN_URL,
-      selfReward: 0
+      actived: 2,
+      nowEnv: process.env.VUE_APP_ENV,
+      pledgeBenefit: 0,
+      invitePledgeBenefit: '--',
+      inviteExchangeBenefit: '--',
+      inviteExchangeBenefitBonus: '--',
+      YouPrice: '',
+      headChainId: '128'
     }
   },
   computed: {
+    selfBenefitPlus () {
+      if (this.invitePledgeBenefit != '--' && this.inviteExchangeBenefit != '--' && this.inviteExchangeBenefitBonus != '--' && this.YouPrice) {
+        let num = this.pledgeBenefit * this.YouPrice / 20 + this.inviteExchangeBenefitBonus
+        this.initChart(num, this.invitePledgeBenefit, this.inviteExchangeBenefit)
+        return num
+      } else {
+        return '--'
+      }
+    },
     ...mapState({
-      inviteBenefit: state => state.inviteBenefit,
-      pledgeBenefit: state => state.pledgeBenefit
+      chainId: state => state.chainId
     })
   },
-  created() {
+  created () {
     let platform = this.isPC()
     if (platform) {
       this.platform = 2
@@ -376,18 +389,23 @@ export default {
     }
   },
   async mounted () {
+    // 连接钱包
+    bus.$on('connectWallet', this.connectWallet)
     // 激活成功之后更新邀请数据
     bus.$on('showLoading', this.showLoadingHandle)
     bus.$on('closeLoading', this.closeLoadingHandle)
+
     this.initLangHandle()
-    this.checkNetwork()
+    setTimeout(() => {
+      this.checkNetwork()
+    }, 500)
     this.accountChanged()
   },
   methods: {
     /**
      * 判断是否h5
      */
-    isPC() {
+    isPC () {
       var userAgentInfo = navigator.userAgent.toLowerCase();
       var Agents = ['android', 'iphone', 'symbianOS', 'windows phone', 'ipad', 'ipod'];
       var flag = true;
@@ -399,7 +417,7 @@ export default {
     /**
      * 格式化钱包地址
      */
-    shortenAddress(address, chars, type) {
+    shortenAddress (address, chars, type) {
       let label = '...'
       if (type == 1) {
         label = '...'
@@ -408,19 +426,25 @@ export default {
       }
       return `${address.substring(0, chars)}${label}${address.substring(42 - chars)}`
     },
-    showLoadingHandle() {
+    showLoadingHandle () {
       this.loading = true
     },
-    closeLoadingHandle() {
+    closeLoadingHandle () {
       this.loading = false
+    },
+    /**
+     * 截取小数精度
+     */
+    getDecimalsCoinFn (number, decimal) {
+      return getDecimalsCoin(number, decimal)
     },
     /**
      * 设置初始语言
      */
-    initLangHandle() {
+    initLangHandle () {
       let lang = 'en'
       let langTxt = 'EN'
-      const localLang = localStorage.getItem('lang')
+      const localLang = Cookies.get('lang') && typeof Cookies.get('lang') === 'string' ? Cookies.get('lang').toLowerCase() : ''
       if (localLang) {
         if (localLang == 'zh') {
           lang = 'zh'
@@ -435,26 +459,26 @@ export default {
       this.$i18n.locale = lang
       this.lang = lang
       this.langTxt = langTxt
-      localStorage.setItem('lang', lang)
+      Cookies.set('lang', lang.toUpperCase(), { domain: `${process.env.VUE_APP_DOMAIN}` })
       document.title = this.$t('invite')[0]
     },
-    getRequest() {
+    getRequest () {
       let url = location.href; //获取url中"?"符后的字串
       let theRequest = {};
       if (url.indexOf('?') !== -1) {
-          let ind = url.indexOf('?');
-          let str = url.substr(ind + 1);
-          let strs = str.split('&');
-          for (var i = 0; i < strs.length; i++) {
-              theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
-          }
+        let ind = url.indexOf('?');
+        let str = url.substr(ind + 1);
+        let strs = str.split('&');
+        for (var i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
+        }
       }
       return theRequest;
     },
     /**
      * 检查邀请链接
      */
-    checkShare() {
+    checkShare () {
       let shareAddress = this.getRequest().address
       if (shareAddress) {
         this.shareAddress = shareAddress
@@ -482,6 +506,7 @@ export default {
                   this.isShowTip = true
                 }
               }
+              this.getYouPrice()
             }).catch((err) => {
               console.log(err)
             })
@@ -501,11 +526,12 @@ export default {
             }
           `
           request(endpoint, query).then((res) => {
-            if (res.relationShip && res.relationShip.owner  && res.relationShip.owner != '0x0000000000000000000000000000000000000000') {
+            if (res.relationShip && res.relationShip.owner && res.relationShip.owner != '0x0000000000000000000000000000000000000000') {
               this.userAddress = this.shortenAddress(res.relationShip.owner, 4)
               this.isInvited = true
               this.isShowTip = true
             }
+            this.getYouPrice()
           }).catch((err) => {
             console.log(err)
           })
@@ -516,10 +542,10 @@ export default {
       //   console.log(1)
       // }
     },
-    hideLangHandle() {
+    hideLangHandle () {
       this.isShowLang = false
     },
-    changeLangHandle() {
+    changeLangHandle () {
       let lang = ''
       let langTxt = ''
 
@@ -530,16 +556,18 @@ export default {
         lang = "en"
         langTxt = "EN"
       }
-      this.$i18n.locale = lang
+      // this.$i18n.locale = lang
       this.lang = lang
       this.langTxt = langTxt
+      Cookies.set('lang', lang.toUpperCase(), { domain: `${process.env.VUE_APP_DOMAIN}` })
       localStorage.setItem('lang', lang)
       document.title = this.$t('invite')[0]
+      location.reload();
     },
-    sendRequest(param, cb) {
+    sendRequest (param, cb) {
       let provider = new ethers.providers.Web3Provider(window.ethereum)
-      provider.provider.sendAsync(param, function(err, res){
-        if (!err && res.error) err = new Error('EthQuery - RPC Error - '+res.error.message)
+      provider.provider.sendAsync(param, function (err, res) {
+        if (!err && res.error) err = new Error('EthQuery - RPC Error - ' + res.error.message)
         if (err) return cb(err)
         cb(null, res)
       })
@@ -547,16 +575,17 @@ export default {
     /**
      * 检测网络
      */
-    checkNetwork() {
+    checkNetwork () {
       if (!window.ethereum) {
         this.$message.error(this.$t('connect')[2])
         return
       }
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       provider.getNetwork().then(Network => {
-        if (Network.chainId != process.env.VUE_APP_HECO_CHAINID) {
+        if (Network.chainId.toString() != process.env.VUE_APP_HECO_CHAINID) {
           this.$message.error(this.$t('index')[6])
           this.network = false
+          this.initChart('--')
         } else {
           this.network = true
           this.initCoin(Network.chainId)
@@ -567,7 +596,7 @@ export default {
     /**
      * 初始化币种
      */
-    initCoin(chainId) {
+    initCoin (chainId) {
       let coin = 'HT'
       if (chainId == process.env.VUE_APP_CHAINID) {
         coin = 'ETH'
@@ -579,7 +608,7 @@ export default {
     /**
      * 添加heco公链
      */
-    addHecoChain() {
+    addHecoChain () {
       let param = {
         method: "wallet_addEthereumChain",
         params: [{
@@ -607,17 +636,19 @@ export default {
     /**
      * 初始化账户
      */
-    initAccount() {
+    initAccount () {
       let that = this
       let param = {
         'method': 'eth_accounts'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result && res.result.length) {
           that.account = res.result[0]
           that.$store.commit('setAccount', res.result[0])
           that.isConnected = true
           that.initBalance()
+        } else {
+          that.initChart('--')
         }
         that.checkShare()
       })
@@ -625,13 +656,13 @@ export default {
     /**
      * 初始化余额
      */
-    initBalance() {
+    initBalance () {
       let that = this
       let param = {
         params: [this.account],
         'method': 'eth_getBalance'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result) {
           that.balance = (parseInt(res.result, 16) / 1e18).toFixed(3)
         }
@@ -640,8 +671,9 @@ export default {
     /**
      * 切换账户之后的回调
      */
-    accountChanged() {
+    accountChanged () {
       let that = this
+      if (!window.ethereum) return
       window.ethereum.on('accountsChanged', (accounts) => {
         // Handle the new accounts, or lack thereof.
         // "accounts" will always be an array, but it can be empty.
@@ -671,76 +703,38 @@ export default {
       // console.log(window.ethereum.isMetaMask)
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_requestAccounts' })
-        .then((accounts) => {
-          if (accounts.length === 0) {
-            console.log('Please connect to MetaMask.');
-          } else {
-            this.addHecoChain()
-          }
-        })
-        .catch((err) => {
-          if (err.code === 4001) {
-            console.log('Please connect to MetaMask.');
-          } else {
-            console.error(err);
-          }
-        })
+          .then((accounts) => {
+            if (accounts.length === 0) {
+              console.log('Please connect to MetaMask.');
+            } else {
+              this.addHecoChain()
+            }
+          })
+          .catch((err) => {
+            if (err.code === 4001) {
+              console.log('Please connect to MetaMask.');
+            } else {
+              console.error(err);
+            }
+          })
       } else {
-        console.log('')
+        window.open('https://metamask.io/', '_self')
       }
     },
-    showInviteHandle(data) {
-      this.levelOneNum = data ? data.one : 0
-      this.levelTwoNum = data ? data.two : 0
-      this.totalNum = data ? data.total : 0
-    },
-    showSelfRewardHandle(data) {
-      this.selfReward = data
-    },
-    /**
-     * graph请求邀请数量
-     */
-    getInviteData() {
-      const endpoint = process.env.VUE_APP_API_GRAPHQL_URL
-      const query = gql`
-        {
-          relationShips(first: 7 skip: 0, where: {owner: "${this.account.toLowerCase()}"}) {
-            address
-            type0
-          }
-          counts(where: {id: "${this.account.toLowerCase()}"}){
-            total
-            one
-            two
-          }
-        }
-      `
-      request(endpoint, query).then((res) => {
-        let data = res
-        // console.log(data)
-        if (data.counts.length) {
-          this.levelOneNum = data.counts[0].one || 0
-          this.levelTwoNum = data.counts[0].two || 0
-          this.totalNum = data.counts[0].total || 0
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    activateHandle() {
+    activateHandle () {
       if (!this.account) {
         this.connectWallet()
         return
       }
       this.isShowActivate = true
     },
-    updateAccountHandle() {
+    updateAccountHandle () {
       this.initBalance()
     },
-    closeActivateHandle() {
+    closeActivateHandle () {
       this.isShowActivate = false
     },
-    funcUrlDel(paramKey){
+    funcUrlDel (paramKey) {
       var url = window.location.href;    //页面url
       var urlParam = window.location.search.substr(1);   //页面参数
       var beforeUrl = url.substr(0, url.indexOf("?"));   //页面主地址（参数之前地址）
@@ -748,28 +742,28 @@ export default {
 
       var arr = new Array();
       if (urlParam != "") {
-          var urlParamArr = urlParam.split("&"); //将参数按照&符分成数组
-          for (var i = 0; i < urlParamArr.length; i++) {
-              var paramArr = urlParamArr[i].split("="); //将参数键，值拆开
-              //如果键雨要删除的不一致，则加入到参数中
-              if (paramArr[0] != paramKey) {
-                  arr.push(urlParamArr[i]);
-              }
+        var urlParamArr = urlParam.split("&"); //将参数按照&符分成数组
+        for (var i = 0; i < urlParamArr.length; i++) {
+          var paramArr = urlParamArr[i].split("="); //将参数键，值拆开
+          //如果键雨要删除的不一致，则加入到参数中
+          if (paramArr[0] != paramKey) {
+            arr.push(urlParamArr[i]);
           }
+        }
       }
       if (arr.length > 0) {
-          nextUrl = "?" + arr.join("&");
+        nextUrl = "?" + arr.join("&");
       }
       url = beforeUrl + nextUrl;
       return url;
     },
-    closeShareHandle(data) {
+    closeShareHandle (data) {
       this.isShowShare = false
       if (data) {
         window.location.href = this.funcUrlDel('address')
       }
     },
-    invitedSuccHandle() {
+    invitedSuccHandle () {
       this.userAddress = this.shortenAddress(this.shareAddress, 4)
       this.isInvited = true
       this.isShowTip = true
@@ -778,7 +772,7 @@ export default {
     //   this.userAddress = this.shortenAddress(data, 4)
     //   this.isShowTip = false
     // },
-    getInviteUrlHandle() {
+    getInviteUrlHandle () {
       if (!this.account) {
         this.connectWallet()
         // this.isShowWarn = true
@@ -786,8 +780,235 @@ export default {
       }
       this.isShowInviteUrl = true
     },
-    closeInviteUrlHandle() {
+    closeInviteUrlHandle () {
       this.isShowInviteUrl = false
+    },
+    // 获取YOU的折UDST价格
+    getYouPrice () {
+      const endpoint = process.env.VUE_APP_MING_ROPSTEN
+      const query = gql`
+        {
+          token(id: "${process.env.VUE_APP_YOU_ADDRESS.toLowerCase()}") {
+            derivedETH
+          }
+          bundle(id: "1") {
+            ethPrice
+          } 
+        }`
+      request(endpoint, query).then((res) => {
+        if (res.bundle) {
+          this.YouPrice = res.bundle.ethPrice * res.token.derivedETH
+          console.log(this.YouPrice)
+          this.getExchangeBenefit()
+          this.getExchangeBenefitBonus()
+          this.getInviteBenefit()
+        }
+      })
+    },
+    /**
+     * 获取挖矿合约实例
+     */
+    getContract () {
+      const contractAddress = process.env.VUE_APP_MINING_CONTRACT
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const contract = new ethers.Contract(contractAddress, abiMining, provider)
+      let contractWithSigner = contract.connect(provider.getSigner())
+      return contractWithSigner
+    },
+    /**
+     * 获取质押收益
+     */
+    async getInviteBenefit () {
+      let contract = await this.getContract()
+      contract.rewardInfos(this.account).then(data => {
+        let inviteBenefit = ethers.utils.formatUnits(data.inviteReward.toString(), 6)
+        let pledgeBenefit = ethers.utils.formatUnits(data.pledgeReward.toString(), 6)
+        let dis
+        console.log(inviteBenefit)
+        console.log(pledgeBenefit)
+        this.pledgeBenefit = pledgeBenefit
+        if (this.isInvited) {
+          dis = inviteBenefit - pledgeBenefit / 20
+        } else {
+          dis = inviteBenefit
+        }
+        this.invitePledgeBenefit = dis > 0 ? dis : 0
+
+        this.invitePledgeBenefit = this.invitePledgeBenefit * this.YouPrice
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    /**
+     * 获取邀请交易收益
+     */
+    getExchangeBenefit () {
+      let param = {
+        address: this.account,
+        chain: 'heco'
+      }
+      this.$post(process.env.VUE_APP_INVITE_API + 'v1/airdrop/Friend', param).then(res => {
+        this.inviteExchangeBenefit = isNaN(res.friend) ? '--' : res.friend
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    /**
+     * 获取交易收益加成
+     */
+    getExchangeBenefitBonus () {
+      let param = {
+        address: this.account,
+        chain: 'heco'
+      }
+      this.$post(process.env.VUE_APP_INVITE_API + 'v1/airdrop/Bonus', param).then(res => {
+        this.inviteExchangeBenefitBonus = isNaN(res.bonus) ? '--' : res.bonus * this.YouPrice
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    initChart (num1, num2, num3) {
+      var chartDom = document.getElementById('chart-box');
+      var myChart = echarts.init(chartDom);
+      var option;
+      var total;
+
+      if (isNaN(num1) || isNaN(num2) || isNaN(num3)) {
+        option = {
+          title: {
+            text: '--',
+            subtext: this.$t('exchangeDig')[6],
+            x: 'center',
+            y: this.platform == 2 ? '40%' : '38%',
+            textStyle: {
+              fontFamily: 'DINPro-Medium, DINPro'
+            },
+            subtextStyle: {
+              color: '#6A7D8A',
+              width: this.platform == 2 ? '200' : '80',
+              overflow: 'breakAll'
+            },
+          },
+          color: [
+            '#dcdfe6',
+          ],
+          tooltip: {
+            trigger: 'item',
+            formatter: () => {
+              return this.$t('exchangeDig')[6] + ': --';
+            },
+            position: 'inside',
+            textStyle: {
+              fontSize: 12
+            },
+          },
+          series: [
+            {
+              type: 'pie',
+              radius: ['50%', '70%'],
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 5
+              },
+              minAngle: 7,
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+                { value: 0, name: this.$t('exchangeDig')[6] },
+              ]
+            }
+          ]
+        };
+      } else {
+        total = parseFloat(num1, 10) + parseFloat(num2, 10) + parseFloat(num3, 10)
+        option = {
+          title: {
+            text: '$' + this.getDecimalsCoinFn(total, 2),
+            subtext: this.$t('exchangeDig')[6],
+            x: 'center',
+            y: this.platform == 2 ? '40%' : '38%',
+            textStyle: {
+              fontFamily: 'DINPro-Medium, DINPro'
+            },
+            subtextStyle: {
+              color: '#6A7D8A',
+              width: this.platform == 2 ? '200' : '80',
+              overflow: 'breakAll'
+            },
+          },
+          color: [
+            '#FE535B',
+            '#FB9410',
+            '#35BDB1'
+          ],
+          tooltip: {
+            trigger: 'item',
+            formatter: "{b} : {d}%",
+            position: 'inside',
+            textStyle: {
+              fontSize: 12
+            },
+          },
+          series: [
+            {
+              type: 'pie',
+              radius: ['50%', '70%'],
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 5
+              },
+              minAngle: 7,
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+                { value: num1 / total, name: this.$t('exchangeDig')[7] },
+                { value: num2 / total, name: this.$t('exchangeDig')[8] },
+                { value: num3 / total, name: this.$t('exchangeDig')[9] }
+              ]
+            }
+          ]
+        };
+        if (total <= 0) {
+          option.color = [
+            '#35BDB1'
+          ];
+          option.series = [
+            {
+              type: 'pie',
+              radius: ['50%', '70%'],
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 5
+              },
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+                { value: 0, name: this.$t('exchangeDig')[6] },
+              ]
+            }
+          ];
+        }
+      }
+
+      option && myChart.setOption(option);
     }
   }
 }
@@ -795,616 +1016,603 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .invite {
+.invite {
+  height: 100%;
+  background-color: #f8fcff;
+  .pc-wrap {
+    width: 100%;
     height: 100%;
-    .pc-wrap {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: url("../assets/image/bg-pc-new.png") 0 0 no-repeat;
+    background-size: 100% 400px;
+    header {
+      z-index: 1;
       display: flex;
-      flex-direction: column;
-      background: #F8FCFF;
-      background: url('../assets/image/bg-pc.png') 0 0 no-repeat;
-      background-size: 100% 381px;
-      header {
-        z-index: 1;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px 0 30px;
+      font-size: 16px;
+      .header-left {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px 30px 0 30px;
-        font-size: 16px;
-        .header-left {
-          display: flex;
-          justify-content: center;
-          .logo {
-            position: relative;
-            top: 3px;
-          }
-          .nav {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-            a {
-              font-size: 14px;
-              font-weight: 600;
-              color: #BFC6CB;
-              margin: 0 20px;
-            }
-            a:hover {
-              color: #fff;
-            }
-            .active {
-              color: #fff;
-            }
-          }
+        justify-content: center;
+        .logo {
+          position: relative;
+          top: 3px;
         }
-        .header-right {
+        .nav {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          .connect {
-            height: 38px;
-            line-height: 38px;
-            text-align: center;
-            padding: 0 15px;
-            background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #FFFFFF;
-            cursor: pointer;
+          margin-left: 20px;
+          a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #bfc6cb;
+            margin: 0 20px;
           }
-          .connect:hover {
-            opacity: .9;
+          a:hover {
+            color: #fff;
           }
-          .account {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 38px;
-            background: #fff;
-            border-radius: 12px;
-            .account-num {
-              width: 92px;
-              padding: 0 8px 0 12px;
-              box-sizing: border-box;
-              font-size: 16px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #06263C;
-            }
-            .address {
-              width: 112px;
-              height: 38px;
-              line-height: 38px;
-              padding: 0 16px 0 12px;
-              box-sizing: border-box;
-              box-shadow: 0px 0px 4px 0px rgba(157, 157, 158, 0.5);
-              background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-              border-radius: 12px;
-              font-size: 16px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #fff;
-            }
-            .loading-box {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 99px;
-              height: 38px;
-              padding: 0 15px;
-              background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-              border-radius: 12px;
-              box-sizing: border-box;
-              span {
-                font-size: 16px;
-                font-family: PingFangSC-Medium, PingFang SC;
-                font-weight: 500;
-                color: #FFFFFF;
-                line-height: 38px;
-              }
-            }
-          }
-          .language-wrapper {
-            margin-left: 10px;
-            width: 38px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #06263C;
-            font-weight: 500;
-            background-color: #FFFDFA;
-            border-radius: 10px;
-            cursor: pointer;
-          }
-          .language-wrapper:hover {
-            opacity: 0.8;
+          .active {
+            color: #fff;
           }
         }
       }
-      .content {
-        flex: 1;
-        .info {
-          height: 328px;
-          padding-top: 67px;
+      .header-right {
+        padding: 15px 0 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .connect {
+          height: 38px;
+          line-height: 38px;
+          text-align: center;
+          padding: 0 15px;
+          background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+          border-radius: 10px;
+          font-size: 16px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #ffffff;
+          cursor: pointer;
+        }
+        .connect:hover {
+          opacity: 0.9;
+        }
+        .account {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 38px;
+          background: #fff;
+          border-radius: 12px;
+          .account-num {
+            width: 92px;
+            padding: 0 8px 0 12px;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+          }
+          .address {
+            width: 112px;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 16px 0 12px;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 4px 0px rgba(157, 157, 158, 0.5);
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #fff;
+          }
+          .loading-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 99px;
+            height: 38px;
+            padding: 0 15px;
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+            border-radius: 12px;
+            box-sizing: border-box;
+            span {
+              font-size: 16px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              font-weight: 500;
+              color: #ffffff;
+              line-height: 38px;
+            }
+          }
+        }
+        .language-wrapper {
+          margin-left: 10px;
+          width: 38px;
+          height: 38px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          color: #06263c;
+          font-weight: 500;
+          background-color: #fffdfa;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+        .language-wrapper:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+    .content {
+      flex: 1;
+      .info {
+        width: 1200px;
+        height: 351px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        .info-left {
+          width: 440px;
+          padding: 59px 0 0 0;
           box-sizing: border-box;
-          width: 1200px;
-          margin: 0 auto;
           .title {
-            font-size: 36px;
+            font-size: 40px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
-            color: #FFFFFF;
+            color: #ffffff;
             line-height: 50px;
           }
           .desc {
             margin-top: 16px;
-            width: 514px;
-            font-size: 14px;
+            font-size: 16px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #FFFFFF;
-            line-height: 24px;
+            color: rgba(228, 232, 234, 0.8);
+            line-height: 22px;
+          }
+          .btn-poster {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 30px;
+            width: 260px;
+            height: 50px;
+            background: linear-gradient(72deg, #34bdb0 0%, #0c979c 100%);
+            border-radius: 35px;
+            padding: 0 30px;
+            box-sizing: border-box;
+            span {
+              font-size: 20px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              color: #ffffff;
+            }
+            img {
+              width: 30px;
+              height: 30px;
+            }
+          }
+          .btn-poster:hover {
+            opacity: 0.9;
+          }
+          .disabled {
+            background: rgba(255, 255, 255, 0.5);
+            color: rgba(6, 38, 60, 1);
+            justify-content: center;
           }
         }
-        .about {
-          width: 1200px;
-          margin: 33px auto 20px;
+        .info-right {
+          img {
+            width: 572px;
+            height: 358px;
+          }
+        }
+      }
+      .my-benefit {
+        width: 1200px;
+        height: 405px;
+        padding: 30px;
+        box-sizing: border-box;
+        margin: 30px auto 0;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #f0f2f6;
+        h3 {
+          font-size: 18px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          color: #06263c;
+          line-height: 25px;
+        }
+        .benefit-content {
+          margin-top: 30px;
           display: flex;
           justify-content: space-between;
-          .count, .my-invite {
-            width: 590px;
-            height: 565px;
-            padding: 40px 30px 30px;
-            box-sizing: border-box;
-            background: #FFFFFF;
-            box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
-            border-radius: 20px;
-            .block-title {
-              font-size: 26px;
-              font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
-              color: #06263C;
-              span {
-                margin: 0 5px 0 15px;
-                font-size: 36px;
-                font-family: DINPro-Bold, DINPro;
-                font-weight: bold;
-                line-height: 36px;
-              }
-              .toast-box {
-                position: relative;
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                margin-left: 6px;
-                img {
-                  width: 20px;
-                  height: 20px;
-                }
-                div {
-                  position: absolute;
-                  left: -11px;
-                  bottom: 18px;
-                  width: 316px;
-                  background: #FFFFFF;
-                  box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
-                  border-radius: 10px;
-                  padding: 10px;
-                  font-size: 12px;
-                  color: rgba(6, 38, 60, 0.5);
-                  display: none;
-                  i {
-                    position: absolute;
-                    bottom: -12px;
-                    left: 15px;
-                    border: 6px solid transparent;
-                    border-top: 8px solid #fff;
-                    width: 0;
-                    height: 0px;
-                  }
-                }
-              }
-              .toast-box:hover {
-                div {
-                  display: block;
-                }
-              }
+          .chart {
+            margin-left: 62px;
+            width: 300px;
+            height: 300px;
+            position: relative;
+            #chart-box {
+              position: absolute;
+              top: -15px;
+              width: 300px;
+              height: 300px;
             }
           }
-          .count {
-            .num-box {
-              margin: 30px 0 40px;
+          .list-box {
+            width: 640px;
+            .list-top {
+              height: 125px;
               display: flex;
               justify-content: space-between;
-              &> div {
-                width: 260px;
-                height: 87px;
-                padding: 20px 0 0 30px;
+              & > div {
+                width: 200px;
+                height: 125px;
+                background: #ffffff;
+                box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.08);
+                border-radius: 20px;
+                padding: 30px 0 0;
                 box-sizing: border-box;
-                background: rgba(4, 67, 163, .06);
-                border-radius: 11px;
+                text-align: center;
                 span {
-                  font-size: 14px;
-                  font-family: PingFangSC-Regular, PingFang SC;
-                  font-weight: 400;
-                  color: #06263C;
-                  line-height: 20px;
-                }
-                p {
-                  margin-top: 5px;
-                  font-size: 16px;
+                  font-size: 26px;
                   font-family: DINPro-Medium, DINPro;
                   font-weight: 500;
-                  color: #06263C;
-                  line-height: 21px;
+                  color: #fe535b;
+                  line-height: 33px;
                 }
-              }
-            }
-            .list {
-              margin-bottom: 30px;
-              &> div {
-                display: flex;
-                align-items: center;
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #06263C;
-                line-height: 20px;
-                .toast-box {
-                  position: relative;
-                  display: block;
-                  width: 20px;
-                  height: 20px;
-                  margin-left: 6px;
-                  img {
-                    width: 20px;
-                    height: 20px;
-                  }
-                  div {
-                    position: absolute;
-                    left: -11px;
-                    bottom: 26px;
-                    width: 316px;
-                    background: #FFFFFF;
-                    box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
-                    border-radius: 10px;
-                    padding: 10px;
-                    font-size: 12px;
-                    color: rgba(6, 38, 60, 0.5);
-                    display: none;
-                    i {
+                p {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin-top: 12px;
+                  font-size: 14px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  color: #6a7d8a;
+                  .toast-box {
+                    position: relative;
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+                    margin-left: 6px;
+                    img {
+                      width: 14px;
+                      height: 14px;
+                    }
+                    div {
                       position: absolute;
-                      bottom: -12px;
-                      left: 15px;
-                      border: 6px solid transparent;
-                      border-top: 8px solid #fff;
-                      width: 0;
-                      height: 0px;
+                      left: -14px;
+                      bottom: 21px;
+                      width: 316px;
+                      background: #ffffff;
+                      box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
+                      border-radius: 10px;
+                      padding: 10px;
+                      font-size: 12px;
+                      color: rgba(6, 38, 60, 0.5);
+                      display: none;
+                      text-align: left;
+                      line-height: 20px;
+                      i {
+                        position: absolute;
+                        bottom: -12px;
+                        left: 15px;
+                        border: 6px solid transparent;
+                        border-top: 8px solid #fff;
+                        width: 0;
+                        height: 0px;
+                      }
                     }
                   }
-                  .activate-tip {
-                    bottom: 25px;
-                  }
-                }
-                .toast-box:hover {
-                  div {
-                    display: block;
+                  .toast-box:hover {
+                    div {
+                      display: block;
+                    }
                   }
                 }
               }
-              &> a {
-                display: block;
-                margin-top: 10px;
-                width: 360px;
-                height: 45px;
-                line-height: 45px;
-                text-align: center;
-                background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-                border-radius: 10px;
-                font-size: 16px;
-                font-family: PingFangSC-Medium, PingFang SC;
-                font-weight: 500;
-                color: #FFFFFF;
-                cursor: pointer;
+              & > div.second {
+                span {
+                  color: #fb9410;
+                }
               }
-              &> a:hover {
-                opacity: .9;
-              }
-              &> a.disabled {
-                background: rgba(6,38,60, .06);
-                color: rgba(6, 38, 60, .5);
-              }
-              .warn {
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                color: #FE535B;
-                line-height: 20px;
+              & > div.third {
+                span {
+                  color: #35bdb1;
+                }
               }
             }
-            .tip {
+            & > p {
+              margin: 30px 0 20px;
               font-size: 14px;
               font-family: PingFangSC-Regular, PingFang SC;
-              color: #06263C;
+              font-weight: 400;
+              color: #6a7d8a;
               line-height: 20px;
-              opacity: .5;
+            }
+            & > a {
+              display: block;
+              width: 640px;
+              height: 40px;
+              line-height: 40px;
+              text-align: center;
+              background: linear-gradient(72deg, #34bdb0 0%, #0c979c 100%);
+              border-radius: 10px;
+              font-size: 16px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              color: #ffffff;
+            }
+            & > a:hover {
+              opacity: 0.9;
+            }
+            & > a.disabled {
+              background: rgba(6, 38, 60, 0.06);
+              color: rgba(6, 38, 60, 0.5);
             }
           }
         }
-        .intro {
-          width: 1200px;
-          margin: 0 auto 90px;
-          padding: 30px;
-          background: #FFFFFF;
-          box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
-          border-radius: 20px;
-          h2 {
-            font-size: 26px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #06263C;
-            line-height: 37px;
-          }
-          .question {
-            margin-top: 20px;
-            font-size: 14px;
-            font-family: Avenir, Helvetica, Arial, sans-serif;
-            font-weight: 500;
-            color: rgba(6, 38, 60, .5);
-            line-height: 24px;
+      }
+      .my-invitation {
+        width: 1200px;
+        max-height: 510px;
+        padding: 30px 0 30px;
+        box-sizing: border-box;
+        margin: 30px auto 30px;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #f0f2f6;
+      }
+      .intro {
+        width: 1200px;
+        margin: 0 auto 90px;
+        padding: 30px;
+        border: 1px solid #f0f2f6;
+        background: #ffffff;
+        border-radius: 20px;
+        h2 {
+          font-size: 18px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          color: #06263c;
+          line-height: 25px;
+        }
+        .question {
+          margin-top: 20px;
+          font-size: 14px;
+          font-family: Avenir, Helvetica, Arial, sans-serif;
+          font-weight: 500;
+          color: rgba(6, 38, 60, 0.5);
+          line-height: 24px;
+          span {
+            color: #385163;
           }
         }
       }
     }
-    .h5-wrap {
-      width: 100%;
-      position: relative;
+  }
+  .h5-wrap {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(90deg, #122363 0%, #01091f 100%);
+    header {
+      padding: 0 20px;
+      z-index: 1;
       display: flex;
-      flex-direction: column;
-      background: rgba(6, 38, 60, 1);
-      background: url('../assets/image/bg-h5.png') 0 0 no-repeat;
-      background-size: 100% 688px;
-      background-color: rgba(6, 38, 60, 1);
-      padding: 31px 20px 0;
-      header {
-        z-index: 1;
+      align-items: center;
+      justify-content: space-between;
+      .header-left {
         display: flex;
+        justify-content: center;
         align-items: center;
-        justify-content: space-between;
-        .header-left {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          .logo {
+        .logo {
+          width: 22px;
+          height: 22px;
+          img {
             width: 22px;
             height: 22px;
-            img {
-              width: 22px;
-              height: 22px;
-            }
-          }
-          .nav {
-            display: flex;
-            align-items: center;
-            a {
-              font-size: 14px;
-              color: #BFC6CB;
-              margin-left: 13px;
-              opacity: .6;
-              font-family: PingFangSC-Regular, PingFang SC;
-            }
-            a:hover {
-              color: #fff;
-            }
-            .active {
-              color: #fff;
-            }
           }
         }
-        .header-right {
+        .nav {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          .account {
+          a {
+            font-size: 14px;
+            color: #bfc6cb;
+            margin-left: 13px;
+            opacity: 0.6;
+            font-family: PingFangSC-Regular, PingFang SC;
+          }
+          a:hover {
+            color: #fff;
+          }
+          .active {
+            color: #fff;
+          }
+        }
+      }
+      .header-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .account {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 36px;
+          background: #ffffff;
+          border-radius: 6px;
+          .connect {
+            height: 36px;
+            line-height: 36px;
+            padding: 0 3px;
+            box-sizing: border-box;
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+            box-shadow: 0px 0px 2px 0px rgba(157, 157, 158, 0.5);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #fff;
+            text-align: center;
+          }
+          .account-num {
+            width: 86px;
+            padding: 0 6px;
+            box-sizing: border-box;
+            font-size: 12px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+          }
+          .loading-box {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            height: 36px;
-            background: #FFFFFF;
+            justify-content: center;
+            width: 99px;
+            height: 38px;
+            padding: 0 15px;
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
             border-radius: 6px;
-            .connect {
-              height: 36px;
-              line-height: 36px;
-              padding: 0 3px;
-              box-sizing: border-box;
-              background: linear-gradient(
-        80deg
-        , #35BEB1 0%, #0C979C 100%);
-              box-shadow: 0px 0px 2px 0px rgba(157, 157, 158, 0.5);
-              border-radius: 6px;
-              font-size: 12px;
-              font-family: DINPro-Medium, DINPro;
+            box-sizing: border-box;
+            span {
+              font-size: 16px;
+              font-family: PingFangSC-Medium, PingFang SC;
               font-weight: 500;
-              color: #fff;
-              text-align: center;
-            }
-            .account-num {
-              width: 86px;
-              padding: 0 6px;
-              box-sizing: border-box;
-              font-size: 12px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #06263C;
-            }
-            .loading-box {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 99px;
-              height: 38px;
-              padding: 0 15px;
-              background: linear-gradient(
-          80deg
-          , #35BEB1 0%, #0C979C 100%);
-              border-radius: 6px;
-              box-sizing: border-box;
-              span {
-                font-size: 16px;
-                font-family: PingFangSC-Medium, PingFang SC;
-                font-weight: 500;
-                color: #FFFFFF;
-                line-height: 38px;
-              }
-            }
-            .address {
-              height: 36px;
-              line-height: 36px;
-              padding: 0 5px;
-              box-sizing: border-box;
-              box-shadow: 0px 0px 4px 0px rgba(157, 157, 158, 0.5);
-              background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-              border-radius: 6px;
-              font-size: 12px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #fff;
+              color: #ffffff;
+              line-height: 38px;
             }
           }
-          .lang-box {
-            position: relative;
-            margin-left: 10px;
-            cursor: pointer;
-            text-align: center;
-            span {
-              width: 67px;
+          .address {
+            height: 36px;
+            line-height: 36px;
+            padding: 0 5px;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 4px 0px rgba(157, 157, 158, 0.5);
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #fff;
+          }
+        }
+        .lang-box {
+          position: relative;
+          margin-left: 10px;
+          cursor: pointer;
+          text-align: center;
+          span {
+            width: 67px;
+            height: 36px;
+            display: block;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 3px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #06263c;
+            line-height: 36px;
+          }
+          div {
+            width: 67px;
+            position: absolute;
+            left: 0;
+            top: 38px;
+            background: #fff;
+            border-radius: 3px;
+            font-size: 12px;
+            p {
               height: 36px;
-              display: block;
-              box-sizing: border-box;
-              background: #FFFFFF;
-              border-radius: 3px;
-              font-size: 12px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
-              color: #06263C;
               line-height: 36px;
             }
+          }
+          .toast-box:hover {
             div {
-              width: 67px;
-              position: absolute;
-              left: 0;
-              top: 38px;
-              background: #fff;
-              border-radius: 3px;
-              font-size: 12px;
-              p {
-                height: 36px;
-                line-height: 36px;
-              }
+              display: block;
             }
           }
         }
       }
-      .content {
-        flex: 1;
-        .info {
-          margin-top: 43px;
+    }
+    .content {
+      flex: 1;
+      border-radius: 20px 20px 0px 0px;
+      .info {
+        margin: 10px auto 0;
+        display: flex;
+        justify-content: space-between;
+        .info-left {
+          width: 44%;
+          box-sizing: border-box;
+          padding: 17px 0 0 15px;
           .title {
-            font-size: 30px;
+            font-size: 20px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #FFFFFF;
-            line-height: 42px;
+            color: #ffffff;
+            line-height: 28px;
           }
           .desc {
-            margin: 14px 0 16px;
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            color: rgba(255, 255, 255, .5);
-            line-height: 24px;
-          }
-        }
-        .rule {
-          position: relative;
-          padding: 30px 20px;
-          border-radius: 16px;
-          background: linear-gradient(180deg, #11476E 0%, #0B304A 100%, #0B304A 100%);
-          img {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 108px;
-            height: 108px;
-          }
-          h3 {
-            font-size: 14px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            color: #FFFFFF;
-            line-height: 26px;
-          }
-          p {
-            margin-top: 10px;
-            font-size: 12px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            color: rgba(255, 255, 255, .5);
-            line-height: 24px;
-          }
-        }
-        .count, .my-invite {
-          margin-top: 10px;
-          padding: 27px 20px 30px;
-          background: #0B304A;
-          border-radius: 16px;
-          .block-title {
-            font-size: 18px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #fff;
-            line-height: 25px;
-            span {
-              margin: 0 5px 0 15px;
-              font-size: 36px;
-              font-family: DINPro-Bold, DINPro;
-              font-weight: bold;
-              line-height: 36px;
+            position: relative;
+            margin-top: 4px;
+            p {
+              width: 88%;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              color: rgba(255, 255, 255, 0.6);
+              line-height: 17px;
             }
             .toast-box {
-              position: relative;
-              display: inline-block;
-              width: 16px;
-              height: 16px;
-              margin-left: 6px;
-              img {
-                width: 16px;
-                height: 16px;
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              line-height: 16px;
+              span {
+                padding-left: 5px;
+                font-size: 12px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                background: #0b1744;
+                i {
+                  color: rgba(255, 255, 255, 0.6);
+                }
+                strong {
+                  color: #35bdb1;
+                  text-decoration: underline;
+                }
               }
               div {
                 position: absolute;
-                right: -42px;
-                bottom: 23px;
-                width: 100px;
-                background: #FFFFFF;
+                left: -103px;
+                top: 26px;
+                width: 246px;
+                background: #ffffff;
                 box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
                 border-radius: 10px;
                 padding: 10px;
                 font-size: 12px;
-                line-height: 16px;
+                line-height: 17px;
                 text-align: left;
-                color: rgba(6, 38, 60, 0.5);
+                color: #565656;
+                font-family: PingFangSC-Regular, PingFang SC;
+                z-index: 100;
                 display: none;
                 i {
                   position: absolute;
                   bottom: -12px;
-                  right: 43px;
+                  right: 15px;
                   border: 6px solid transparent;
                   border-top: 8px solid #fff;
                   width: 0;
                   height: 0px;
                 }
+              }
+              .activate-tip {
+                bottom: 26px;
               }
             }
             .toast-box:hover {
@@ -1413,53 +1621,200 @@ export default {
               }
             }
           }
-        }
-        .count {
-          .num-box {
-            margin: 30px 0 0;
+          .btn-poster {
             display: flex;
             align-items: center;
-            justify-content: center;
-            height: 63px;
-            background: #FFFDFC;
-            border-radius: 10px;
-            &> div {
-              // padding: 8px 0 0 20px;
-              border-radius: 11px;
-              span {
-                font-size: 15px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                color: rgba(11, 48, 74, .5);
-                line-height: 20px;
-              }
-              p {
-                margin-top: 5px;
-                font-size: 16px;
-                font-family: DINPro-Medium, DINPro;
-                font-weight: 500;
-                color: #0B304A;
-                line-height: 21px;
-              }
-            }
-            &> p {
-              margin: 0 30px 0 30px;
-              width: 1px;
-              height: 31px;
-              background: rgba(11, 48, 74, .15)
-            }
-            &> .divide-en {
-              margin: 0 10px 0 10px;
-            }
-          }
-          .list {
-            margin-top: 32px;
-            &> div {
-              display: flex;
-              align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            width: 144px;
+            height: 30px;
+            background: linear-gradient(71deg, #35beb1 0%, #0c979c 100%);
+            border-radius: 15px;
+            padding: 0 10px;
+            box-sizing: border-box;
+            span {
               font-size: 14px;
               font-family: PingFangSC-Regular, PingFang SC;
-              color: #fff;
+              color: #ffffff;
               line-height: 20px;
+            }
+            img {
+              width: 14px;
+              height: 14px;
+            }
+          }
+          .btn-poster.en-version {
+            width: 150px;
+          }
+          .btn-poster:hover {
+            opacity: 0.9;
+          }
+          .disabled {
+            background: rgba(255, 255, 255, 0.5);
+            color: rgba(6, 38, 60, 1);
+            font-size: 12px;
+          }
+        }
+        .info-right {
+          width: 56%;
+          height: 151px;
+          img {
+            width: 100%;
+          }
+        }
+      }
+      .main-content {
+        background: #f8fcff;
+        padding: 20px 15px 100px;
+        border-radius: 20px 20px 0px 0px;
+        .my-benefit {
+          background: #ffffff;
+          border-radius: 10px;
+          border: 1px solid #f0f2f6;
+          padding: 20px 20px 20px 0;
+          h3 {
+            margin: 0 0 0 20px;
+            font-size: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            color: #06263c;
+            line-height: 22px;
+          }
+          .benefit-content {
+            display: flex;
+            justify-content: space-between;
+          }
+          .chart {
+            position: relative;
+            width: 170px;
+            #chart-box {
+              position: absolute;
+              left: -10px;
+              top: 7px;
+              width: 230px;
+              height: 230px;
+            }
+            @media screen and (max-width: 375px) {
+              #chart-box {
+                position: absolute;
+                left: -10px;
+                top: 15px;
+                width: 200px;
+                height: 200px;
+              }
+            }
+            @media screen and (max-width: 320px) {
+              #chart-box {
+                position: absolute;
+                left: -10px;
+                top: 38px;
+                width: 160px;
+                height: 160px;
+              }
+            }
+          }
+          .list-box {
+            margin: 20px 0 0 0;
+            .list-top {
+              & > div {
+                margin-bottom: 10px;
+                p {
+                  display: flex;
+                  position: relative;
+                  font-size: 12px;
+                  padding-left: 20px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  color: #06263c;
+                  line-height: 17px;
+                  .toast-box {
+                    position: relative;
+                    display: block;
+                    width: 16px;
+                    height: 16px;
+                    margin-left: 6px;
+                    img {
+                      width: 16px;
+                      height: 16px;
+                    }
+                    div {
+                      position: absolute;
+                      right: -13px;
+                      bottom: 26px;
+                      width: 200px;
+                      background: #ffffff;
+                      box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
+                      border-radius: 10px;
+                      padding: 10px;
+                      font-size: 12px;
+                      line-height: 16px;
+                      text-align: left;
+                      color: rgba(6, 38, 60, 0.5);
+                      display: none;
+                      i {
+                        position: absolute;
+                        bottom: -12px;
+                        right: 15px;
+                        border: 6px solid transparent;
+                        border-top: 8px solid #fff;
+                        width: 0;
+                        height: 0px;
+                      }
+                    }
+                    .activate-tip {
+                      bottom: 26px;
+                    }
+                  }
+                  .toast-box:hover {
+                    div {
+                      display: block;
+                    }
+                  }
+                }
+                p:before {
+                  content: "";
+                  position: absolute;
+                  top: 7px;
+                  left: 10px;
+                  display: block;
+                  width: 4px;
+                  height: 4px;
+                  background: #fe535b;
+                  border-radius: 1px;
+                }
+                & > span {
+                  margin: 4px 0 0 20px;
+                  font-size: 14px;
+                  font-family: DINPro-Medium, DINPro;
+                  font-weight: 500;
+                  color: #fe535b;
+                  line-height: 18px;
+                }
+              }
+              .second {
+                p:before {
+                  background: #fb9410;
+                }
+                & > span {
+                  color: #fb9410;
+                }
+              }
+              .third {
+                p:before {
+                  background: #35bdb1;
+                }
+                & > span {
+                  color: #35bdb1;
+                }
+              }
+            }
+            & > p {
+              display: flex;
+              margin-left: 20px;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #06263c;
+              line-height: 17px;
               .toast-box {
                 position: relative;
                 display: block;
@@ -1472,10 +1827,10 @@ export default {
                 }
                 div {
                   position: absolute;
-                  left: -13px;
+                  right: -13px;
                   bottom: 26px;
                   width: 200px;
-                  background: #FFFFFF;
+                  background: #ffffff;
                   box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
                   border-radius: 10px;
                   padding: 10px;
@@ -1487,7 +1842,7 @@ export default {
                   i {
                     position: absolute;
                     bottom: -12px;
-                    left: 15px;
+                    right: 15px;
                     border: 6px solid transparent;
                     border-top: 8px solid #fff;
                     width: 0;
@@ -1504,59 +1859,67 @@ export default {
                 }
               }
             }
-            &> a {
+            & > a {
+              margin: 5px 0 0 20px;
               display: block;
-              margin-top: 10px;
-              height: 45px;
-              line-height: 45px;
+              width: 110px;
+              height: 40px;
+              line-height: 40px;
               text-align: center;
-              background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
+              background: linear-gradient(71deg, #35beb1 0%, #0c979c 100%);
               border-radius: 10px;
               font-size: 14px;
               font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
-              color: #FFFFFF;
+              color: #ffffff;
             }
-            &> a.disabled {
-              background: rgba(255, 255, 255, .5);
-              color: rgba(6, 38, 60, 1);
+            & > a:hover {
+              opacity: 0.9;
             }
-            .warn {
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                color: #FE535B;
-                line-height: 20px;
-              }
-          }
-          .tip {
-            margin-top: 20px;
-            font-size: 12px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            color: rgba(255, 255, 255, .5);
-            line-height: 17px;
+            & > a.disabled {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: rgba(6, 38, 60, 0.06);
+              color: rgba(6, 38, 60, 0.5);
+              font-size: 12px;
+              line-height: 14px;
+            }
           }
         }
-        .intro {
-          margin: 10px auto 42px;
-          padding: 30px 20px 24px;
-          background: #0B304A;
-          border-radius: 16px;
-          h2 {
-            font-size: 18px;
+      }
+      .my-invitation {
+        padding: 20px 0 20px;
+        box-sizing: border-box;
+        margin: 20px auto 20px;
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #f0f2f6;
+      }
+      .intro {
+        margin: 0 auto 0;
+        padding: 20px 20px 24px;
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #f0f2f6;
+        h2 {
+          font-size: 16px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          color: #06263c;
+          line-height: 22px;
+        }
+        .question {
+          margin-top: 12px;
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          color: #6a7d8a;
+          line-height: 20px;
+          span {
             font-family: PingFangSC-Medium, PingFang SC;
-            color: #fff;
-            line-height: 25px;
-          }
-          .question {
-            margin-top: 12px;
-            font-size: 14px;
-            font-family: Avenir, Helvetica, Arial, sans-serif;
-            font-weight: 500;
-            color: rgba(255, 255, 255, .5);
-            line-height: 24px;
+            color: #385163;
           }
         }
       }
     }
   }
+}
 </style>

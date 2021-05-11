@@ -6,35 +6,56 @@
           <div class="filter-left">
             <div class="radio-wrapper">
               <div class="switch-container">
-                <input id="switch" type="checkbox" class="switch" @click="handleCheckedMine"/>
-                <label for="switch"></label>
+                <input id="switch"
+                       type="checkbox"
+                       class="switch"
+                       @click="handleCheckedMine" />
+                <label for="switch"
+                       @click="handleCheckedMine"></label>
               </div>
               <span>{{$t('liquidity')[2]}}</span>
             </div>
             <div class="radio-wrapper state-wrapper">
               <div class="switch-container">
-                <input id="switch-state" type="checkbox" class="switch" @click="handleCheckedState"/>
+                <input id="switch-state"
+                       type="checkbox"
+                       class="switch"
+                       @click="handleCheckedState" />
                 <label for="switch-state"></label>
               </div>
               <span>{{$t('tabs')[1]}}</span>
             </div>
           </div>
           <div class="filter-right">
-            <div class="sort-box" @click.stop="showSortHandle">
+            <div class="search-box">
+              <template v-if="isFocused">
+                <img src="../../assets/image/icon-search-active.png"
+                     alt="">
+              </template>
+              <template v-else>
+                <img src="../../assets/image/icon-search.png"
+                     alt="">
+              </template>
+              <input type="text"
+                     v-model="keyword"
+                     :placeholder="$t('section')[4]"
+                     @input="searchHandle()"
+                     @focus="focusHandle"
+                     @blur="blurHandle">
+            </div>
+            <div class="sort-box"
+                 @click.stop="showSortHandle">
               <div class="main-sort"><span>{{curSortTxt}}</span><i :class="isShowSort ? 'up' : ''"></i></div>
-              <div class="sort-list" v-if="isShowSort">
+              <div class="sort-list"
+                   v-if="isShowSort">
                 <div class="list-item"
-                v-for="(item, index) in sortTitle"
-                :key="index"
-                :class="curSortVal == item.value ? 'active' : ''"
-                @click="switchSortHandle(item)"
-                >
+                     v-for="(item, index) in sortTitle"
+                     :key="index"
+                     :class="curSortVal == item.value ? 'active' : ''"
+                     @click="switchSortHandle(item)">
                   {{item.label}}
                 </div>
               </div>
-            </div>
-            <div class="search-box">
-              <input type="text" v-model="keyword" :placeholder="$t('section')[4]" @input="searchHandle()">
             </div>
           </div>
         </div>
@@ -42,46 +63,57 @@
       <template v-else>
         <div class="filter-h5-container">
           <div class="search-box">
-            <img src="../../assets/image/icon-search.png" alt="">
-            <input type="text" v-model="keyword" :placeholder="$t('section')[4]" @input="searchHandle()">
+            <img src="../../assets/image/icon-search.png"
+                 alt="">
+            <input type="text"
+                   v-model="keyword"
+                   :placeholder="$t('section')[4]"
+                   @input="searchHandle()">
           </div>
           <div class="filter-box">
-            <img @click.stop="showFilterHandle" src="../../assets/image/about.png" alt="">
-            <div class="filter-dialog" v-if="isShowFilterDialog">
-              <div class="title">筛选</div>
+            <img @click.stop="showFilterHandle"
+                 src="../../assets/image/about.png"
+                 alt="">
+            <div class="filter-dialog"
+                 v-if="isShowFilterDialog">
+              <!-- <div class="title">{{$t('section')[6]}}</div> -->
               <div class="list-item">
                 <div class="list-left">{{$t('liquidity')[2]}}</div>
-                <div class="list-right" @click.stop="handleCheckedH5Mine">
+                <div class="list-right"
+                     @click.stop="handleCheckedH5Mine">
                   <template v-if="isMine">
-                    <img src="../../assets/image/icon-opened.png" alt="">
+                    <img src="../../assets/image/icon-opened.png"
+                         alt="">
                   </template>
                   <template v-else>
-                    <img src="../../assets/image/icon-closed.png" alt="">
+                    <img src="../../assets/image/icon-closed.png"
+                         alt="">
                   </template>
                 </div>
               </div>
               <div class="list-item">
                 <div class="list-left">{{$t('tabs')[1]}}</div>
-                <div class="list-right" @click.stop="handleCheckedH5State">
+                <div class="list-right"
+                     @click.stop="handleCheckedH5State">
                   <template v-if="isFinished">
-                    <img src="../../assets/image/icon-opened.png" alt="">
+                    <img src="../../assets/image/icon-opened.png"
+                         alt="">
                   </template>
                   <template v-else>
-                    <img src="../../assets/image/icon-closed.png" alt="">
+                    <img src="../../assets/image/icon-closed.png"
+                         alt="">
                   </template>
                 </div>
               </div>
               <div class="list-item">
-                <div class="list-left">排序</div>
+                <div class="list-left">{{$t('section')[6]}}</div>
               </div>
               <div class="sort-box">
-                <div class="list-item"
-                v-for="(item, index) in sortTitle"
-                :key="index"
-                :class="curSortVal == item.value ? 'active' : ''"
-                @click="switchSortHandle(item)"
-                >
-                  {{item.label}}
+                <div v-for="(item, index) in sortTitle"
+                     :key="index"
+                     :class="curSortVal == item.value ? 'active' : ''"
+                     @click="switchSortHandle(item)">
+                  <p>{{item.label}}</p>
                 </div>
               </div>
             </div>
@@ -90,11 +122,16 @@
       </template>
       <div v-if="poolsList.length > 0">
         <div :class="platform === 2 ? 'container' : 'h5-container'">
-          <div class="digcard-item" v-for="(item, index) in poolsList" :key="index">
-            <div v-if="item.isfinshed" class="isfinshed_tips">{{$t('isfinshed')}}</div>
+          <div class="digcard-item"
+               v-for="(item, index) in poolsList"
+               :key="index">
+            <div v-if="item.isfinshed"
+                 class="isfinshed_tips">{{$t('isfinshed')}}</div>
             <div class="title-inner">
               <div class="title-left">
-                <img class="img1" :src="`https://youswap.oss-cn-shanghai.aliyuncs.com/YouSwap/${item.lpaddress}.png`" alt="">
+                <img class="img1"
+                     :src="`https://youswap.oss-cn-shanghai.aliyuncs.com/YouSwap/${item.lpaddress}.png`"
+                     alt="">
                 <span>{{item.poolname}}</span>
               </div>
               <div class="title-right">{{item.rewardmultiple}} X</div>
@@ -102,22 +139,49 @@
             <div class="content">
               <div class="content-item">
                 <div class="item-left">{{$t('digcards')[0]}}</div>
-                <div class="item-right">{{item.apy}}%</div>
+                <div class="item-right">
+                  <template v-if="item.apy && item.apy != '--'">
+                    {{item.apy}}%
+                  </template>
+                  <template v-else>
+                    <template v-if="item.apy == 0">
+                      0.00%
+                    </template>
+                    <template v-else>--</template>
+                  </template>
+                </div>
               </div>
               <div class="content-item">
                 <div class="item-left">TVL</div>
-                <div class="item-right">${{item.liquidityTotal}}</div>
+                <div class="item-right">
+                  <template v-if="item.liquidityTotal && item.liquidityTotal != '--'">
+                    ${{item.liquidityTotal}}
+                  </template>
+                  <template v-else>
+                    <template v-if="item.liquidityTotal == 0">
+                      $0
+                    </template>
+                    <template v-else>--</template>
+                  </template>
+                </div>
               </div>
-              <div v-if="!item.isNotStart" class="content-item">
+              <div class="content-item">
                 <div class="item-left">{{$t('digcards')[1]}}</div>
                 <div class="item-right">YOU</div>
               </div>
-              <div v-if="!item.isNotStart" class="content-item">
+              <div class="content-item">
                 <div class="item-left">
                   {{$t('digcards')[2]}}
                   <div>
                     <a class="toast-box">
-                      <img :src="questionImgUrl" alt="">
+                      <template v-if="$store.state.platform == 2">
+                        <img :src="questionImgUrl"
+                             alt="">
+                      </template>
+                      <template v-else>
+                        <img :src="questionImgH5Url"
+                             alt="">
+                      </template>
                       <div>
                         {{$t('digcards')[10]}}
                         <i></i>
@@ -127,43 +191,45 @@
                 </div>
                 <div class="item-right">
                   <span v-if="item.user.length > 0">
-                    <span v-for="poolsinfo in item.user[0].poolsinfo" :key="poolsinfo.id">
+                    <span v-for="poolsinfo in item.user[0].poolsinfo"
+                          :key="poolsinfo.id">
                       <span v-if="poolsinfo.id.split('-')[0] === item.id">
-                      {{ getDecimalsCoinFn(scientificNotationToStringFn((poolsinfo.invitepower/10**item.decimals + poolsinfo.stakepower/10**item.decimals)*100/(poolsinfo.pool.totalpower/10**item.decimals)), 2)}}%</span>
-                      </span>
+                        {{ getDecimalsCoinFn(scientificNotationToStringFn(isNaN((poolsinfo.invitepower/10**item.decimals + poolsinfo.stakepower/10**item.decimals)*100/(poolsinfo.pool.totalpower/10**item.decimals)) ? '0.00' : (poolsinfo.invitepower/10**item.decimals + poolsinfo.stakepower/10**item.decimals)*100/(poolsinfo.pool.totalpower/10**item.decimals)), 2)}}%</span>
                     </span>
+                  </span>
                   <span v-else>0.00%</span>
                 </div>
               </div>
-              <div v-if="!item.isNotStart" class="content-item">
+              <div class="content-item">
                 <div class="item-left">{{$t('digcards')[3]}}</div>
               </div>
-              <div v-if="!item.isNotStart" class="content-item">
+              <div class="content-item content-item-special">
                 <div class="item-left">
-                <span>{{item.youPrice ? getDecimalsCoinFn(item.youPrice, 4) : '0'}}</span>
+                  <span>{{item.youPrice ? getDecimalsCoinFn(item.youPrice, 4) : '--'}}</span>
                 </div>
-                <button
-                  :disabled="!(Number(item.youPrice) > 0)"
-                  :class="Number(item.youPrice) > 0 ? '': 'receive-disabled'"
-                  class="receive"
-                  @click="handleToReceive(item)">
+                <button :disabled="!(Number(item.youPrice) > 0)"
+                        :class="Number(item.youPrice) > 0 ? '': 'receive-disabled'"
+                        class="receive"
+                        @click="handleToReceive(item)">
                   {{$t('digcards')[7]}}
                 </button>
+              </div>
+              <div class="content-item content-item-special">
+                <div class="item-left">
+                  {{item.poolname}}
+                  <i style="margin: 0 4px"
+                     v-if="item.type == 1">LP</i>
+                  {{$t('digcards')[4]}}
+                </div>
               </div>
               <div v-if="item.allowance > 0 && !item.isNotStart">
                 <div class="content-item">
                   <div class="item-left">
-                  {{item.poolname}} 
-                  <i style="margin-left:4px" v-if="item.type == 1">LP</i>
-                  {{$t('digcards')[4]}}</div>
-                </div>
-                <div class="content-item">
-                  <div class="item-left">
                     <span v-if="item.user.length > 0">
-                      <span v-for="poolsinfo in item.user[0].poolsinfo" :key="poolsinfo.id">
+                      <span v-for="poolsinfo in item.user[0].poolsinfo"
+                            :key="poolsinfo.id">
                         <span v-if="poolsinfo.id.split('-')[0] === item.id">
-                          <span v-if="poolsinfo.pool.lpaddress === lpaddress">{{getDecimalsCoinFn(ethersFn.utils.formatUnits(poolsinfo.stake, 6), 16)}}</span>
-                          <span v-else>{{getDecimalsCoinFn(ethersFn.utils.formatUnits(poolsinfo.stake, item.decimals), 16)}}</span>
+                          <span>{{getDecimalsCoinFn(item.maxStakeAmount, 16)}}</span>
                         </span>
                       </span>
                     </span>
@@ -171,30 +237,70 @@
                   </div>
                   <div class="havepledge">
                     <div v-if="item.user.length > 0">
-                      <div v-for="poolsinfo in item.user[0].poolsinfo" :key="poolsinfo.id">
+                      <div v-for="poolsinfo in item.user[0].poolsinfo"
+                           :key="poolsinfo.id">
                         <div v-if="poolsinfo.id.split('-')[0] === item.id">
                           <div v-if="!item.isfinshed">
-                            <button class="pledge" v-if="poolsinfo.stake > 0" @click="handleUnstake(item)">-</button>
-                            <button v-if="poolsinfo.stake > 0" :class="item.isfinshed ? 'isfinshed':''" :disabled="item.isfinshed" class="pledge" @click="handlePledge(item)">+</button>
-                            <button v-if="poolsinfo.stake <= 0" class="pledge" @click="handlePledge(item)">{{$t('digcards')[6]}}</button>
+                            <button class="pledge"
+                                    v-if="item.maxStakeAmount > 0"
+                                    @click="handleUnstake(item)">-</button>
+                            <button v-if="item.maxStakeAmount > 0"
+                                    :class="item.isfinshed ? 'isfinshed':''"
+                                    :disabled="item.isfinshed"
+                                    class="pledge"
+                                    @click="handlePledge(item)">+</button>
+                            <button v-if="item.maxStakeAmount <= 0"
+                                    class="pledge"
+                                    @click="handlePledge(item)">{{$t('digcards')[6]}}</button>
                           </div>
                           <div v-else>
-                            <button class="pledge" :class="poolsinfo.stake > 0 ? '':'isfinshed'" :disabled="poolsinfo.stake <= 0"  @click="handleUnstake(item)">-</button>
-                            <button :class="item.isfinshed ? 'isfinshed':''" :disabled="item.isfinshed" class="pledge" @click="handlePledge(item)">+</button>
+                            <button class="pledge"
+                                    :class="item.maxStakeAmount > 0 ? '':'isfinshed'"
+                                    :disabled="item.maxStakeAmount <= 0"
+                                    @click="handleUnstake(item)">-</button>
+                            <button :class="item.isfinshed ? 'isfinshed':''"
+                                    :disabled="item.isfinshed"
+                                    class="pledge"
+                                    @click="handlePledge(item)">+</button>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <button v-else :disabled="item.isfinshed" class="pledge" :class="item.isfinshed? 'isfinshed': ''" @click="handlePledge(item)">{{$t('digcards')[6]}}</button>
+                    <button v-else
+                            :disabled="item.isfinshed"
+                            class="pledge"
+                            :class="item.isfinshed? 'isfinshed': ''"
+                            @click="handlePledge(item)">{{$t('digcards')[6]}}</button>
                   </div>
                 </div>
               </div>
             </div>
-            <button v-if="item.allowance <= 0 && !item.isNotStart" :disabled="item.isfinshed" :class="item.isfinshed ? 'isfinshed': ''" class="btn" @click="handleApproval(item)">{{$t('digcards')[5]}}</button>
-            <div v-if="!item.isNotStart" class="line"></div>
-            <div v-if="!item.isNotStart" class="fold">
-              <a v-if="item.type == 2" :href="swapTokenUrl">{{$t('digcards')[13]}} {{item.poolname}} </a>
-              <a v-else :href="lpTokenUrl">{{$t('digcards')[13]}} {{item.poolname}} LP</a>
+            <button v-if="item.allowance <= 0 && !item.isNotStart"
+                    :disabled="item.isfinshed"
+                    :class="item.isfinshed ? 'isfinshed': ''"
+                    class="btn"
+                    @click="handleApproval(item)">{{$t('digcards')[5]}}</button>
+            <button v-if="item.isNotStart"
+                    class="btn">
+              <!-- {{$t('hopes')}} -->
+              <template v-if="!item.isLoading">
+                {{$t('section')[7]}}<countdown :intervalId="``"
+                           :totalSeconds="item.leftTime"
+                           endInfo="00:00"
+                           :timeType="0"
+                           :unitType="0"
+                           @endTime="timeEndFunc(item)"></countdown>
+              </template>
+              <template v-else>
+                {{$t('loading')}}
+              </template>
+            </button>
+            <div class="line"></div>
+            <div class="fold">
+              <a v-if="item.type == 2"
+                 :href="swapTokenUrl">{{$t('digcards')[13]}} {{item.poolname}} </a>
+              <a v-else
+                 :href="lpTokenUrl">{{$t('digcards')[13]}} {{item.poolname}} LP</a>
               <!-- <div class="fold-inner" @click="handleFoldChange(item)">
                 <span>{{item.fold ? $t('digcards')[11] : $t('digcards')[12]}}</span>
                 <img :src="arrowDownUrl" alt="" v-show="item.fold">
@@ -215,13 +321,16 @@
                 </div>
               </div>
             </div> -->
-            <button v-if="item.isNotStart" class="btn">{{$t('hopes')}}</button>
           </div>
         </div>
       </div>
-      <div v-else class="noData" :class="platform === 2 ? '' : 'h5-noData'">{{$t('nodata')}}</div>
+      <div v-else
+           class="noData"
+           :class="platform === 2 ? '' : 'h5-noData'">{{$t('nodata')}}</div>
     </div>
-    <div v-else class="loadings" :class="platform === 2 ? '' : 'h5-loadings'">{{$t('loading')}}</div>
+    <div v-else
+         class="loadings"
+         :class="platform === 2 ? '' : 'h5-loadings'">{{$t('loading')}}</div>
   </div>
 </template>
 
@@ -231,10 +340,14 @@ import { getDecimalsCoin, scientificNotationToString } from '../../utils'
 import abiMing from '../../abi-mining.json'
 import abiUSDT from '../../abi-usdt.json'
 import bus from '../../assets/script/bus'
+import countdown from '../../components/countdown'
 import { request, gql } from 'graphql-request'
 
 export default {
-  props: ['cardLists', 'platform', 'loading'],
+  props: ['cardLists', 'platform', 'loading', 'currentBlockNumber'],
+  components: {
+    countdown
+  },
   data () {
     return {
       receiveGasLimit: 600000,
@@ -243,16 +356,16 @@ export default {
       imgUrl: require('../../assets/image/default_coin_icon.png'),
       arrowDownUrl: require('../../assets/image/arrow_down.png'),
       arrowUpUrl: require('../../assets/image/arrow_top.png'),
-      questionImgUrl: require('../../assets/image/question-h5.png'),
+      questionImgUrl: require('../../assets/image/question-pc.png'),
+      questionImgH5Url: require('../../assets/image/question-h5.png'),
       poolsList: this.cardLists,
+      sortedList: [],
       finishedList: [],  //结束列表
       progressList: [],   // 进行中的列表
       myprogressList: [], //我的进行中的池子
       myfinishedList: [],  // 我的结束的池子
       progressLoading: false, // 接口请求loading，防止重复点击按钮
-      YouPrice: '',
       lpTokenUrl: process.env.VUE_APP_LPTOKEN_URL,
-      lpaddress: process.env.VUE_APP_YOU_ADDRESS,
       swapTokenUrl: process.env.VUE_APP_SWAP_URL,
       sortTitle: [
         {
@@ -264,7 +377,7 @@ export default {
           value: 'multiple'
         },
         {
-          label: this.$t('digcards')[8],
+          label: this.$t('section')[5],
           value: 'liquidityTotal'
         },
         {
@@ -279,29 +392,36 @@ export default {
       state: true,
       isMine: false, // 是否仅看我的
       isFinished: false, // 是否结束
-      isShowFilterDialog: false
+      isShowFilterDialog: false,
+      YouPrice: '',
+      isFocused: false
     }
   },
-  mounted() {
+  mounted () {
     this.initEvent();
     this.getYouPrice();
+    // 重置筛选条件
+    bus.$on('resetCondition', this.resetConditionFunc)
+    // setTimeout(() => {
+    //   bus.$emit('updateSinglePool', {id: 12})
+    // }, 5000)
   },
   computed: {
-    ethersFn() {
+    ethersFn () {
       return ethers
     },
-    youPrice() {
+    youPrice () {
       return this.YouPrice
     }
   },
   methods: {
-    scientificNotationToStringFn(params) {
+    scientificNotationToStringFn (params) {
       return scientificNotationToString(params)
     },
     /**
      * 截取小数精度
      */
-    getDecimalsCoinFn(number, decimal) {
+    getDecimalsCoinFn (number, decimal) {
       return getDecimalsCoin(number, decimal)
     },
     /**
@@ -311,7 +431,7 @@ export default {
       item.fold = !item.fold
     },
     // 获取YOU的折UDST价格
-    getYouPrice() {
+    getYouPrice () {
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const query = gql`
         {
@@ -331,7 +451,7 @@ export default {
     /**
      * 获取gasPrice
      */
-    getGasValue(item, callback) {
+    getGasValue (item, callback) {
       this.$get(process.env.VUE_APP_HECO_GAS_API).then(res => {
         if (res.code == 0) {
           this.gasPrice = res.prices.median
@@ -351,14 +471,14 @@ export default {
     /**
      * 请求领取
      */
-    async requestReceive(item) {
+    async requestReceive (item) {
       if (this.progressLoading) {
         return
       }
       this.progressLoading = true
       let overrides = {
         gasLimit: this.receiveGasLimit,
-        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(),'gwei')
+        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(), 'gwei')
       }
 
       bus.$emit('showLoading', 'receive')
@@ -366,7 +486,7 @@ export default {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(LpAddress, abiMing, provider)
       const contractWithSigner = contract.connect(provider.getSigner())
-      
+
       await provider.getTransactionCount(this.$store.state.account).then((res) => {
         overrides.nonce = res
       }).catch(err => {
@@ -381,7 +501,7 @@ export default {
                 setTimeout(() => {
                   this.$message.success(this.$t('digcards')[14])
                   bus.$emit('initBalance')
-                  bus.$emit('initPoolList')
+                  bus.$emit('updateSinglePool', { id: item.id })
                   bus.$emit('updateInviteBenefit')
                   bus.$emit('closeLoading')
                   this.progressLoading = false
@@ -410,6 +530,16 @@ export default {
         }
       })
     },
+    disabledBtn (data) {
+      data.isBtnDisabled = true
+      let tempId = ''
+      this.poolsList.forEach((item, index) => {
+        if (item.id == data.id) {
+          tempId = index
+        }
+      })
+      this.poolsList.splice(tempId, 1, data)
+    },
     /**
      * 质押
      */
@@ -420,7 +550,7 @@ export default {
     /**
      * 赎回
     */
-    handleUnstake(item) {
+    handleUnstake (item) {
       localStorage.setItem('list_info', JSON.stringify(item))
       this.$emit('redeemInit')
     },
@@ -433,14 +563,14 @@ export default {
     /**
      * 请求授权
      */
-    requestApproval(item) {
+    requestApproval (item) {
       if (this.progressLoading) {
         return
       }
       this.progressLoading = true
       let overrides = {
         gasLimit: this.approvalGasLimit,
-        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(),'gwei')
+        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(), 'gwei')
       }
       bus.$emit('showLoading', 'approval')
       const LpAddress = item.lpaddress
@@ -456,7 +586,7 @@ export default {
               setTimeout(() => {
                 this.$message.success(this.$t('digcards')[18])
                 bus.$emit('initBalance')
-                bus.$emit('initPoolList')
+                bus.$emit('updateSinglePool', { id: item.id })
                 bus.$emit('closeLoading')
                 this.progressLoading = false
               }, 2000)
@@ -492,13 +622,13 @@ export default {
       this.isFinished = e.target.checked
       this.formatCardList()
     },
-    showFilterHandle() {
+    showFilterHandle () {
       this.isShowFilterDialog = !this.isShowFilterDialog
     },
     /**
      * 切换仅看自己的矿h5
      */
-    handleCheckedH5Mine() {
+    handleCheckedH5Mine () {
       this.isMine = !this.isMine
       setTimeout(() => {
         this.isShowFilterDialog = false
@@ -542,35 +672,37 @@ export default {
     /**
      * 初始化数据
     */
-    initList(val) {
+    initList (val) {
       let that = this
       let copy = JSON.stringify(val)
       let sortData = JSON.parse(copy)
       const finishedList = [];
       const progressList = [];
       const myfinishedList = [];
-      const myprogressList= [];
+      const myprogressList = [];
 
       sortData.forEach((item) => {
-        item.apy = '0.00'
-        item.liquidityTotal = '0'
-        if (item.reserveUSD || that.lpaddress === item.lpaddress) {
+        item.apy = '--'
+        item.liquidityTotal = '--'
+        item.blockbetween = item.startblockheight - that.currentBlockNumber
+        item.leftTime = Math.abs(item.blockbetween) * 3
+        if (item.reserveUSD) {
           // 计算apy
-          if (((item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10**item.decimals)) === 0) || (that.youPrice * (item.staketotaldnow / 10**item.decimals) === 0)) {
+          if (((item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10 ** item.decimals)) === 0) || (this.YouPrice * (item.staketotaldnow / 10 ** item.decimals) === 0)) {
             item.apy = '0.00'
           } else {
-            if (that.lpaddress === item.lpaddress) {
-              item.apy = getDecimalsCoin((item.rewardperblock / 10**6 * that.youPrice * 10512000 * 100) / ( that.youPrice * (item.staketotaldnow / 10**item.decimals)), 2)
+            if (item.type == 2) {
+              item.apy = getDecimalsCoin((item.rewardperblock / 10 ** 6 * this.YouPrice * 10512000 * 100) / (item.reserveUSD * (item.staketotaldnow / 10 ** item.decimals)), 2)
             } else {
-              item.apy = getDecimalsCoin((item.rewardperblock / 10**6 * that.youPrice * 10512000 * 100) / (item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10**item.decimals)), 2)
+              item.apy = getDecimalsCoin((item.rewardperblock / 10 ** 6 * this.YouPrice * 10512000 * 100) / (item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10 ** item.decimals)), 2)
             }
           }
-     
+
           // 计算流动性总额
-          if (that.lpaddress === item.lpaddress) {
-            item.liquidityTotal = getDecimalsCoin(( that.youPrice * (item.staketotaldnow / 10**item.decimals)), 2)
+          if (item.type == 2) {
+            item.liquidityTotal = getDecimalsCoin((item.reserveUSD * (item.staketotaldnow / 10 ** item.decimals)), 2)
           } else {
-            item.liquidityTotal = getDecimalsCoin((item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10**item.decimals)), 2)
+            item.liquidityTotal = getDecimalsCoin((item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10 ** item.decimals)), 2)
           }
         }
         if (item.isfinshed) {
@@ -592,7 +724,7 @@ export default {
       this.myfinishedList = myfinishedList;
       this.formatCardList()
     },
-    initEvent() {
+    initEvent () {
       window.onclick = () => {
         this.isShowSort = false
         setTimeout(() => {
@@ -603,7 +735,7 @@ export default {
     /**
      * 切换排序
     */
-    switchSortHandle(item) {
+    switchSortHandle (item) {
       this.curSortTxt = item.label
       this.curSortVal = item.value
       setTimeout(() => {
@@ -614,7 +746,7 @@ export default {
     /**
      * 排序函数
     */
-    sortFunc(item, data) {
+    sortFunc (item, data) {
       if (item.value == 'apy') {
         data.sort((a, b) => {
           return b.apy - a.apy
@@ -634,15 +766,17 @@ export default {
       }
       let copy = JSON.stringify(data)
       this.poolsList = JSON.parse(copy)
+      this.sortedList = JSON.parse(copy)
+      console.log(this.poolsList)
       this.searchFunc()
     },
-    showSortHandle() {
+    showSortHandle () {
       this.isShowSort = !this.isShowSort
     },
     /**
      * 搜索
     */
-    searchHandle() {
+    searchHandle () {
       if (!this.state) {
         return;
       }
@@ -652,12 +786,12 @@ export default {
         this.state = true;
       }, 500);
     },
-    searchFunc(val) {
+    searchFunc (val) {
       let newData = []
-      let text = this.keyword.replace(/\s/ig,'')
+      let text = this.keyword.replace(/\s/ig, '')
       if (text) {
-        this.poolsList.forEach((item) => {
-          let tempKeyword = this.keyword.toLowerCase()
+        this.sortedList.forEach((item) => {
+          let tempKeyword = text.toLowerCase()
           let tempPoolname = item.poolname.toLowerCase()
           if (tempPoolname.indexOf(tempKeyword) != -1) {
             newData.push(item)
@@ -669,16 +803,53 @@ export default {
           this.formatCardList()
         }
       }
+    },
+    /**
+     * 倒计时结束
+    */
+    timeEndFunc (data) {
+      let tempId = ''
+      let copyData = JSON.stringify(data)
+      let newData = JSON.parse(copyData)
+      this.poolsList.forEach((item, index) => {
+        if (item.id == data.id) {
+          tempId = index
+          newData.isLoading = true
+        }
+      })
+      this.poolsList.splice(tempId, 1, newData)
+      bus.$emit('updateSinglePool', { id: data.id })
+    },
+    /**
+     * 获得焦点
+    */
+    focusHandle () {
+      this.isFocused = true
+    },
+    /**
+     * 失去焦点
+    */
+    blurHandle () {
+      this.isFocused = false
+    },
+    /**
+     * 重置筛选条件
+    */
+    resetConditionFunc () {
+      this.isMine = false
+      this.isFinished = false
+      this.curSortTxt = 'Hot'
+      this.curSortVal = 'priority'
     }
   },
   watch: {
     cardLists: {
-      handler(value) {
+      handler (value) {
         this.keyword = ''
         this.initList(value)
       },
       deep: true,
-      immediate:true,
+      immediate: true,
     }
   },
 }
@@ -697,7 +868,7 @@ export default {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: #06263C;
+        color: #06263c;
         line-height: 20px;
         opacity: 0.5;
         margin-left: 12px;
@@ -710,14 +881,14 @@ export default {
         }
         label {
           display: block;
-          background-color: #EEEEEE;
+          background-color: #eeeeee;
           height: 100%;
           width: 100%;
           cursor: pointer;
           border-radius: 25px;
         }
         label:before {
-          content: '';
+          content: "";
           display: block;
           border-radius: 25px;
           height: 100%;
@@ -731,7 +902,7 @@ export default {
           position: relative;
           top: -15px;
           left: 15px;
-          content: '';
+          content: "";
           display: block;
           border-radius: 25px;
           height: 100%;
@@ -741,23 +912,23 @@ export default {
           box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.08);
           -webkit-transition: all 0.2s ease;
         }
-        #switch:checked~label:after {
+        #switch:checked ~ label:after {
           opacity: 1;
         }
-        #switch:checked~label:before {
+        #switch:checked ~ label:before {
           opacity: 0;
         }
-        #switch:checked~label {
-          background-color: #0C979C;
+        #switch:checked ~ label {
+          background-color: #0c979c;
         }
-        #switch-state:checked~label:after {
+        #switch-state:checked ~ label:after {
           opacity: 1;
         }
-        #switch-state:checked~label:before {
+        #switch-state:checked ~ label:before {
           opacity: 0;
         }
-        #switch-state:checked~label {
-          background-color: #0C979C;
+        #switch-state:checked ~ label {
+          background-color: #0c979c;
         }
       }
     }
@@ -788,19 +959,19 @@ export default {
         span {
           font-size: 16px;
           font-family: PingFangSC-Medium, PingFang SC;
-          color: #06263C;
+          color: #06263c;
           line-height: 40px;
         }
         i {
           width: 10px;
           height: 7px;
           margin-left: 3px;
-          background: url('../../assets/image/down-arrow.png') no-repeat;
+          background: url("../../assets/image/down-arrow.png") no-repeat;
           background-size: 100%;
-          transition: .2s;
+          transition: 0.2s;
         }
         .up {
-          transform: rotate(180deg)
+          transform: rotate(180deg);
         }
       }
       .sort-list {
@@ -823,11 +994,11 @@ export default {
           line-height: 40px;
           font-size: 14px;
           font-family: PingFangSC-Medium, PingFang SC;
-          color: #06263C;
+          color: #06263c;
           cursor: pointer;
         }
         .active {
-          color: #35BDB1;
+          color: #35bdb1;
           img {
             width: 10px;
             height: 6px;
@@ -837,25 +1008,31 @@ export default {
       }
     }
     .search-box {
-      margin-left: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 11px;
       width: 216px;
       height: 40px;
       line-height: 40px;
-      background: #FFFFFF;
+      background: #ffffff;
       box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
       border-radius: 6px;
+      img {
+        width: 18px;
+        height: 16px;
+      }
       input {
         width: 100%;
         height: 40px;
-        padding: 0 12px;
+        padding: 0 12px 0 6px;
         border-radius: 6px;
-        color: #06263C!important;
+        color: #06263c !important;
       }
       input::-webkit-input-placeholder {
         font-size: 16px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
-        color: #82929D;
+        color: #c5cfd5;
       }
     }
   }
@@ -870,7 +1047,7 @@ export default {
     align-items: center;
     padding: 0 11px;
     height: 30px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
     border-radius: 10px;
     img {
@@ -881,10 +1058,13 @@ export default {
       flex: 1;
       margin-left: 9px;
     }
+    input::-webkit-input-placeholder {
+      color: #c5cfd5;
+    }
   }
   .filter-box {
     position: relative;
-    margin-left: 65px;
+    margin: 0 0 0 45px;
     width: 18px;
     height: 14px;
     img {
@@ -898,7 +1078,7 @@ export default {
       width: 280px;
       box-sizing: border-box;
       padding: 20px;
-      background: #FFFFFF;
+      background: #ffffff;
       box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
       border-radius: 10px;
       z-index: 2;
@@ -906,7 +1086,7 @@ export default {
         margin-bottom: 21px;
         font-size: 16px;
         font-family: PingFangSC-Regular, PingFang SC;
-        color: #06263C;
+        color: #06263c;
       }
       .list-item {
         display: flex;
@@ -915,7 +1095,7 @@ export default {
         .list-left {
           font-size: 12px;
           font-family: PingFangSC-Regular, PingFang SC;
-          color: #82929D;
+          color: #82929d;
           line-height: 17px;
         }
         .list-right {
@@ -927,20 +1107,23 @@ export default {
       }
       .sort-box {
         display: flex;
-        &>div {
-          margin-right: 4px;
+        justify-content: space-between;
+        & > div {
           height: 30px;
           border-radius: 10px;
-          border: 1px solid #35BDB1;
+          border: 1px solid #35bdb1;
           font-size: 12px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
-          color: #35BDB1;
+          color: #35bdb1;
           line-height: 30px;
-          padding: 0 10px;
+          padding: 0 5px;
+          p {
+            transform: scale(0.83, 0.83);
+          }
         }
-        &>div.active {
-          background: #35BDB1;
+        & > div.active {
+          background: #35bdb1;
           color: #fff;
         }
       }
@@ -961,7 +1144,7 @@ export default {
     // display: flex;
     // flex-direction: column;
     float: left;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
     border-radius: 20px;
     margin-top: 20px;
@@ -982,13 +1165,13 @@ export default {
         font-size: 20px;
         font-family: DINPro-Medium, DINPro;
         font-weight: 500;
-        color: #06263C;
+        color: #06263c;
         line-height: 28px;
       }
       .title-right {
         padding: 4px 5px;
         height: 18px;
-        background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+        background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
         border-radius: 4px;
         display: flex;
         justify-content: center;
@@ -996,47 +1179,59 @@ export default {
         font-size: 12px;
         font-family: DINPro-Medium, DINPro;
         font-weight: 500;
-        color: #FFFFFF;
+        color: #ffffff;
         line-height: 14px;
       }
     }
     .content {
       display: flex;
       flex-direction: column;
-      margin-top: 20px;
+      margin-top: 10px;
       .content-item {
-        width: 100.00%;
+        width: 100%;
         display: flex;
         justify-content: space-between;
-        margin-top: 30px;
+        margin-top: 20px;
         .item-left {
           display: flex;
           align-items: center;
+          color: #6a7d8a;
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
           & > span {
             font-size: 16px;
-            font-family: DINPro-Regular, DINPro;
-            font-weight: 400;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
             line-height: 18px;
+            color: #06263c;
           }
         }
         .item-right {
-          font-size: 14px;
+          font-size: 16px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #06263C;
+          color: #06263c;
           line-height: 18px;
+          & > span {
+            font-size: 16px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+            line-height: 18px;
+          }
         }
         .last-left {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #06999F;
+          color: #06999f;
           line-height: 18px;
         }
-        .receive, .pledge {
+        .receive,
+        .pledge {
           padding: 4px 18px;
-          height: 30px;
-          background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+          height: 40px;
+          background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
           border-radius: 10px;
           display: flex;
           align-items: center;
@@ -1044,7 +1239,7 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #FFFFFF;
+          color: #ffffff;
           cursor: pointer;
         }
         .havepledge {
@@ -1057,7 +1252,7 @@ export default {
           .pledge:last-child {
             margin-right: 0;
           }
-          >div>div>div>div {
+          > div > div > div > div {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1076,21 +1271,21 @@ export default {
           opacity: 0.8;
         }
       }
-      .content-item:last-child {
-        margin-top: 16px;
+      .content-item-special {
+        margin-top: 9px;
       }
     }
     .line {
       margin-top: 30px;
-      width: 100.00%;
+      width: 100%;
       height: 1px;
-      border-top: 1px dashed #06263C;
+      border-top: 1px dashed #06263c;
       opacity: 0.08;
     }
     .btn {
       width: 320px;
-      height: 45px;
-      background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+      height: 40px;
+      background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -1098,8 +1293,8 @@ export default {
       font-size: 16px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
-      color: #FFFFFF;
-      margin-top: 30px;
+      color: #ffffff;
+      margin-top: 20px;
       cursor: pointer;
     }
     .btn:hover {
@@ -1109,7 +1304,7 @@ export default {
       display: flex;
       align-items: center;
       margin-top: 19px;
-      width: 100.00%;
+      width: 100%;
       justify-content: center;
       cursor: pointer;
       .fold-inner {
@@ -1119,7 +1314,7 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #06999E;
+          color: #06999e;
           line-height: 20px;
         }
         & > img {
@@ -1131,7 +1326,7 @@ export default {
       a {
         font-size: 14px;
         font-family: DINPro-Regular, DINPro;
-        color: #06999F;
+        color: #06999f;
       }
     }
     .bottom {
@@ -1147,25 +1342,25 @@ export default {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #06263C;
-          line-height: 18px
+          color: #06263c;
+          line-height: 18px;
         }
         .item-right {
           font-size: 14px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #06263C;
+          color: #06263c;
           line-height: 18px;
         }
         .last-left {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #06999F;
+          color: #06999f;
           line-height: 18px;
           cursor: pointer;
           a {
-            color: #06999F;
+            color: #06999f;
           }
         }
       }
@@ -1174,18 +1369,18 @@ export default {
 }
 
 .h5-container {
-  margin-top: 6px;
-  color: #FFFDFA;
+  margin-top: 10px;
+  color: #fffdfa;
   padding: 0 0 30px;
   .digcard-item {
-    width: 100.00%;
+    width: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
     background: #fff;
     box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
     border-radius: 10px;
-    margin-top: 20px;
+    margin-bottom: 20px;
     position: relative;
     overflow: hidden;
     .title-inner {
@@ -1198,7 +1393,7 @@ export default {
         font-size: 16px;
         font-family: DINPro-Medium, DINPro;
         font-weight: 500;
-        color: #06263C;
+        color: #06263c;
         line-height: 21px;
         .img1 {
           height: 22px;
@@ -1208,7 +1403,7 @@ export default {
       .title-right {
         width: 36px;
         height: 18px;
-        background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+        background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
         border-radius: 4px;
         display: flex;
         justify-content: center;
@@ -1216,28 +1411,29 @@ export default {
         font-size: 12px;
         font-family: DINPro-Medium, DINPro;
         font-weight: 500;
-        color: #FFFDFA;
+        color: #fffdfa;
         line-height: 14px;
       }
     }
     .content {
       display: flex;
       flex-direction: column;
-      margin-top: 20px;
+      margin-top: 10px;
       .content-item {
-        width: 100.00%;
+        width: 100%;
         display: flex;
         justify-content: space-between;
-        margin-top: 30px;
+        margin-top: 10px;
         .item-left {
           display: flex;
           align-items: center;
-          color: #6A7D8A;
+          color: #6a7d8a;
+          font-size: 12px;
           span {
             font-size: 16px;
-            font-family: DINPro-Regular, DINPro;
+            font-family: DINPro-Medium, DINPro;
             font-weight: 500;
-            color: #06263C;
+            color: #06263c;
             line-height: 18px;
           }
         }
@@ -1245,14 +1441,21 @@ export default {
           font-size: 14px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #06263C;
+          color: #06263c;
           line-height: 18px;
+          span {
+            font-size: 14px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+            line-height: 18px;
+          }
         }
         .last-left {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #06999F;
+          color: #06999f;
           line-height: 18px;
         }
         .havepledge {
@@ -1262,16 +1465,18 @@ export default {
           .pledge:nth-child(1) {
             margin: 0 10px;
           }
-          >div>div>div>div {
+          > div > div > div > div {
             display: flex;
             align-items: center;
             justify-content: space-between;
           }
         }
-        .receive, .pledge {
-          width: 60px;
+        .receive,
+        .pledge {
+          // width: 60px;
+          padding: 0 20px;
           height: 30px;
-          background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+          background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
           border-radius: 6px;
           display: flex;
           align-items: center;
@@ -1279,11 +1484,11 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #FFFDFA;
+          color: #fffdfa;
           cursor: pointer;
         }
-        .pledge:last-child{
-          margin-right: 0!important;
+        .pledge:last-child {
+          margin-right: 0 !important;
         }
         .receive:hover {
           opacity: 0.8;
@@ -1304,15 +1509,15 @@ export default {
     }
     .line {
       margin-top: 30px;
-      width: 100.00%;
+      width: 100%;
       height: 1px;
-      border-top: 1px dashed #06263C;
+      border-top: 1px dashed #06263c;
       opacity: 0.08;
     }
     .btn {
-      width: 100.00%;
+      width: 100%;
       height: 45px;
-      background: linear-gradient(80deg, #35BEB1 0.00%, #0C979C 100.00%);
+      background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -1320,7 +1525,7 @@ export default {
       font-size: 16px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
-      color: #FFFDFA;
+      color: #fffdfa;
       margin-top: 30px;
       cursor: pointer;
     }
@@ -1331,7 +1536,7 @@ export default {
       display: flex;
       align-items: center;
       margin-top: 19px;
-      width: 100.00%;
+      width: 100%;
       justify-content: center;
       cursor: pointer;
       .fold-inner {
@@ -1341,7 +1546,7 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #06999E;
+          color: #06999e;
           line-height: 20px;
         }
         & > img {
@@ -1353,7 +1558,7 @@ export default {
       a {
         font-size: 12px;
         font-family: PingFangSC-Regular, PingFang SC;
-        color: #06999F;
+        color: #06999f;
       }
     }
     .bottom {
@@ -1369,7 +1574,7 @@ export default {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #FFFDFA;
+          color: #fffdfa;
           line-height: 18px;
           opacity: 0.6;
         }
@@ -1377,18 +1582,18 @@ export default {
           font-size: 14px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #FFFDFA;
+          color: #fffdfa;
           line-height: 18px;
         }
         .last-left {
           font-size: 14px;
           font-family: DINPro-Regular, DINPro;
           font-weight: 400;
-          color: #06999F;
+          color: #06999f;
           line-height: 18px;
           cursor: pointer;
           a {
-            color: #06999F;
+            color: #06999f;
           }
         }
       }
@@ -1405,17 +1610,19 @@ export default {
   display: block;
   width: 20px;
   height: 20px;
+  display: flex;
+  align-items: center;
   margin-left: 6px;
   img {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
   }
   div {
     position: absolute;
     left: -11px;
     bottom: 26px;
     width: 316px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
     border-radius: 10px;
     padding: 10px;
@@ -1425,7 +1632,7 @@ export default {
     i {
       position: absolute;
       bottom: -12px;
-      left: 15px;
+      left: 12px;
       border: 6px solid transparent;
       border-top: 8px solid #fff;
       width: 0;
@@ -1442,31 +1649,31 @@ export default {
   }
 }
 .h5-noData {
-  color: #6A7D8A!important;
+  color: #6a7d8a !important;
 }
 .noData {
   text-align: center;
   min-height: 200px;
-  line-height:200px;
+  line-height: 200px;
   color: #333;
 }
 .loadings {
   text-align: center;
   min-height: 200px;
-  line-height:200px;
+  line-height: 200px;
 }
 .h5-loadings {
-  color: #6A7D8A
+  color: #6a7d8a;
 }
 .isfinshed {
-  background: #C7D1D8!important;
-  color: #fff!important;
+  background: #c7d1d8 !important;
+  color: #fff !important;
 }
 .isfinshed_tips {
-  width: 60.00%;
+  width: 60%;
   height: 50px;
   line-height: 50px;
-  background-color: #C7D1D8;
+  background-color: #c7d1d8;
   color: #fff;
   position: absolute;
   right: -60px;

@@ -19,7 +19,7 @@ import { YellowCard } from '../Card'
 // import { Moon, Sun } from 'react-feather'
 // import LanguageMenu from '../LanguageMenu'
 
-import Row, { RowFixed } from '../Row'
+import Row, { RowFixed, RowFlex, RowColumnBetween, RowStart } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
 import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
@@ -36,6 +36,14 @@ import BgIconMobile from '../../assets/images/bg@2x.png'
 import { isMobile } from 'react-device-detect'
 import i18n from 'i18n'
 import { useCookies } from 'react-cookie'
+import arrowImg from '../../assets/images/icon-arrow.png'
+import dealPoolImg from '../../assets/images/dealpool_icon.png'
+import stackImg from '../../assets/images/stack_pool.png'
+import newIcon from '../../assets/images/new.png'
+import arrowRight from '../../assets/images/icon_arrow_right.png'
+import redPoint from '../../assets/images/red_point.png'
+import rightActive from '../../assets/images/right_active.png'
+import rightDefault from '../../assets/images/right_default.png'
 
 const HeaderWrapper = styled.div`
   position: relative;
@@ -338,9 +346,30 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   }
 `
 
-// ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-// display: none;
-// `} 
+const PoolNavMobile = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text10};
+  font-size: 14px;
+  font-family: PingFangSC-Medium, PingFang SC !important;
+  width: fit-content;
+  padding: 0 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: 16px!important;
+    font-size: 12px;
+    font-family: PingFangSC-Medium,PingFang SC!important;
+    font-weight: 500;
+    color: #bfc6cb;
+    line-height: 17px;
+    padding: 0;
+    white-space: nowrap;
+  `};
+`
 
 export const StyledMenuButton = styled.button`
   position: relative;
@@ -436,6 +465,99 @@ const TextBlock2 = styled.div`
   `};
 `
 
+const NavWrap = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+`
+
+const IWrap = styled.i`
+  width: 10px;
+  height: 7px;
+  margin-left: -17px;
+  background: url(${arrowImg});
+  background-size: 100%;
+  transition: 0.2s;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: 3px;
+  `};
+`
+
+const IWrapUp = styled.i`
+  width: 10px;
+  height: 7px;
+  margin-left: -17px;
+  background: url(${arrowImg});
+  background-size: 100%;
+  transition: 0.2s;
+  transform: rotate(180deg);
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: 3px;
+  `};
+`
+
+const DropDownLayout = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 20px;
+  top: 20px;
+  padding-top: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 999;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    transform: translate(-100%);
+    left: 53px;
+    top: 10px;
+  `};
+`
+
+const DropDownItem = styled.div`
+  width: 100%;
+  min-width: 250px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  align-items: center;
+  padding: 20px;
+  :hover,
+  :focus {
+    background: #edf9f8;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    min-width: 186px;
+    height: 55px;
+    padding: 10px;
+  `};
+`
+
+const TextShowTop = styled.span`
+  font-size: 12px;
+  color: #06263c;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  line-height: 14px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 10px;
+  `};
+`
+
+const TextShowBottom = styled.span`
+  font-size: 10px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  line-height: 14px;
+  margin-top: 4px;
+  color: #6a7d8a;
+  white-space: nowrap;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 10px;
+  `};
+`
+
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -461,6 +583,11 @@ export default function Header() {
   const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
+  const [showDropdownMenu, setShowDropdownMenu] = useState(false)
+  const [showDealpoolIcon, setShowDealpoolIcon] = useState(false)
+  const [showStackIcon, setShowStackIcon] = useState(false)
+  const [isDealTouch, setIsDealTouch] = useState(false)
+  const [isStackTouch, setIsStackTouch] = useState(false)
   const showClaimPopup = useShowClaimPopup()
 
   const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
@@ -481,6 +608,26 @@ export default function Header() {
     }
   }
 
+  const handleMouseEnter = function () {
+    setShowDropdownMenu(true)
+  }
+
+  const handleMouseLeave = function () {
+    setShowDropdownMenu(false)
+  }
+
+  const handleLinkDealpool = function () {
+    window.open(process.env.REACT_APP_DEALPOOL_URL, '_self')
+  }
+
+  const handleLinkPool = function () {
+    window.open(process.env.REACT_APP_DIG_URL, '_self')
+  }
+
+  const handleLinkHome = function () {
+    window.open(process.env.REACT_APP_HOME_URL, '_self')
+  }
+
   return (
     <HeaderWrapper>
       <IconWrapper>
@@ -494,7 +641,7 @@ export default function Header() {
         </Modal>
         <HeaderRow>
           <Title>
-            <UniIcon>
+            <UniIcon onClick={handleLinkHome}>
               <img height={isMobile ? '20px' : '30px'} src={isMobile ? LogoMobile : Logo} alt="logo" />
             </UniIcon>
           </Title>
@@ -502,25 +649,109 @@ export default function Header() {
             <StyledExternalLink id={`stake-nav-link`} href={`${process.env.REACT_APP_HOME_URL}`}>
               {t('home page')}
             </StyledExternalLink>
-            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-              {t('swap')}
-            </StyledNavLink>
             <StyledNavLink
-              id={`pool-nav-link`}
-              to={'/pool'}
+              id={`swap-nav-link`}
+              to={'/swap'}
               isActive={(match, { pathname }) =>
                 Boolean(match) ||
                 pathname.startsWith('/add') ||
+                pathname.startsWith('/swap') ||
+                pathname.startsWith('/pool') ||
                 pathname.startsWith('/remove') ||
                 pathname.startsWith('/create') ||
                 pathname.startsWith('/find')
-              }
-            >
-              {t('flowd')}
+              }>
+              {t('swap')}
             </StyledNavLink>
-            <StyledExternalLink id={`stake-nav-link`} href={`${process.env.REACT_APP_DIG_URL}`}>
-              {t('flowd-mining')}
+            <StyledExternalLink id={`pool-nav-link`} href={`${process.env.REACT_APP_INVITE_URL}`}>
+              {t('flowd')}
             </StyledExternalLink>
+            {!isMobile && (
+              <NavWrap style={{ marginRight: account ? '20px' : '20px' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <StyledExternalLink id={`stake-nav-link`} href={`${process.env.REACT_APP_DIG_URL}`}>
+                  {t('flowd-mining')}
+                </StyledExternalLink>
+                <img style={{ width: '5px', height: '5px', position: 'absolute', top: '0', right: '10px' }} src={redPoint} alt="" />
+                {showDropdownMenu ? (
+                  <IWrapUp></IWrapUp>
+                ) : (<IWrap></IWrap>)}
+                {showDropdownMenu && (
+                  <DropDownLayout>
+                    <DropDownItem style={{ borderTopLeftRadius: '6px', borderTopRightRadius: '6px' }} onClick={handleLinkDealpool} onMouseEnter={() => setShowDealpoolIcon(true)} onMouseLeave={() => setShowDealpoolIcon(false)}>
+                      <RowStart>
+                        <img style={{ width: '30px', height: '30px' }} src={dealPoolImg} alt="" />
+                        <RowFlex style={{ marginLeft: '10px' }}>
+                          <RowColumnBetween>
+                            <TextShowTop>{t('dealTitle')}</TextShowTop>
+                            <img style={{ width: '30px', height: '12px', marginLeft: '8px' }} src={newIcon} alt="" />
+                          </RowColumnBetween>
+                          <TextShowBottom>{t('dealDes')}</TextShowBottom>
+                        </RowFlex>
+                      </RowStart>
+                      {showDealpoolIcon && <img style={{ width: '12px', height: '9px' }} src={arrowRight} alt="" />}
+                    </DropDownItem>
+                    <DropDownItem style={{ borderBottomLeftRadius: '6px', borderBottomRightRadius: '6px' }} onClick={handleLinkPool} onMouseEnter={() => setShowStackIcon(true)} onMouseLeave={() => setShowStackIcon(false)}>
+                      <RowStart>
+                        <img style={{ width: '30px', height: '30px' }} src={stackImg} alt="" />
+                        <RowFlex style={{ marginLeft: '10px' }}>
+                          <TextShowTop>{t('stackTitle')}</TextShowTop>
+                          <TextShowBottom>{t('stackDes')}</TextShowBottom>
+                        </RowFlex>
+                      </RowStart>
+                      {showStackIcon && <img style={{ width: '12px', height: '9px', marginLeft: '20px' }} src={arrowRight} alt="" />}
+                    </DropDownItem>
+                  </DropDownLayout>
+                )}
+              </NavWrap>
+            )}
+
+            {isMobile && (
+              <NavWrap onClick={() => showDropdownMenu ? setShowDropdownMenu(false) : setShowDropdownMenu(true)}>
+                <PoolNavMobile>
+                  {t('flowd-mining')}
+                </PoolNavMobile>
+                <img style={{ width: '5px', height: '5px', position: 'absolute', top: '0', right: '10px' }} src={redPoint} alt="" />
+                {showDropdownMenu ? (
+                  <IWrapUp></IWrapUp>
+                ) : (<IWrap></IWrap>)}
+                {showDropdownMenu && (
+                  <DropDownLayout>
+                    <DropDownItem style={{ borderTopLeftRadius: '6px', borderTopRightRadius: '6px' }} onClick={handleLinkDealpool} onTouchStart={() => setIsDealTouch(true)} onTouchEnd={() => setIsDealTouch(false)}>
+                      <RowStart>
+                        <img style={{ width: '30px', height: '30px' }} src={dealPoolImg} alt="" />
+                        <RowFlex style={{ marginLeft: '10px' }}>
+                          <RowColumnBetween>
+                            <TextShowTop>{t('dealTitle')}</TextShowTop>
+                            <img style={{ width: '30px', height: '12px', marginLeft: '8px' }} src={newIcon} alt="" />
+                          </RowColumnBetween>
+                          <TextShowBottom>{t('dealDes')}</TextShowBottom>
+                        </RowFlex>
+                      </RowStart>
+                      {isDealTouch ? (
+                        <img style={{ width: '7px', height: '12px', marginLeft: '10px' }} src={rightActive} alt="" />
+                      ) : (
+                        <img style={{ width: '7px', height: '12px', marginLeft: '10px' }} src={rightDefault} alt="" />
+                      )}
+                    </DropDownItem>
+                    <DropDownItem style={{ borderBottomLeftRadius: '6px', borderBottomRightRadius: '6px' }} onClick={handleLinkPool} onTouchStart={() => setIsStackTouch(true)} onTouchEnd={() => setIsStackTouch(false)}>
+                      <RowStart>
+                        <img style={{ width: '30px', height: '30px' }} src={stackImg} alt="" />
+                        <RowFlex style={{ marginLeft: '10px' }}>
+                          <TextShowTop>{t('stackTitle')}</TextShowTop>
+                          <TextShowBottom>{t('stackDes')}</TextShowBottom>
+                        </RowFlex>
+                      </RowStart>
+                      {isStackTouch ? (
+                        <img style={{ width: '7px', height: '12px', marginLeft: '10px' }} src={rightActive} alt="" />
+                      ) : (
+                        <img style={{ width: '7px', height: '12px', marginLeft: '10px' }} src={rightDefault} alt="" />
+                      )}
+                    </DropDownItem>
+                  </DropDownLayout>
+                )}
+              </NavWrap>
+            )}
+
             {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             {t('flowd-mining')}
             </StyledNavLink> */}
@@ -534,6 +765,12 @@ export default function Header() {
             <StyledExternalLink id={`stake-nav-link`} href={`${process.env.REACT_APP_BRIDGE_URL}`}>
               {t('Bridge')}
             </StyledExternalLink>
+            {!isMobile && (
+              <StyledExternalLink id={`stake-nav-link`} href={cookies.lang === 'ZH' ? 'https://youswap-1.gitbook.io/youswap/v/chinese/' : 'https://youswap-1.gitbook.io/youswap/'}>
+                {t('Docs')}
+              </StyledExternalLink>
+            )}
+
           </HeaderLinks>
         </HeaderRow>
         <HeaderControls>
@@ -583,7 +820,7 @@ export default function Header() {
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                  {userEthBalance?.toSignificant(4)} BNB
+                  {userEthBalance?.toSignificant(4)} HT
                 </BalanceText>
               ) : null}
               <Web3Status />

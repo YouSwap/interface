@@ -117,7 +117,7 @@ module.exports = {
   qualification: '资格',
   RemainingBlockchain: '剩余区块',
   Private: '私有轮',
-  liquidity: '流动性',
+  liquidity: '邀请挖矿',
   LiquidityDig: '挖矿',
   Quatation: '行情',
   CurrentTVL: '当前流动性(USDT）',
@@ -213,5 +213,10 @@ module.exports = {
   Preview: '上一页',
   Next: '下一页',
   Action: '操作',
-  docs: '文档'
+  dealTitle: '交易挖矿',
+  dealDes: '完成交易就送YOU奖励',
+  stackTitle: '质押挖矿',
+  stackDes: '质押Token赚取YOU奖励',
+  docs: '文档',
+  navDocs: '教程'
 }

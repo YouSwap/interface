@@ -23,11 +23,12 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 
-// bsc链添加基础币种
-export const ETH = new Token(ChainId.BSC, '0x2170ed0880ac9a755fd29b2688956bd959f933f8', 18, 'ETH', 'Binance-Peg Ethereum Token')
-export const USDT = new Token(ChainId.BSC, '0x55d398326f99059ff775485246999027b3197955', 18, 'USDT', 'Binance-Peg BUSD-T')
-export const YOU = new Token(ChainId.BSC, '0x181801f00df1bd997d38dd579dbd44bf9b5a6d2d', 6, 'YOU', 'YouSwap Token')
-export const BUSD = new Token(ChainId.BSC, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'Binance-Peg BUSD Token')
+// heco链添加基础币种
+export const HUSD = new Token(ChainId.HECO, '0x0298c2b32eae4da002a15f36fdf7615bea3da047', 8, 'HUSD', 'Heco-Peg HUSD Token')
+export const USDT = new Token(ChainId.HECO, '0xa71edc38d189767582c38a3145b5873052c3e47a', 18, 'USDT', 'Heco-Peg USDTHECO Token')
+export const YOU = new Token(ChainId.HECO, '0x9364e119ad76e0346126afcbdf5c9f0189500cc5', 6, 'YOU', 'YouSwap')
+export const ETH = new Token(ChainId.HECO, '0x64ff637fb478863b7468bc97d30a5bf3a428a1fd', 18, 'ETH', 'Heco-Peg ETH Token')
+// export const USDTX = new Token(ChainId.HECO, '0x67e121b94d95c88e53a26fdbafbc1176e8d5a1fc', 6, 'USDT', 'USDT Test')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 13
@@ -45,7 +46,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.BSC]: new Token(ChainId.BSC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -65,14 +66,14 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.BSC]: [WETH[ChainId.BSC]],
+  [ChainId.HECO]: [WETH[ChainId.HECO]],
 }
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC],
-  [ChainId.BSC]: [...WETH_ONLY[ChainId.BSC], ETH, USDT, BUSD, YOU]
+  [ChainId.HECO]: [...WETH_ONLY[ChainId.HECO], YOU, USDT, HUSD, ETH]
 }
 
 /**
@@ -89,7 +90,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
-  [ChainId.BSC]: [...WETH_ONLY[ChainId.BSC], ETH, USDT, BUSD, YOU]
+  [ChainId.HECO]: [...WETH_ONLY[ChainId.HECO], YOU, USDT, HUSD]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

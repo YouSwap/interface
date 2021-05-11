@@ -1,53 +1,57 @@
 <template>
   <div class="mining-container">
-    <MiningHeader 
-      :balance="balance" 
-      :isConnected="isConnected"
-      :account="account"
-      :title="$t('title')"
-      :titleDesc="$t('titleDesc')"
-      @connectWallet="connectWallet"/>
+    <MiningHeader :balance="balance"
+                  :isConnected="isConnected"
+                  :account="account"
+                  :title="$t('title')"
+                  :titleDesc="$t('titleDesc')"
+                  @connectWallet="connectWallet" />
     <div class="content-wrapper">
       <div class="content-center">
-        <PledgeCard :pledgeObj="pledgeObj" :totalUSDT="totalUSDT" :realTimeDeflationRate="realTimeDeflationRate"/>
+        <PledgeCard :pledgeObj="pledgeObj"
+                    :totalUSDT="totalUSDT"
+                    :realTimeDeflationRate="realTimeDeflationRate" />
         <div class="content-top">
           <div class="list-card">
-            <YouDestory :dataObj="youObj"/>
+            <YouDestory :dataObj="youObj" />
           </div>
-          <div class="list-card" style="margin-left: 20px;">
-            <YouHouse :dataObj="liqualityObj"/>
+          <div class="list-card"
+               style="margin-left: 20px;">
+            <YouHouse :dataObj="liqualityObj" />
           </div>
         </div>
         <div class="content-bottom-max">
           <div class="list-card">
-            <DigProduct :digObj="exchangeObj" digImgUrl="1"/>
+            <DigProduct :digObj="exchangeObj"
+                        digImgUrl="1" />
           </div>
           <div class="list-card">
-            <DigProduct :digObj="youDigObj"/>
+            <DigProduct :digObj="youDigObj" />
           </div>
         </div>
         <AuditCard v-if="IsPC()" />
-        <partner v-if="IsPC()" /> 
+        <partner v-if="IsPC()" />
         <div class="content-bottom-min">
-          <DigProduct class="dig-min" :digObj="exchangeObj" digImgUrl="1"/>
-          <DigProduct :digObj="youDigObj" digImgUrl="2"/>
+          <DigProduct class="dig-min"
+                      :digObj="exchangeObj"
+                      digImgUrl="1" />
+          <DigProduct :digObj="youDigObj"
+                      digImgUrl="2" />
           <!-- <ExchangeCard :exchangeObj="exchangeObj2"/>
           <ExchangeCard :exchangeObj="exchangeObj1"/> -->
           <AuditCard />
           <partner />
         </div>
       </div>
-      <MobileFooter 
-        class="footer"
-        :balance="balance" 
-        :isConnected="isConnected"
-        :account="account"
-        @showNet="showNetHandle"
-        @connectWallet="connectWallet" />
-      <MobileChain 
-        v-if="isShowNet"
-        @close="closeNetHandle"/>
-      <PcFooter class="pc-footer"/>
+      <MobileFooter class="footer"
+                    :balance="balance"
+                    :isConnected="isConnected"
+                    :account="account"
+                    @showNet="showNetHandle"
+                    @connectWallet="connectWallet" />
+      <MobileChain v-if="isShowNet"
+                   @close="closeNetHandle" />
+      <PcFooter class="pc-footer" />
     </div>
   </div>
 </template>
@@ -82,7 +86,7 @@ export default {
     PcFooter,
     YouDestory
   },
-  async mounted() {
+  async mounted () {
     this.getTotalAmmount(); //当前流动性质押
     this.getBlockHigh(); // 获取当前块高
     this.getBuyBackFee();
@@ -152,34 +156,34 @@ export default {
     totalAmmount () {
       let total = 0
       this.liqualityObj.totalLists.forEach(item => {
-        total = total + (item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10**18))
+        total = total + (item.reserveUSD / item.totalSupply * (item.staketotaldnow / 10 ** 18))
       })
       return total
     },
     blockNumberInt () {
-      return this.currentBlockNumber - 1200*24
+      return this.currentBlockNumber - 1200 * 24
     },
   },
   methods: {
     // 判断是否是PC端
-    IsPC() {
+    IsPC () {
       let userAgentInfo = navigator.userAgent;
       let Agents = ["Android", "iPhone",
-                  "SymbianOS", "Windows Phone",
-                  "iPad", "iPod"];
+        "SymbianOS", "Windows Phone",
+        "iPad", "iPod"];
       let flag = true;
       for (var v = 0; v < Agents.length; v++) {
-          if (userAgentInfo.indexOf(Agents[v]) > 0) {
-              flag = false;
-              break;
-          }
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+          flag = false;
+          break;
+        }
       }
       return flag;
     },
     /**
      * 检测网络
      */
-    checkNetwork() {
+    checkNetwork () {
       if (!window.ethereum) {
         this.$message.error(this.$t('NoWallet'))
         return
@@ -191,6 +195,7 @@ export default {
         provider = new ethers.providers.Web3Provider(window.ethereum);
       }
       provider.getNetwork().then(Network => {
+        this.$store.commit('setChainid', Network.chainId.toString())
         if (Network.chainId != process.env.VUE_APP_HECO_CHAINID) {
           this.$message.error(this.$t('networkError'))
           this.network = false
@@ -204,7 +209,7 @@ export default {
     /**
      * 初始化币种
      */
-    initCoin(chainId) {
+    initCoin (chainId) {
       let coin = 'HT'
       if (chainId == process.env.VUE_APP_CHAINID) {
         coin = 'ETH'
@@ -216,7 +221,7 @@ export default {
     /**
      * 添加heco公链
      */
-    addHecoChain() {
+    addHecoChain () {
       let param = {
         method: "wallet_addEthereumChain",
         params: [{
@@ -245,12 +250,12 @@ export default {
     /**
      * 初始化账户
      */
-    initAccount() {
+    initAccount () {
       let that = this
       let param = {
         'method': 'eth_accounts'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result && res.result.length) {
           that.account = res.result[0]
           that.$store.commit('setAccount', res.result[0])
@@ -264,13 +269,13 @@ export default {
     /**
      * 初始化余额
      */
-    initBalance() {
+    initBalance () {
       let that = this
       let param = {
         params: [this.account],
         'method': 'eth_getBalance'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result) {
           that.balance = (parseInt(res.result, 16) / 1e18).toFixed(3)
           that.$store.commit('setBalance', that.balance)
@@ -280,7 +285,7 @@ export default {
     /**
      * 切换账户之后的回调
      */
-    accountChanged() {
+    accountChanged () {
       let that = this
       if (!window.ethereum) return
       window.ethereum.on('accountsChanged', (accounts) => {
@@ -310,30 +315,30 @@ export default {
       // }
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_requestAccounts' })
-        .then((accounts) => {
-          if (accounts.length === 0) {
-            console.log('Please connect to MetaMask.');
-          } else {
-            this.addHecoChain()
-            // this.account = accounts[0]
-            // this.$store.commit('setAccount', accounts[0])
-            // this.shortAccount = getShowAddress(accounts[0])
-            // this.isConnected = true
-            // this.sendAsync()
-            // const provider = new ethers.providers.Web3Provider(window.ethereum)
-            // provider.getBalance(this.account).then((balance) => {
-            //   let etherString = ethers.utils.formatEther(balance)
-            //   this.balance = parseFloat(etherString, 10).toFixed(3)
-            // })
-          }
-        })
-        .catch((err) => {
-          if (err.code === 4001) {
-            console.log('Please connect to MetaMask.');
-          } else {
-            console.error(err);
-          }
-        })
+          .then((accounts) => {
+            if (accounts.length === 0) {
+              console.log('Please connect to MetaMask.');
+            } else {
+              this.addHecoChain()
+              // this.account = accounts[0]
+              // this.$store.commit('setAccount', accounts[0])
+              // this.shortAccount = getShowAddress(accounts[0])
+              // this.isConnected = true
+              // this.sendAsync()
+              // const provider = new ethers.providers.Web3Provider(window.ethereum)
+              // provider.getBalance(this.account).then((balance) => {
+              //   let etherString = ethers.utils.formatEther(balance)
+              //   this.balance = parseFloat(etherString, 10).toFixed(3)
+              // })
+            }
+          })
+          .catch((err) => {
+            if (err.code === 4001) {
+              console.log('Please connect to MetaMask.');
+            } else {
+              console.error(err);
+            }
+          })
       } else {
         window.open('https://metamask.io/', '_self')
       }
@@ -341,7 +346,7 @@ export default {
     /**
      * 获取当前块高
      */
-    getBlockHigh() {
+    getBlockHigh () {
       let provider
       if (!window.ethereum) {
         provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
@@ -354,7 +359,7 @@ export default {
         this.getExchange()
         const startBlock = parseInt(12043919 - BlockNumber) * 15
         const endBlock = parseInt(12045359 - BlockNumber) * 15
-        const nowTime = parseInt(new Date().getTime()/1000)
+        const nowTime = parseInt(new Date().getTime() / 1000)
         this.$store.commit('startTime', nowTime + startBlock)
         this.$store.commit('endTime', nowTime + endBlock)
         this.$store.commit('RemainingBlockchain', 12043919 - BlockNumber)
@@ -366,7 +371,7 @@ export default {
     /**
      * 获取合约实例
      */
-    async getContract() {
+    async getContract () {
       const contractAddress = process.env.VUE_APP_YOU_CONTRACT_ADDRESS
       let provider
       if (!window.ethereum) {
@@ -381,15 +386,15 @@ export default {
     /**
      * 封装请求
      */
-    sendRequest(param, cb) {
+    sendRequest (param, cb) {
       let provider
       if (!window.ethereum) {
         provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
       } else {
         provider = new ethers.providers.Web3Provider(window.ethereum);
       }
-      provider.provider.sendAsync(param, function(err, res){
-        if (!err && res.error) err = new Error('EthQuery - RPC Error - '+res.error.message)
+      provider.provider.sendAsync(param, function (err, res) {
+        if (!err && res.error) err = new Error('EthQuery - RPC Error - ' + res.error.message)
         if (err) return cb(err)
         cb(null, res)
       })
@@ -397,7 +402,7 @@ export default {
     /**
      * 获取当前用户YOU数量
      */
-    async sendAsync() {
+    async sendAsync () {
       const contract = await this.getContract()
       if (this.account) {
         contract.balanceOf(this.account).then((res) => {
@@ -410,7 +415,7 @@ export default {
     /**
      * 获取YOU总余额
      */
-    async sendAsyncTotal() {
+    async sendAsyncTotal () {
       const contract = await this.getContract()
       contract.totalSupply().then((res) => {
         this.youTotal = ethers.utils.formatUnits(res, 6) || 0
@@ -421,7 +426,7 @@ export default {
     /**
      * 获取Lp list
      */
-    getList() {
+    getList () {
       const that = this
       const endpoint = process.env.VUE_APP_MINING_GRAPHQL_URL
       const query = gql`{
@@ -479,11 +484,11 @@ export default {
             that.getYOU(item)
             pools.push(item)
           })
-          
+
           setTimeout(() => {
             let totol = 0
             pools.forEach(pool => {
-              that.totolList.forEach(totolList =>{
+              that.totolList.forEach(totolList => {
                 if (pool.lpaddress.toString() === totolList.id.toString()) {
                   pool.reserveUSD = totolList.reserveUSD
                   pool.totalSupply = totolList.totalSupply
@@ -510,9 +515,9 @@ export default {
               }
               if (pool.reserveUSD) {
                 if (pool.type == 2) { // 2为单币种，1为币对
-                  totol += pool.reserveUSD * (pool.staketotaldnow / 10**pool.decimals)
+                  totol += pool.reserveUSD * (pool.staketotaldnow / 10 ** pool.decimals)
                 } else {
-                  totol += (pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10**pool.decimals))
+                  totol += (pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10 ** pool.decimals))
                 }
               }
               liquidityLists.push(pool)
@@ -523,13 +528,13 @@ export default {
             if (this.liqualityObj.totalLists[0].startblockheight) {
               let productCount = 0
               // 计算当前挖矿产出
-              productCount = getDecimalsCoin(1.388888888*(this.currentBlockNumber - this.liqualityObj.totalLists[0].startblockheight), 3)
+              productCount = getDecimalsCoin(1.388888888 * (this.currentBlockNumber - this.liqualityObj.totalLists[0].startblockheight), 3)
               this.youDigObj.content = Number(productCount) > 0 ? productCount : '0'
               // this.youDigObj.count = Number(productCount) >  2399999.99999998 ?  2399999.99999998 : productCount
-              this.youDigObj.content2 = getDecimalsCoin(this.youDigObj.content*this.pledgeObj.nowPrice, 3)
+              this.youDigObj.content2 = getDecimalsCoin(this.youDigObj.content * this.pledgeObj.nowPrice, 3)
             }
           }, 3000)
-          
+
         }
       }).catch((err) => {
         console.log(err)
@@ -538,7 +543,7 @@ export default {
     /**
      * 获取矿池精度
      */
-    getDecimals(lpaddress) {
+    getDecimals (lpaddress) {
       let provider
       if (!window.ethereum) {
         provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
@@ -551,22 +556,22 @@ export default {
         provider
       );
       contractLP.decimals().then((res) => {
-          if (res) {
-            const list =  {
-              id: lpaddress,
-              decimals: res,
-            }
-            this.decimalsList.push(list)
+        if (res) {
+          const list = {
+            id: lpaddress,
+            decimals: res,
           }
-        });
+          this.decimalsList.push(list)
+        }
+      });
     },
     /**
      * 获取流动性总额、You的价格
      */
-    getTotole(lpaddress, type) {
+    getTotole (lpaddress, type) {
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const tokenOrPair = type == 2 ? 0 : 1
-      const query = tokenOrPair ?gql`
+      const query = tokenOrPair ? gql`
         {
           pair (id: "${lpaddress}"){
             id
@@ -583,18 +588,18 @@ export default {
             ethPrice
           }
         }`
-        request(endpoint, query).then((res) => {
-          if (!tokenOrPair) {
-            res.pair = {
-              id: res.token.id,
-              totalSupply: res.token.totalSupply,
-              reserveUSD: res.bundle.ethPrice * res.token.derivedETH
-            }
+      request(endpoint, query).then((res) => {
+        if (!tokenOrPair) {
+          res.pair = {
+            id: res.token.id,
+            totalSupply: res.token.totalSupply,
+            reserveUSD: res.bundle.ethPrice * res.token.derivedETH
           }
-          if (res.pair) {
-            this.totolList.push(res.pair)
-          }
-        }).catch((err) => {
+        }
+        if (res.pair) {
+          this.totolList.push(res.pair)
+        }
+      }).catch((err) => {
         console.log(err)
       })
     },
@@ -602,7 +607,7 @@ export default {
     /**
      * YOU的收益数量
      */
-    getYOU(item) { 
+    getYOU (item) {
       let provider
       if (!window.ethereum) {
         provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL);
@@ -627,7 +632,7 @@ export default {
     /**
      * 获取流动性质押
      */
-    getLiquidity() {
+    getLiquidity () {
       const that = this
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const query = gql`{
@@ -649,7 +654,7 @@ export default {
         }
         // 当前价格
         if (res.bundle && res.token) {
-          that.pledgeObj.nowPrice = res.bundle.ethPrice*res.token.derivedETH;
+          that.pledgeObj.nowPrice = res.bundle.ethPrice * res.token.derivedETH;
           // that.getDigProduct();
         }
         this.getList(); // 流动性挖矿列表
@@ -690,7 +695,7 @@ export default {
     /**
      * 获取当前挖矿产出
      */
-    getDigProduct() {
+    getDigProduct () {
       const endpoint = process.env.VUE_APP_LIQUIDITY_PRODUCT
       const query = gql`{
         allPoolInfo(id: "0"){
@@ -700,8 +705,8 @@ export default {
       }`
       request(endpoint, query).then((res) => {
         if (res.allPoolInfo) {
-          this.youDigObj.content = res.allPoolInfo.rewardstotal/1e18;
-          this.youDigObj.content2 = this.youDigObj.content*this.pledgeObj.nowPrice
+          this.youDigObj.content = res.allPoolInfo.rewardstotal / 1e18;
+          this.youDigObj.content2 = this.youDigObj.content * this.pledgeObj.nowPrice
         }
       }).catch((err) => {
         console.log(err)
@@ -710,7 +715,7 @@ export default {
     /**
      * 当前流动性质押
      */
-    getTotalAmmount() {
+    getTotalAmmount () {
       let that = this
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const query = gql`{
@@ -723,7 +728,7 @@ export default {
 
       }`
       request(endpoint, query).then((res) => {
-        that.pledgeObj.totalCurrentAmmount = res.bundles[0].ethPrice*res.uniswapFactories[0].totalLiquidityETH
+        that.pledgeObj.totalCurrentAmmount = res.bundles[0].ethPrice * res.uniswapFactories[0].totalLiquidityETH
       }).catch((err) => {
         console.log(err)
       })
@@ -731,7 +736,7 @@ export default {
     /**
      * 总回购手续费
      */
-    getBuyBackFee() {
+    getBuyBackFee () {
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const query = gql`{
         buyBack(id: "${process.env.VUE_APP_PAIR_ADDRESS}"){
@@ -750,7 +755,7 @@ export default {
     /**
      * 获取交易额、手续费
      */
-    getExchange() {
+    getExchange () {
       // const that = this
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
       const query = gql`{
@@ -765,7 +770,7 @@ export default {
       request(endpoint, query).then((res) => {
         if (res.total[0]) {
           this.exchangeObj.content = getDecimalsCoin((res.total[0].totalVolumeUSD), 3)
-          this.exchangeObj.content2 = getDecimalsCoin((res.total[0].totalVolumeUSD*0.003), 3)
+          this.exchangeObj.content2 = getDecimalsCoin((res.total[0].totalVolumeUSD * 0.003), 3)
         }
         if (res.total[0] && res.day[0]) {
           // this.exchangeObj.content = getDecimalsCoin((res.total[0].totalVolumeUSD - res.day[0].totalVolumeUSD), 3)
@@ -775,10 +780,10 @@ export default {
         console.log(err)
       })
     },
-    showNetHandle() {
+    showNetHandle () {
       this.isShowNet = true
     },
-    closeNetHandle() {
+    closeNetHandle () {
       this.isShowNet = false
     }
   }
@@ -850,7 +855,7 @@ export default {
   .mining-container {
     width: 100%;
     .content-wrapper {
-      background-color: #F8FCFF;
+      background-color: #f8fcff;
       width: 100%;
       height: 100%;
       display: flex;
@@ -864,7 +869,7 @@ export default {
         display: flex;
       }
       .content-center {
-        width:92%;
+        width: 92%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -903,5 +908,4 @@ export default {
     }
   }
 }
-  
 </style>

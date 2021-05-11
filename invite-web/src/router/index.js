@@ -14,6 +14,11 @@ const routes = [
     name: 'Invite',
     component:  () => import(/* webpackChunkName: "about" */ '../views/Invite.vue')
   },
+  {
+    path: '/dealpool',
+    name: 'DealPool',
+    component:  () => import(/* webpackChunkName: "about" */ '../views/DealPool.vue')
+  }
 ]
 
 const router = new VueRouter({

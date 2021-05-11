@@ -1,7 +1,12 @@
 <template>
-  <div class="staked-wrapper" @click="handleDialogClose">
-    <div class="dialog-wrap" :class="$store.state.platform === 2 ? '': 'dialog-wrap-phone'" @click.stop="handleContentClick">
-      <h5>{{$t('dialog')[0]}}</h5>
+  <div class="staked-wrapper"
+       @click="handleDialogClose">
+    <div class="dialog-wrap"
+         :class="$store.state.platform === 2 ? '': 'dialog-wrap-phone'"
+         @click.stop="handleContentClick">
+      <h5>{{$t('digcards')[6]}} {{list_info.poolname}}
+        <template v-if="list_info.type == 1">LP</template>
+      </h5>
       <div class="input-wrap">
         <div class="title-wrap">
           <span>{{$t('digcards')[6]}}</span>
@@ -11,24 +16,35 @@
           </div>
         </div>
         <div class="content-wrap">
-          <input style="font-size: 16px; width: 122px" type="text" placeholder="0.0" v-model="amount" @input="amount = mustNum(amount)">
+          <input type="text"
+                 placeholder="0.0"
+                 v-model="amount"
+                 @input="amount = mustNum(amount)">
           <div class="content-right">
-            <el-button class="maxBtn"  @click="maxNumber">Max</el-button>
+            <el-button class="maxBtn"
+                       @click="maxNumber">Max</el-button>
             <span>{{list_info.poolname}} <span v-if="list_info.type == 1">LP</span></span>
           </div>
         </div>
       </div>
-      <div class="tip-wrap" v-if="tip_error">
+      <div class="tip-wrap"
+           v-if="tip_error">
         <span>*{{list_info.poolname}} LP {{$t('dialog')[6]}}</span>
       </div>
       <div class="btn-wrap">
-        <button class="cancel" @click="handleDialogClose">{{$t('dialog')[3]}}</button>
-        <button :class="notshowConfim?'confirm-disabled': ''" :disabled="notshowConfim" class="confirm" @click="confirm">{{$t('dialog')[4]}}</button>
+        <button class="cancel"
+                @click="handleDialogClose">{{$t('dialog')[3]}}</button>
+        <button :class="notshowConfim?'confirm-disabled': ''"
+                :disabled="notshowConfim"
+                class="confirm"
+                @click="confirm">{{$t('dialog')[4]}}</button>
       </div>
       <div class="link-wrap">
         <span>
-          <a v-if="list_info.type == 2" :href="swapTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} </a>
-          <a v-else :href="lpTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} LP</a>
+          <a v-if="list_info.type == 2"
+             :href="swapTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} </a>
+          <a v-else
+             :href="lpTokenUrl">{{$t('digcards')[13]}} {{list_info.poolname}} LP</a>
         </span>
       </div>
     </div>
@@ -57,29 +73,28 @@ export default {
       notshowConfim: false,
       lpTokenUrl: process.env.VUE_APP_LPTOKEN_URL,
       swapTokenUrl: process.env.VUE_APP_SWAP_URL,
-      lpaddress: process.env.VUE_APP_YOU_ADDRESS,
     };
   },
-  mounted() {
+  mounted () {
     this.getbalance();
   },
   methods: {
     /**
      * maxNumber
     */
-    maxNumber() {
+    maxNumber () {
       this.amount = this.balanceof
     },
     /**
      * 截取小数精度
      */
-    getDecimalsCoinFn(number, decimal) {
+    getDecimalsCoinFn (number, decimal) {
       return getDecimalsCoin(number, decimal)
     },
     handleDialogClose () {
       this.$emit('stakedClose')
     },
-    handleContentClick() {
+    handleContentClick () {
       // this.$emit('stakedClose')
     },
     /**
@@ -96,29 +111,26 @@ export default {
     /**
      * 获取合约实例
      */
-    getContract() {
+    getContract () {
       const contractAddress = process.env.VUE_APP_MINING_CONTRACT
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(contractAddress, abiMing, provider)
       let contractWithSigner = contract.connect(provider.getSigner())
       return contractWithSigner
     },
-    getbalance() {
+    getbalance () {
       const lpaddress = this.list_info.lpaddress
+      let decimals = this.list_info.decimals
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(lpaddress, abiUSDT, provider)
       contract.balanceOf(this.$store.state.account).then(balanceof => {
-        if (process.env.VUE_APP_YOU_ADDRESS === lpaddress) {
-          this.balanceof = ethers.utils.formatUnits(balanceof.toString(), 6) || '--'
-        } else {
-          this.balanceof = ethers.utils.formatUnits(balanceof.toString(), 18) || '--'
-        }
+        this.balanceof = ethers.utils.formatUnits(balanceof.toString(), decimals) || '--'
       })
     },
     /**
      * 获取gasPrice
      */
-    getGasValue() {
+    getGasValue () {
       this.$get(process.env.VUE_APP_HECO_GAS_API).then(res => {
         if (res.code == 0) {
           this.gasPrice = res.prices.median
@@ -129,7 +141,7 @@ export default {
         this.sendAsync()
       })
     },
-    async sendAsync() {
+    async sendAsync () {
 
       if (this.loading) {
         return
@@ -137,18 +149,14 @@ export default {
       this.loading = true
       bus.$emit('showLoading', 'staked')
       this.$emit('stakedClose')
-    
+
       let overrides = {
         gasLimit: this.gasLimit,
-        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(),'gwei')
+        gasPrice: ethers.utils.parseUnits(this.gasPrice.toString(), 'gwei')
       }
       const contract = await this.getContract()
       let BigNumbers = ''
-      if (process.env.VUE_APP_YOU_ADDRESS === this.list_info.lpaddress) {
-        BigNumbers = ethers.utils.parseUnits(this.amount, 6)
-      } else {
-        BigNumbers = ethers.utils.parseUnits(this.amount, 18)
-      }
+      BigNumbers = ethers.utils.parseUnits(this.amount, this.list_info.decimals)
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       await provider.getTransactionCount(this.$store.state.account).then((res) => {
         overrides.nonce = res
@@ -164,8 +172,8 @@ export default {
               if (receipt.logs.length) {
                 this.$message.success(this.$t('digcards')[20])
                 bus.$emit('initBalance')
-                setTimeout(()=>{
-                  bus.$emit('initPoolList')
+                setTimeout(() => {
+                  bus.$emit('updateSinglePool', { id: this.list_info.id })
                   console.log('质押')
                 }, 2000)
                 bus.$emit('updateInviteBenefit')
@@ -202,7 +210,7 @@ export default {
     /**
      * 重置弹窗内容
      */
-    resetInput() {
+    resetInput () {
       this.amount = ''
     },
     confirm () {
@@ -211,7 +219,7 @@ export default {
   },
   watch: {
     amount: {
-      handler(val) {
+      handler (val) {
         if (val === '' || val == 0) {
           this.tip_error = false;
           this.notshowConfim = true;
@@ -241,204 +249,214 @@ export default {
 
 </script>
 <style lang='less' scoped>
-  .staked-wrapper {
-    width: 100%;
-    height: 100%;
-    background: rgba(68, 68, 68, 0.5);
-    position: fixed;
-    left: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    .dialog-wrap-phone {
-       width: 90%!important;
-       padding: 30px 15px!important;
-       .input-wrap {
-         .content-wrap {
-          .content-right {
-            display: flex;
-          }
-          .content-right > span {
-            font-size: 12px!important;
-            margin-left: 0!important;
-          }
-         }
-       }
-       .right-wrap >img{
-         display: none
-       }
+.staked-wrapper {
+  width: 100%;
+  height: 100%;
+  background: rgba(68, 68, 68, 0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  .dialog-wrap-phone {
+    width: 90% !important;
+    padding: 30px 15px !important;
+    .input-wrap {
+      .content-wrap {
+        input {
+          width: 20vw;
+        }
+        .content-right {
+          display: flex;
+        }
+        .content-right > span {
+          font-size: 12px !important;
+          margin-left: 0 !important;
+        }
+      }
     }
-    .dialog-wrap {
-      width: 480px;
-      background: #FFFFFF;
-      box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
-      border-radius: 20px;
-      padding: 30px;
-      z-index: 1111;
-      & > h5 {
-        font-size: 20px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #06263C;
-        line-height: 28px;
-      }
-      .input-wrap {
-        width: 100%;
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid #E6E9EB;
-        margin-top: 30px;
-        display: flex;
-        flex-direction: column;
-        .title-wrap {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          & > span {
-            font-size: 12px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #06263C;
-            line-height: 16px;
-            opacity: 0.5;
-          }
-          & > div {
-            display: flex;
-            & > span {
-              font-size: 12px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #06263C;
-              line-height: 16px;
-              opacity: 0.5;
-            }
-          }
-        }
-        .content-wrap {
-          display: flex;
-          margin-top: 9px;
-          align-items: center;
-          justify-content: space-between;
-          
-          .content-right {
-            display: flex;
-            align-items: center;
-            .right-wrap {
-              width: 20px;
-              height: 20px;
-              position: relative;
-              .img1 {
-                height: 20px;
-              }
-              .img2 {
-                width: 20px;
-                height: 20px;
-                position: absolute;
-                right: -50%;
-              }
-            }
-            & > span {
-              margin-left: 10px;
-              font-size: 14px;
-              font-family: DINPro-Medium, DINPro;
-              font-weight: 500;
-              color: #06263C;
-              line-height: 18px;
-            }
-          }
-        }
-      }
-      .tip-wrap {
-        width: 100%;
-        height: 26px;
-        padding-top: 10px;
-        & > span {
-          font-size: 12px;
-          font-family: DINPro-Regular, DINPro;
-          font-weight: 400;
-          color: #FE535B;
-          line-height: 16px;
-        }
-      }
-      .btn-wrap {
+    .right-wrap > img {
+      display: none;
+    }
+  }
+  .dialog-wrap {
+    width: 480px;
+    background: #ffffff;
+    box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
+    border-radius: 20px;
+    padding: 30px;
+    z-index: 1111;
+    & > h5 {
+      font-size: 20px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #06263c;
+      line-height: 28px;
+    }
+    .input-wrap {
+      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #e6e9eb;
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      .title-wrap {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 30px;
-        .cancel {
-          width: 200px;
-          height: 45px;
-          background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-          border-radius: 10px;
+        & > span {
+          font-size: 12px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #06263c;
+          line-height: 16px;
           opacity: 0.5;
+        }
+        & > div {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #FFFFFF;
-          line-height: 22px;
-          cursor: pointer;
-        }
-        .cancel:hover {
-          opacity: 0.8;
-        }
-        .confirm {
-          width: 200px;
-          height: 45px;
-          margin-left: 20px;
-          background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
-          border-radius: 10px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 16px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #FFFFFF;
-          line-height: 22px;
-          cursor: pointer;
-        }
-        .confirm-disabled {
-          opacity: 0.6;
-        }
-        .confirm:hover {
-          opacity: 0.8;
+          & > span {
+            font-size: 12px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+            line-height: 16px;
+            opacity: 0.5;
+          }
         }
       }
-      .link-wrap {
-        width: 100%;
-        margin-top: 30px;
+      .content-wrap {
         display: flex;
-        justify-content: center;
-        & > span {
-          font-size: 14px;
-          font-family: DINPro-Regular, DINPro;
-          font-weight: 400;
-          color: #06999E;
-          line-height: 18px;
-          text-decoration: underline;
-          cursor: pointer;
-          a {
-            color: #06999E;
+        margin-top: 9px;
+        align-items: center;
+        justify-content: space-between;
+        input {
+          flex: 1;
+          margin-right: 10px;
+        }
+        .content-right {
+          display: flex;
+          align-items: center;
+          .right-wrap {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            .img1 {
+              height: 20px;
+            }
+            .img2 {
+              width: 20px;
+              height: 20px;
+              position: absolute;
+              right: -50%;
+            }
           }
-          a:hover {
-            opacity: 0.8;
+          & > span {
+            margin-left: 10px;
+            font-size: 14px;
+            font-family: DINPro-Medium, DINPro;
+            font-weight: 500;
+            color: #06263c;
+            line-height: 18px;
           }
         }
       }
     }
+    .tip-wrap {
+      width: 100%;
+      height: 26px;
+      padding-top: 10px;
+      & > span {
+        font-size: 12px;
+        font-family: DINPro-Regular, DINPro;
+        font-weight: 400;
+        color: #fe535b;
+        line-height: 16px;
+      }
+    }
+    .btn-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 30px;
+      .cancel {
+        width: 200px;
+        height: 45px;
+        background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+        border-radius: 10px;
+        opacity: 0.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 22px;
+        cursor: pointer;
+      }
+      .cancel:hover {
+        opacity: 0.8;
+      }
+      .confirm {
+        width: 200px;
+        height: 45px;
+        margin-left: 20px;
+        background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 22px;
+        cursor: pointer;
+      }
+      .confirm-disabled {
+        opacity: 0.6;
+      }
+      .confirm:hover {
+        opacity: 0.8;
+      }
+    }
+    .link-wrap {
+      width: 100%;
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      & > span {
+        font-size: 14px;
+        font-family: DINPro-Regular, DINPro;
+        font-weight: 400;
+        color: #06999e;
+        line-height: 18px;
+        text-decoration: underline;
+        cursor: pointer;
+        a {
+          color: #06999e;
+        }
+        a:hover {
+          opacity: 0.8;
+        }
+      }
+    }
   }
-  .maxBtn {
-    height: 28px;
-    border: none;
-    background: linear-gradient(80deg, rgb(52, 189, 176) 0%, rgb(12, 151, 156) 100%);
-    font-weight: 500;
-    color: rgb(255, 255, 255);
-    padding: 4px 5px;
-    margin-right: 5px;
-  }
+}
+.maxBtn {
+  height: 28px;
+  border: none;
+  background: linear-gradient(
+    80deg,
+    rgb(52, 189, 176) 0%,
+    rgb(12, 151, 156) 100%
+  );
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+  padding: 4px 5px;
+  margin-right: 5px;
+}
 </style>

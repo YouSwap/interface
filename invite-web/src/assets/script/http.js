@@ -1,6 +1,6 @@
 // import Vue from 'vue';
 import axios from 'axios';
-axios.defaults.baseURL = process.env.API_ROOT
+axios.defaults.baseURL = process.env.VUE_APP_API_ROOT
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = false
 axios.defaults.crossDomain = true
@@ -43,7 +43,7 @@ axios.interceptors.response.use(
  * 封装get
  */
 
-export function get(url, params = {}) {
+export function get (url, params = {}) {
   return new Promise((resolve, reject) => {
     axios.get(url, {
       params: params
@@ -65,7 +65,7 @@ export function get(url, params = {}) {
  * @returns {Promise}
  */
 
-export function post(url, data = {}) {
+export function post (url, data = {}) {
   return new Promise((resolve, reject) => {
     axios.post(url, data)
       .then(response => {

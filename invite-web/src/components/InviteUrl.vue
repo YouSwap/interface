@@ -38,6 +38,7 @@
 // 二维码生成器
 import qrcode from '@chenfengyuan/vue-qrcode';
 import html2canvas from 'html2canvas'
+import Cookies from 'js-cookie'
 
 export default {
   name: 'inviteUrl',
@@ -61,7 +62,7 @@ export default {
     }
   },
   mounted() {
-    this.lang = localStorage.getItem('lang')
+    this.lang = Cookies.get('lang') && typeof Cookies.get('lang') === 'string' ? Cookies.get('lang').toLowerCase() : ''
     this.createShareUrl()
   },
   methods: {

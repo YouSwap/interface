@@ -58,7 +58,7 @@ export default function Header() {
   return (
     <TabLinks>
       <TabNavLink id={`tab-nav-link`} to={`/swap`}>{t('swap')}</TabNavLink>
-      <TabNavLink id={`tab-nav-link`} to={`/create/BNB`} isActive={(match, { pathname }) =>
+      <TabNavLink id={`tab-nav-link`} to={`/create/HT`} isActive={(match, { pathname }) =>
         Boolean(match) ||
         pathname.startsWith('/add') ||
         pathname.startsWith('/create')

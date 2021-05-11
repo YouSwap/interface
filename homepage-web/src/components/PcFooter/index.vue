@@ -4,45 +4,111 @@
       <div class="footer-inner">
         <div class="footer-left">
           <div class="img-wrap">
-            <div @mouseenter="showActive(1)" @mouseleave="showActive(0)" @click="handleItemClick(0)">
-              <img v-if="active === 1" class="img" :src="url1_active" alt="">
-              <img v-else class="img" :src="url1" alt="">
+            <div @mouseenter="showActive(1)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(0)">
+              <img v-if="active === 1"
+                   class="img"
+                   :src="url1_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url1"
+                   alt="">
             </div>
-            <div @mouseenter="showActive(2)" @mouseleave="showActive(0)" @click="handleItemClick(1)">
-              <img v-if="active === 2" class="img" :src="url2_active" alt="">
-              <img v-else class="img" :src="url2" alt="">
+            <div @mouseenter="showActive(2)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(1)">
+              <img v-if="active === 2"
+                   class="img"
+                   :src="url2_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url2"
+                   alt="">
             </div>
-            <div @mouseenter="showActive(3)" @mouseleave="showActive(0)" @click="handleItemClick(2)">
-              <img v-if="active === 3" class="img" :src="url3_active" alt="">
-              <img v-else class="img" :src="url3" alt="">
+            <div @mouseenter="showActive(3)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(2)">
+              <img v-if="active === 3"
+                   class="img"
+                   :src="url3_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url3"
+                   alt="">
             </div>
-            <div @mouseenter="showActive(4)" @mouseleave="showActive(0)" @click="handleItemClick(3)">
-              <img v-if="active === 4" class="img" :src="url4_active" alt="">
-              <img v-else class="img" :src="url4" alt="">
+            <div @mouseenter="showActive(4)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(3)">
+              <img v-if="active === 4"
+                   class="img"
+                   :src="url4_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url4"
+                   alt="">
             </div>
-            <div @mouseenter="showActive(5)" @mouseleave="showActive(0)" @click="handleItemClick(4)">
-              <img v-if="active === 5" class="img" :src="url5_active" alt="">
-              <img v-else class="img" :src="url5" alt="">
+            <div @mouseenter="showActive(5)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(4)">
+              <img v-if="active === 5"
+                   class="img"
+                   :src="url5_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url5"
+                   alt="">
             </div>
-            <div @mouseenter="showActive(6)" @mouseleave="showActive(0)" @click="handleItemClick(5)">
-              <img v-if="active === 6" class="img" :src="url6_active" alt="">
-              <img v-else class="img" :src="url6" alt="">
+            <div @mouseenter="showActive(6)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(5)">
+              <img v-if="active === 6"
+                   class="img"
+                   :src="url6_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url6"
+                   alt="">
             </div>
-            <el-tooltip class="item" effect="dark" content="support@youswap.info" placement="top">
-              <div @mouseenter="showActive(7)" @mouseleave="showActive(0)">
-                <img v-if="active === 7" class="img" :src="url7_active" alt="">
-                <img v-else class="img" :src="url7" alt="">
+            <el-tooltip class="item"
+                        effect="dark"
+                        content="support@youswap.com"
+                        placement="top">
+              <div @mouseenter="showActive(7)"
+                   @mouseleave="showActive(0)">
+                <img v-if="active === 7"
+                     class="img"
+                     :src="url7_active"
+                     alt="">
+                <img v-else
+                     class="img"
+                     :src="url7"
+                     alt="">
               </div>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('docs')" placement="top">
+            <!-- <el-tooltip class="item" effect="dark" :content="$t('docs')" placement="top">
               <div @mouseenter="showActive(8)" @mouseleave="showActive(0)" @click="handleItemClick(6)">
                 <img v-if="active === 8" class="img" :src="url8_active" alt="">
                 <img v-else class="img" :src="url8" alt="">
               </div>
-            </el-tooltip>
-            <div @mouseenter="showActive(9)" @mouseleave="showActive(0)" @click="handleItemClick(9)">
-              <img v-if="active === 9" class="img" :src="url9_active" alt="">
-              <img v-else class="img" :src="url9" alt="">
+            </el-tooltip> -->
+            <div @mouseenter="showActive(9)"
+                 @mouseleave="showActive(0)"
+                 @click="handleItemClick(9)">
+              <img v-if="active === 9"
+                   class="img"
+                   :src="url9_active"
+                   alt="">
+              <img v-else
+                   class="img"
+                   :src="url9"
+                   alt="">
             </div>
           </div>
         </div>
@@ -84,19 +150,19 @@ export default {
     };
   },
   methods: {
-    showActive(index) {
+    showActive (index) {
       this.active = index;
     },
-    WhitePaper() {
+    WhitePaper () {
       if (Cookies.get('lang') === 'ZH') {
         window.open('https://youswap.oss-cn-shanghai.aliyuncs.com/YouSwap/swap-papper-cn.pdf', '_self')
       } else {
         window.open('https://youswap.oss-cn-shanghai.aliyuncs.com/YouSwap/swap-papper-en.pdf', '_self')
       }
     },
-    handleItemClick(index) {
-      switch(index) {
-        case 0: 
+    handleItemClick (index) {
+      switch (index) {
+        case 0:
           window.open('https://twitter.com/YouSwap_Global', '_self')
           break
         case 1:
@@ -107,7 +173,7 @@ export default {
           }
           break
         case 2:
-          window.open('https://medium.com/@adamkpeterson', '_self')
+          window.open('https://medium.com/youswap', '_self')
           break
         case 3:
           window.open('https://www.facebook.com/YouSwap.Global', '_self')
@@ -119,7 +185,11 @@ export default {
           window.open('https://weibo.com/7572028591/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1&sudaref=www.youswap.info', '_self')
           break
         case 6:
-          window.open('https://youswap-1.gitbook.io/youswap/', '_self')
+          if (Cookies.get('lang') === 'ZH') {
+            window.open('https://youswap-1.gitbook.io/youswap/v/chinese/', '_self')
+          } else {
+            window.open('https://youswap-1.gitbook.io/youswap/', '_self')
+          }
           break
         case 9:
           window.open('https://github.com/youswap/', '_self')
@@ -133,7 +203,7 @@ export default {
 <style lang='less' scoped>
 .footer-wrap {
   width: 100%;
-  background: #001F34;
+  background: #001f34;
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
   .footer-wrap-inner {
     width: 1200px;
@@ -152,7 +222,7 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #06263C;
+          color: #06263c;
           line-height: 20px;
         }
         .img-wrap {
@@ -166,7 +236,6 @@ export default {
               height: 30px;
             }
             .img:hover {
-              
             }
           }
           & > div:hover {
@@ -178,7 +247,7 @@ export default {
         .el-button {
           width: 200px;
           height: 46px;
-          background: linear-gradient(72deg, #34BDB0 0%, #0C979C 100%);
+          background: linear-gradient(72deg, #34bdb0 0%, #0c979c 100%);
           border-radius: 8px;
           color: #fff;
           border: none;
@@ -189,18 +258,17 @@ export default {
       font-size: 14px;
       font-family: DINPro-Regular, DINPro;
       font-weight: 400;
-      color: #EFF3F5;
+      color: #eff3f5;
       line-height: 30px;
       opacity: 0.5;
     }
   }
-  
 }
 @media screen and (max-width: 1000px) {
   .footer-wrap {
     width: 100%;
     height: 100px;
-    background: #001F34;
+    background: #001f34;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
     margin-bottom: 68px;
     .footer-wrap-inner {
@@ -221,11 +289,11 @@ export default {
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #06263C;
+            color: #06263c;
             line-height: 20px;
           }
           .img-wrap {
-            width:100%;
+            width: 100%;
             margin-left: 10px;
             display: flex;
             align-items: center;
@@ -247,7 +315,7 @@ export default {
           .el-button {
             width: auto;
             height: 30px;
-            background: linear-gradient(72deg, #34BDB0 0%, #0C979C 100%);
+            background: linear-gradient(72deg, #34bdb0 0%, #0c979c 100%);
             border-radius: 10px;
             color: #fff;
             border: none;
@@ -261,12 +329,11 @@ export default {
         font-size: 10px;
         font-family: DINPro-Regular, DINPro;
         font-weight: 400;
-        color: #EFF3F5;
+        color: #eff3f5;
         line-height: 12px;
         opacity: 1;
       }
     }
-    
   }
 }
 </style>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Mining from '../pages/Mining'
 import Across from '../pages/acrossChain'
 import fileRead from '../components/PDFRead'
+import DealPool from '../pages/DealPool'
 Vue.use(VueRouter)
 
 const routes = [
@@ -22,6 +23,10 @@ const routes = [
     path: '/fileRead',
     component: fileRead
   },
+  {
+    path: '/dealpool',
+    component: DealPool
+  }
 ]
 
 var router = new VueRouter({

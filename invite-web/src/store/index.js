@@ -11,7 +11,8 @@ export default new Vuex.Store({
     inviteBenefit: '--',
     pledgeBenefit: '--',
     platform: 2,
-    coin: 'ETH'
+    coin: 'ETH',
+    chainId: "128"
   },
   mutations: {
     setCoin (state, data) {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     setPlatform (state, data) {
       state.platform = data
+    },
+    setChainId (state, data) {
+      state.chainId = data
     }
   },
   actions: {

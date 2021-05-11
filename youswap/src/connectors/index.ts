@@ -11,7 +11,7 @@ const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
-export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '56')
+export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '128')
 
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
@@ -27,13 +27,13 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [56]
+  supportedChainIds: [128]
 })
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 56: NETWORK_URL },
-  bridge: 'https://bsc-dataseed.binance.org',
+  rpc: { 128: NETWORK_URL },
+  bridge: 'https://http-mainnet-node.huobichain.com',
   qrcode: true,
   pollingInterval: 15000
 })

@@ -3,6 +3,7 @@ import zhLocale from './zh'
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import Cookies from 'js-cookie'
 
 Vue.use(VueI18n)
 
@@ -18,7 +19,7 @@ const messages = {
 }
 /* eslint-disable */
 const i18n = new VueI18n({
-    locale: localStorage.getItem('lang') || 'zh',
+    locale:(Cookies.get('lang') && typeof Cookies.get('lang') === 'string' ? Cookies.get('lang').toLowerCase() : '') || 'zh',
     messages,
     silentTranslationWarn: true
 })

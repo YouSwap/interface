@@ -1,8 +1,10 @@
 <!-- 流动性挖矿 -->
 <template>
   <div @click="hideToastHandle">
-    <div class="pc-container" v-if="platform === 2">
-      <Header :isConnected="isConnected"/>
+    <div class="pc-container"
+         v-if="platform === 2">
+      <Header :isConnected="isConnected"
+              :poolType="poolType" />
       <div class="content">
         <div class="content-wrapper">
           <div class="data-wrapper">
@@ -11,12 +13,10 @@
               <span> {{getDecimalsCoinFn(totolUSDT, 6)}} USDT</span>
             </div>
           </div>
-          <div class="title-wrapper">
+          <!-- <div class="title-wrapper">
             <p>{{$t('inviteDig')[6]}}<span @click="handleLinkDetail">{{$t('inviteDig')[7]}}</span></p>
           </div>
-          <HeadCard
-           style="margin-top: 40px"
-          />
+          <HeadCard style="margin-top: 40px" /> -->
           <div class="tab-wrapper">
             <!-- <div class="tab">
               <div class="progress" :class="tabActiveIndex === 0 ? 'active' : ''" @click="handleProgress">{{$t('tabs')[0]}}</div>
@@ -24,33 +24,34 @@
             </div> -->
             <div class="tab-box">
               <div class="list"
-                v-for="(item, index) in tabList"
-                :key="index"
-                :class="curTab == item.id ? 'cur' : ''"
-                @click="switchTabHandle(item)"
-                >
-                  <span>{{item.name}}</span>
-                </div>
+                   v-for="(item, index) in tabList"
+                   :key="index"
+                   :class="curTab == item.id ? 'cur' : ''"
+                   @click="switchTabHandle(item)">
+                <span>{{item.name}}</span>
+              </div>
             </div>
           </div>
-          <div v-if="blockbetween > 0" class="startHeight">
+          <!-- <div v-if="blockbetween > 0" class="startHeight">
             <img class="startHeightImg" :src="blockImg" alt="">
             <span>{{$t('startblock')}}</span>
             <span>{{blockbetween}}</span>
-          </div>
+          </div> -->
           <div class="digcard-wrapper">
-            <DigCard 
-              :platform="platform" 
-              :cardLists="cardLists"
-              :loading = "loading"
-              @redeemInit="handleRedeemInitClick"
-              @pledgeInit="handlePledgeInitClick" />
+            <DigCard :platform="platform"
+                     :cardLists="cardLists"
+                     :loading="loading"
+                     :currentBlockNumber="currentBlockNumber"
+                     @redeemInit="handleRedeemInitClick"
+                     @pledgeInit="handlePledgeInitClick" />
           </div>
         </div>
       </div>
     </div>
-    <div class="h5-container" v-if="platform === 1">
-      <MobileHeader />
+    <div class="h5-container"
+         v-if="platform === 1">
+      <MobileHeader :poolType="poolType"
+                    apy="{}" />
       <div class="top-box">
         <div class="bg-box">
           <div class="total-value">
@@ -59,23 +60,27 @@
         </div>
       </div>
       <div class="content-wrapper">
-        <div class="tips">
+        <!-- <div class="tips">
           <span>{{$t('inviteDig')[6]}}</span>
           <span @click="handleLinkDetail">{{$t('inviteDig')[7]}}</span>
         </div>
         <div class="invote-card">
           <div class="invote-item">
-            <img :src="yaoqingH5Url" alt="">
+            <img :src="yaoqingH5Url"
+                 alt="">
             <span class="item-top">{{$t('inviteDig')[0]}}</span>
             <span class="item-bottom">{{inviteNum}}</span>
           </div>
-          <div class="invote-item" style="margin-top: 30px">
-            <img :src="shouyiH5Url" alt="">
+          <div class="invote-item"
+               style="margin-top: 30px">
+            <img :src="shouyiH5Url"
+                 alt="">
             <div class="item-top-box">
               <span>{{$t('inviteDig')[1]}}</span>
               <div>
                 <a class="toast-box">
-                  <img :src="questionUrl" alt="">
+                  <img :src="questionUrl"
+                       alt="">
                   <div>
                     {{$t('inviteDig')[8]}}
                     <i></i>
@@ -89,105 +94,100 @@
             <div class="bottom-item">
               <div class="item-title">
                 <span :class="lang == 'en' ? 'en-version' : ''">{{$t('inviteDig')[2]}}</span>
-                <a class="toast-box" @click.stop="switchShowToast(1)">
-                  <img :src="questionUrl" alt="">
+                <a class="toast-box"
+                   @click.stop="switchShowToast(1)">
+                  <img :src="questionUrl"
+                       alt="">
                   <div v-if="isShowShareToast">
                     {{$t('notice')[0]}}
                     <i></i>
                   </div>
                 </a>
               </div>
-              <div
-                class="bottom-btn"
-                :class="account ? '' : 'disabled'"
-                @click="handleGetLine"
-              >{{$t('invite')[7]}}</div>
+              <div class="bottom-btn"
+                   :class="account ? '' : 'disabled'"
+                   @click="handleGetLine">{{$t('invite')[7]}}</div>
             </div>
-            <div class="bottom-item" style="margin-left: 10px">
+            <div class="bottom-item"
+                 style="margin-left: 10px">
               <div class="item-title">
                 <span :class="lang == 'en' ? 'en-version' : ''">{{$t('inviteDig')[3]}}</span>
-                <a class="toast-box" @click.stop="switchShowToast(2)">
-                  <img :src="questionUrl" alt="">
-                  <div v-if="isShowActivateToast" class="activate-tip">
+                <a class="toast-box"
+                   @click.stop="switchShowToast(2)">
+                  <img :src="questionUrl"
+                       alt="">
+                  <div v-if="isShowActivateToast"
+                       class="activate-tip">
                     {{$t('notice')[1]}}
                     <i></i>
                   </div>
                 </a>
               </div>
-              <div
-                class="bottom-btn"
-                :class="account ? '' : 'disabled'"
-                @click="handleActive"
-              >{{$t('invite')[8]}}</div>
+              <div class="bottom-btn"
+                   :class="account ? '' : 'disabled'"
+                   @click="handleActive">{{$t('invite')[8]}}</div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="tab-wrapper">
           <div class="tab-box">
             <div class="list"
-              v-for="(item, index) in tabList"
-              :key="index"
-              :class="curTab == item.id ? 'cur' : ''"
-              @click="switchTabHandle(item)"
-              >
-                <span>{{item.name}}</span>
-              </div>
+                 v-for="(item, index) in tabList"
+                 :key="index"
+                 :class="curTab == item.id ? 'cur' : ''"
+                 @click="switchTabHandle(item)">
+              <span>{{item.name}}</span>
+            </div>
           </div>
         </div>
-        <div v-if="blockbetween > 0" class="startHeight">
+        <!-- <div v-if="blockbetween > 0" class="startHeight">
           <img class="startHeightImg" :src="blockImgW" alt="">
           <span>{{$t('startblock')}} </span>
           <span>{{blockbetween}}</span>
-        </div>
+        </div> -->
         <div class="digcard-wrapper">
-          <DigCard 
-            :platform="platform" 
-            :cardLists="cardLists"
-            :loading = "loading"
-            @redeemInit="handleRedeemInitClick"
-            @pledgeInit="handlePledgeInitClick" />
+          <DigCard :platform="platform"
+                   :cardLists="cardLists"
+                   :loading="loading"
+                   :currentBlockNumber="currentBlockNumber"
+                   @redeemInit="handleRedeemInitClick"
+                   @pledgeInit="handlePledgeInitClick" />
         </div>
-        <MobileFooter
-          @setLang="setLangHandle" 
-          :isConnected="isConnected"/>
+        <MobileFooter @setLang="setLangHandle"
+                      :isConnected="isConnected" />
       </div>
     </div>
     <template v-if="isShowInviteUrl">
-      <InviteUrl
-        :account="account"
-        :platform="platform"
-        @cancel="closeInviteUrlHandle"></InviteUrl>
+      <InviteUrl :account="account"
+                 :platform="platform"
+                 @cancel="closeInviteUrlHandle"></InviteUrl>
     </template>
     <div v-show="isShowActivate">
-      <Activate
-        :platform="platform"
-        :account="account"
-        @updateAccount="updateAccountHandle"
-        @cancel="closeActivateHandle"></Activate>
+      <Activate :platform="platform"
+                :account="account"
+                @updateAccount="updateAccountHandle"
+                @cancel="closeActivateHandle"></Activate>
     </div>
     <div v-show="isShowShare">
-      <ShareDialog
-        :platform="platform"
-        :account="account"
-        :shareAddress="shareAddress"
-        @connect="connectWallet"
-        @inviteSucc="invitedSuccHandle"
-        @cancel="closeShareHandle"></ShareDialog>
+      <ShareDialog :platform="platform"
+                   :account="account"
+                   :shareAddress="shareAddress"
+                   @connect="connectWallet"
+                   @inviteSucc="invitedSuccHandle"
+                   @cancel="closeShareHandle"></ShareDialog>
     </div>
     <template v-if="ifStakedShow">
-      <StakedDialog
-        @stakedClose="handleStakedClosed" />
+      <StakedDialog @stakedClose="handleStakedClosed" />
     </template>
     <template v-if="ifUnStakedShow">
-      <UnstakedDialog
-        @stakedClose="handleUnStakedClosed" />
+      <UnstakedDialog @stakedClose="handleUnStakedClosed" />
     </template>
   </div>
 </template>
 
 <script>
 import Header from '../components/Header'
-import HeadCard from '../components/Card/HeadCard'
+// import HeadCard from '../components/Card/HeadCard'
 import DigCard from '../components/Card/DigCard'
 import MobileHeader from '../components/MobileHeader'
 import MobileFooter from '../components/MobileFooter'
@@ -206,12 +206,13 @@ import { ethers } from 'ethers'
 import { getShowAddress, getDecimalsCoin } from '../utils'
 import abiUSDT from '../abi-usdt.json'
 import abi from '../abi-mining.json'
+import abiDecimal from '../abi-decimal.json'
 import { mapState } from 'vuex'
 
 export default {
   components: {
     Header,
-    HeadCard,
+    // HeadCard,
     DigCard,
     MobileHeader,
     MobileFooter,
@@ -233,7 +234,6 @@ export default {
       isShowActivate: false,
       isShowShare: false,
       shareAddress: '',
-      platform: 2,
       yaoqingUrl: require('../assets/image/yaoqing@2x.png'),
       shouyiUrl: require('../assets/image/shouyi@2x.png'),
       yaoqingH5Url: require('../assets/image/yaoqing-h5.png'),
@@ -241,6 +241,8 @@ export default {
       questionUrl: require('../assets/image/question-h5.png'),
       ifStakedShow: false,
       allowanceList: [], // 是否授权列表
+      decimalsList: [], // 矿池精度列表
+      maxStakeAmountList: [], // 最大可解质押数量
       totolList: [],     //流动性总额 YOU价格列表
       getYouList: [],     //YOU的收益列表
       loading: false,
@@ -253,59 +255,62 @@ export default {
       startblockheight: 0,
       blockImg: require('../assets/image/block.png'),
       blockImgW: require('../assets/image/blockWhite.png'),
-      youPrice: 0,
-      curTab: 0,
+      curTab: 1,
       tabList: [
         {
-          name: '主流区',
-          id: 0
-        },
-        {
-          name: '开拓区',
+          name: this.$t('section')[0],
           id: 1
         },
         {
-          name: '联盟区',
+          name: this.$t('section')[1],
           id: 2
+        },
+        {
+          name: this.$t('section')[2],
+          id: 3
         }
-      ]
+      ],
+      mainPoolList: [], // 主选区
+      innovatePoolList: [], // 开拓区
+      alliancePoolList: [], // 联盟区
+      poolType: 'liquidity'
     }
   },
   computed: {
     ...mapState({
       inviteNum: state => state.inviteNum,
-      inviteBenefit: state => state.inviteBenefit
+      inviteBenefit: state => state.inviteBenefit,
+      platform: state => state.platform
     }),
-    blockbetween() {
+    blockbetween () {
       return this.startblockheight - this.currentBlockNumber
-    },
-    YouPrice () {
-      return this.youPrice
     }
   },
-  created() {
+  created () {
     this.initPlatform()
     // 获取当前块高
     this.getBlockHigh();
     setInterval(() => {
       this.getBlockHigh();
     }, 10000);
-    // 获取当前YOU的价格
-    this.getYouPrice();
   },
-  mounted() {
+  mounted () {
     // parseFloat(inviteBenefit, 10).toFixed(4)
     setTimeout(() => {
       this.checkNetwork()
     }, 100)
     this.accountChanged()
-    
+
     // 连接钱包
     bus.$on('connectWallet', this.connectWallet)
     // 获取最新余额
     bus.$on('initBalance', this.initBalance)
     // 获取最新LP列表
     bus.$on('initPoolList', this.getList)
+    // 刷新单个池子
+    bus.$on('updateSinglePool', (data) => {
+      this.getSinglePoolData(data)
+    })
     // 获取最新累计邀请挖矿收益
     bus.$on('updateInviteBenefit', this.getInviteBenefit)
     // this.allowanceUser();
@@ -316,9 +321,10 @@ export default {
     /**
      * 获取当前块高
     */
-    getBlockHigh() {
+    getBlockHigh () {
       const provider = new ethers.providers.JsonRpcProvider(process.env.VUE_APP_RPC_URL)
       provider.getBlockNumber().then(BlockNumber => {
+        // console.log(BlockNumber)
         this.currentBlockNumber = BlockNumber
       })
     },
@@ -326,7 +332,7 @@ export default {
     /**
      * 精度截取
     */
-    getDecimalsCoinFn(number, decimals) {
+    getDecimalsCoinFn (number, decimals) {
       return getDecimalsCoin(number, decimals)
     },
     /**
@@ -338,7 +344,7 @@ export default {
     /**
      * 判断平台
      */
-    initPlatform() {
+    initPlatform () {
       var userAgentInfo = navigator.userAgent.toLowerCase();
       var Agents = ['android', 'iphone', 'symbianOS', 'windows phone', 'ipad', 'ipod'];
       var flag = true;
@@ -367,7 +373,7 @@ export default {
     /**
      * 获取Lp list
      */
-    getList() {
+    getList () {
       const that = this
       const endpoint = process.env.VUE_APP_MINING_GRAPHQL_URL
       const account = that.$store.state.account?.toLowerCase()
@@ -375,6 +381,7 @@ export default {
         pools(orderBy: priority, orderDirection: "asc"){
           id
           pool
+          tab
           type
           lpaddress
           poolname
@@ -422,15 +429,16 @@ export default {
         if (res.pools) {
           res.pools.forEach(item => {
             item.fold = true
-            that.allowanceUser(item.lpaddress)
-            that.getTotole(item.lpaddress);
+            that.getDecimals(item.lpaddress, item.id)
+            // that.allowanceUser(item.lpaddress)
+            that.getTotole(item.lpaddress, item.type)
             that.getYOU(item)
             pools.push(item)
           })
           setTimeout(() => {
             let totol = 0
             pools.forEach(pool => {
-              that.totolList.forEach(totolList =>{
+              that.totolList.forEach(totolList => {
                 if (pool.lpaddress.toString() === totolList.id.toString()) {
                   pool.reserveUSD = totolList.reserveUSD
                   pool.totalSupply = totolList.totalSupply
@@ -441,30 +449,36 @@ export default {
                   pool.allowance = allowance.allowance
                 }
               })
+              that.decimalsList.forEach(decimals => {
+                if (pool.lpaddress.toString() === decimals.id.toString()) {
+                  pool.decimals = decimals.decimals
+                }
+              })
               that.getYouList.forEach(youList => {
                 if (pool.id.toString() === youList.id.split('-')[0]) {
                   pool.youPrice = youList.youPrice
                 }
               })
+              that.maxStakeAmountList.forEach(amount => {
+                if (pool.lpaddress.toString() === amount.id.toString()) {
+                  pool.maxStakeAmount = amount.maxStakeAmount
+                }
+              })
             })
             pools.forEach(pool => {
               if (pool.reserveUSD) {
-                if (process.env.VUE_APP_YOU_ADDRESS === pool.lpaddress) {
-                  totol+= this.YouPrice * (pool.staketotaldnow / 10**6)
-                  console.log('this.YouPrice', this.YouPrice)
+                if (pool.type == 2) { // 2为单币种，1为币对
+                  totol += pool.reserveUSD * (pool.staketotaldnow / 10 ** pool.decimals)
                 } else {
-                  totol+= (pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10**18))
+                  totol += pool.reserveUSD / pool.totalSupply * (pool.staketotaldnow / 10 ** pool.decimals)
                 }
               }
             })
-            console.log('totol', totol)
             this.totolUSDT = totol
+            const mainPoolList = []
+            const innovatePoolList = []
+            const alliancePoolList = []
             pools.forEach(pool => {
-              if (pool.lpaddress === process.env.VUE_APP_YOU_ADDRESS) {
-                pool.decimals = 6
-              } else {
-                pool.decimals = 18
-              }
               const endblockheigh = Number(pool.startblockheight) + Number(Math.ceil(pool.rewardtotal / pool.rewardperblock))
               if (pool.startblockheight > this.currentBlockNumber) {
                 pool.isNotStart = true
@@ -473,32 +487,173 @@ export default {
               if (this.currentBlockNumber >= endblockheigh) {
                 pool.isfinshed = true
               } else {
-                pool.isfinshed = false
+                if (pool.isfinshed) {
+                  pool.isfinshed = true
+                } else {
+                  pool.isfinshed = false
+                }
+              }
+              if (pool.tab == 1) {
+                mainPoolList.push(pool)
+              } else if (pool.tab == 2) {
+                innovatePoolList.push(pool)
+              } else if (pool.tab == 3) {
+                alliancePoolList.push(pool)
               }
             })
-            this.cardLists = pools
+            this.mainPoolList = mainPoolList
+            this.innovatePoolList = innovatePoolList
+            this.alliancePoolList = alliancePoolList
+            // this.cardLists = mainPoolList
+            if (this.curTab == 1) {
+              this.cardLists = this.mainPoolList
+            } else if (this.curTab == 2) {
+              this.cardLists = this.innovatePoolList
+            } else if (this.curTab == 3) {
+              this.cardLists = this.alliancePoolList
+            }
             this.loading = false;
           }, 3000)
-          
+
         }
-        // that.allowanceUser();
-        // if (res.poolUsers) {
-        //   const pools = []
-        //   res.poolUsers.forEach((poolUser) => {
-        //     poolUser.poolsinfo.forEach((pool)=> {
-        //       pool.fold = true
-        //       pool.ids = poolUser.id.toString()
-        //       pools.push(pool)
-        //     })
-        //   })
-        //   pools.forEach((item) => {
-        //     that.getTotole(item.ids)
-        //   })
-        //   that.cardLists = pools
-        // }
       }).catch((err) => {
         console.log(err)
       })
+    },
+    /**
+     * 获取单个矿池数据
+     */
+    getSinglePoolData (param) {
+      let count = 0
+      let timer = null
+      const that = this
+      const endpoint = process.env.VUE_APP_MINING_GRAPHQL_URL
+      const account = that.$store.state.account?.toLowerCase()
+      const query = gql`{
+        pool(id: ${param.id}){
+          id
+          pool
+          tab
+          type
+          lpaddress
+          poolname
+          startblockheight
+          rewardtotal
+          rewardperblock
+          rewardmultiple 
+          priority
+          isfinshed
+          staketotaldnow
+          rewardcanwithdrawnow
+          totalpower
+          user(first:999,where: { address: "${account}" }){
+            address
+            poolsinfo{
+              id
+              pool{
+                id
+                pool
+                lpaddress
+                poolname
+                startblockheight
+                rewardtotal
+                rewardperblock
+                rewardmultiple 
+                priority
+                isfinshed
+                staketotaldnow
+                rewardcanwithdrawnow
+                totalpower
+              }
+              stake
+              stakepower
+              invitepower
+              rewardbalance
+              rewardsT
+              rewardwithdrawT
+            }
+          }
+        }
+      }`
+      timer = setInterval(() => {
+        request(endpoint, query).then((res) => {
+          const pools = []
+          pools.push(res.pool)
+          if (pools) {
+            pools.forEach(item => {
+              item.fold = true
+              that.getDecimals(item.lpaddress, item.id)
+              that.getTotole(item.lpaddress, item.type)
+              that.getYOU(item)
+            })
+            pools.forEach(pool => {
+              that.totolList.forEach(totolList => {
+                if (pool.lpaddress.toString() === totolList.id.toString()) {
+                  pool.reserveUSD = totolList.reserveUSD
+                  pool.totalSupply = totolList.totalSupply
+                }
+              })
+              that.allowanceList.forEach(allowance => {
+                if (pool.lpaddress.toString() === allowance.id.toString()) {
+                  pool.allowance = allowance.allowance
+                }
+              })
+              that.decimalsList.forEach(decimals => {
+                if (pool.lpaddress.toString() === decimals.id.toString()) {
+                  pool.decimals = decimals.decimals
+                }
+              })
+              that.getYouList.forEach(youList => {
+                if (pool.id.toString() === youList.id.split('-')[0]) {
+                  pool.youPrice = youList.youPrice
+                }
+              })
+              that.maxStakeAmountList.forEach(amount => {
+                if (pool.lpaddress.toString() === amount.id.toString()) {
+                  pool.maxStakeAmount = amount.maxStakeAmount
+                }
+              })
+              const endblockheigh = Number(pool.startblockheight) + Number(Math.ceil(pool.rewardtotal / pool.rewardperblock))
+              if (pool.startblockheight > this.currentBlockNumber) {
+                pool.isNotStart = true
+                this.startblockheight = pool.startblockheight
+              }
+              if (this.currentBlockNumber >= endblockheigh) {
+                pool.isfinshed = true
+              } else {
+                if (pool.isfinshed) {
+                  pool.isfinshed = true
+                } else {
+                  pool.isfinshed = false
+                }
+              }
+            })
+            this.cardLists.forEach((item, index) => {
+              if (item.id == pools[0].id) {
+                this.cardLists.splice(index, 1, pools[0])
+              }
+            })
+
+            count++
+            console.log('count' + count)
+            if (count >= 10) {
+              clearInterval(timer)
+            }
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }, 1000)
+    },
+    switchTabHandle (item) {
+      this.curTab = item.id
+      if (item.id == 1) {
+        this.cardLists = this.mainPoolList
+      } else if (item.id == 2) {
+        this.cardLists = this.innovatePoolList
+      } else if (item.id == 3) {
+        this.cardLists = this.alliancePoolList
+      }
     },
     /**
      * 点击赎回
@@ -515,7 +670,7 @@ export default {
     /**
      * 查看当前用户是否授权Lp
      */
-    allowanceUser(lpaddress) {
+    allowanceUser (lpaddress, decimals) {
       // const provider = (typeof window.ethereum !== 'undefined') ? new ethers.providers.Web3Provider(window.ethereum) : ethers.getDefaultProvider(process.env.VUE_APP_NETWORK_NAME);
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contractLP = new ethers.Contract(
@@ -524,33 +679,81 @@ export default {
         provider
       );
       contractLP.allowance(
-          this.$store.state.account,
-          process.env.VUE_APP_MINING_CONTRACT
-        ).then((allowance) => {
-          if (allowance) {
-            let allowances = ''
-            if (process.env.VUE_APP_YOU_ADDRESS === lpaddress) {
-              allowances = ethers.utils.formatUnits(allowance.toString(), 6) || 0
-            } else {
-              allowances = ethers.utils.formatUnits(allowance.toString(), 18) || 0
-            }
-            // console.log('allowance', allowance.toPrecision())
-            // const allowances = allowance.toString().toNumber() || 0;
-            const list =  {
-              id: lpaddress,
-              allowance: allowances,
-            }
-            this.allowanceList.push(list)
+        this.$store.state.account,
+        process.env.VUE_APP_MINING_CONTRACT
+      ).then((allowance) => {
+        if (allowance) {
+          let allowances = ''
+          allowances = ethers.utils.formatUnits(allowance.toString(), decimals) || 0
+          // if (process.env.VUE_APP_YOU_ADDRESS === lpaddress) {
+          //   allowances = ethers.utils.formatUnits(allowance.toString(), 6) || 0
+          // } else {
+          //   allowances = ethers.utils.formatUnits(allowance.toString(), 18) || 0
+          // }
+          // console.log('allowance', allowance.toPrecision())
+          // const allowances = allowance.toString().toNumber() || 0;
+          const list = {
+            id: lpaddress,
+            allowance: allowances,
           }
-        });
+          this.allowanceList.push(list)
+        }
+      });
+    },
+    /**
+     * 获取矿池最大可解质押数量
+     */
+    getMaxStakeAmount (lpaddress, id, decimals) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const contract = new ethers.Contract(
+        process.env.VUE_APP_DECIMAL_ADDRESS,
+        abiDecimal,
+        provider
+      );
+      const contractWithSigner = contract.connect(provider.getSigner())
+      contractWithSigner.withdraw(
+        this.$store.state.account,
+        id
+      ).then((amount) => {
+        if (amount) {
+          const list = {
+            id: lpaddress,
+            maxStakeAmount: ethers.utils.formatUnits(amount, decimals),
+          }
+          console.log(list.maxStakeAmount)
+          this.maxStakeAmountList.push(list)
+        }
+      });
+    },
+    /**
+     * 获取矿池精度
+     */
+    getDecimals (lpaddress, id) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const contractLP = new ethers.Contract(
+        lpaddress,
+        abiUSDT,
+        provider
+      );
+      contractLP.decimals().then((res) => {
+        if (res) {
+          const list = {
+            id: lpaddress,
+            decimals: res,
+          }
+          this.allowanceUser(lpaddress, res)
+          this.getMaxStakeAmount(lpaddress, id, res)
+          this.decimalsList.push(list)
+        }
+      });
     },
     /**
      * 获取流动性总额、You的价格
      */
-    getTotole(lpaddress) {
+    getTotole (lpaddress, type) {
       const endpoint = process.env.VUE_APP_MING_ROPSTEN
-      const tokenOrPair = process.env.VUE_APP_YOU_ADDRESS == lpaddress ? 0 : 1
-      const query = tokenOrPair ?gql`
+      const tokenOrPair = type == 2 ? 0 : 1
+      const query = tokenOrPair ? gql`
         {
           pair (id: "${lpaddress}"){
             id
@@ -567,25 +770,25 @@ export default {
             ethPrice
           }
         }`
-        request(endpoint, query).then((res) => {
-          if (!tokenOrPair) {
-            res.pair = {
-              id: res.token.id,
-              totalSupply: res.token.totalSupply,
-              reserveUSD: res.bundle.ethPrice * res.token.derivedETH
-            }
+      request(endpoint, query).then((res) => {
+        if (!tokenOrPair) {
+          res.pair = {
+            id: res.token.id,
+            totalSupply: res.token.totalSupply,
+            reserveUSD: res.bundle.ethPrice * res.token.derivedETH
           }
-          if (res.pair) {
-            this.totolList.push(res.pair)
-          }
-        }).catch((err) => {
+        }
+        if (res.pair) {
+          this.totolList.push(res.pair)
+        }
+      }).catch((err) => {
         console.log(err)
       })
     },
     /**
      * YOU的收益数量
      */
-    getYOU(item) {
+    getYOU (item) {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(
         process.env.VUE_APP_MINING_CONTRACT,
@@ -606,10 +809,10 @@ export default {
     /**
      * 封装请求
      */
-    sendRequest(param, cb) {
+    sendRequest (param, cb) {
       let provider = new ethers.providers.Web3Provider(window.ethereum)
-      provider.provider.sendAsync(param, function(err, res){
-        if (!err && res.error) err = new Error('EthQuery - RPC Error - '+res.error.message)
+      provider.provider.sendAsync(param, function (err, res) {
+        if (!err && res.error) err = new Error('EthQuery - RPC Error - ' + res.error.message)
         if (err) return cb(err)
         cb(null, res)
       })
@@ -617,13 +820,14 @@ export default {
     /**
      * 检测网络
      */
-    checkNetwork() {
+    checkNetwork () {
       if (!window.ethereum) {
         this.$message.error(this.$t('connect')[2])
         return
       }
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       provider.getNetwork().then(Network => {
+        this.$store.commit('setChainId', Network.chainId.toString())
         if (Network.chainId != process.env.VUE_APP_HECO_CHAINID) {
           this.$message.error(this.$t('index')[6])
           this.network = false
@@ -637,7 +841,7 @@ export default {
     /**
      * 初始化币种
      */
-    initCoin(chainId) {
+    initCoin (chainId) {
       let coin = 'HT'
       if (chainId == process.env.VUE_APP_CHAINID) {
         coin = 'ETH'
@@ -649,7 +853,7 @@ export default {
     /**
      * 添加heco公链
      */
-    addHecoChain() {
+    addHecoChain () {
       let param = {
         method: "wallet_addEthereumChain",
         params: [{
@@ -676,14 +880,43 @@ export default {
       })
     },
     /**
+     * 添加BSC公链
+     */
+    addBSCChain () {
+      let param = {
+        method: "wallet_addEthereumChain",
+        params: [{
+          chainId: "0x38",
+          chainName: "Binance Smart Chain Mainnet",
+          nativeCurrency: {
+            name: "BNB",
+            symbol: "bnb",
+            decimals: 18
+          },
+          rpcUrls: ["https://bsc-dataseed1.ninicoin.io"],
+          blockExplorerUrls: ["https://bscscan.com/"]
+        }]
+      };
+      window.ethereum.request(param).then((res) => {
+        if (res && res.result === null) {
+          window.location.reload()
+        }
+      }).catch((err) => {
+        this.checkNetwork()
+        if (err && err.code == 4001) {
+          window.location.reload()
+        }
+      })
+    },
+    /**
      * 初始化账户
      */
-    initAccount() {
+    initAccount () {
       let that = this
       let param = {
         'method': 'eth_accounts'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result && res.result.length) {
           that.account = res.result[0]
           that.$store.commit('setAccount', res.result[0])
@@ -702,13 +935,13 @@ export default {
     /**
      * 初始化余额
      */
-    initBalance() {
+    initBalance () {
       let that = this
       let param = {
         params: [this.account],
         'method': 'eth_getBalance'
       }
-      this.sendRequest(param, function(err, res){
+      this.sendRequest(param, function (err, res) {
         if (res.result) {
           that.balance = (parseInt(res.result, 16) / 1e18).toFixed(3)
           that.$store.commit('setBalance', that.balance)
@@ -718,8 +951,9 @@ export default {
     /**
      * 切换账户之后的回调
      */
-    accountChanged() {
+    accountChanged () {
       let that = this
+      if (!window.ethereum) return
       window.ethereum.on('accountsChanged', (accounts) => {
         // Handle the new accounts, or lack thereof.
         // "accounts" will always be an array, but it can be empty.
@@ -729,6 +963,9 @@ export default {
           window.location.reload()
         } else if (accounts[0] !== that.account) {
           this.initAccount()
+          this.curTab = 1
+          bus.$emit('resetCondition')
+          // window.location.reload()
         }
       });
       window.ethereum.on('chainChanged', () => {
@@ -748,25 +985,25 @@ export default {
       // }
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_requestAccounts' })
-        .then((accounts) => {
-          if (accounts.length === 0) {
-            console.log('Please connect to a wallet.');
-          } else {
-            this.addHecoChain()
-          }
-        })
-        .catch((err) => {
-          if (err.code === 4001) {
-            console.log('Please connect to a wallet.');
-          } else {
-            console.error(err);
-          }
-        })
+          .then((accounts) => {
+            if (accounts.length === 0) {
+              console.log('Please connect to a wallet.');
+            } else {
+              this.addHecoChain()
+            }
+          })
+          .catch((err) => {
+            if (err.code === 4001) {
+              console.log('Please connect to a wallet.');
+            } else {
+              console.error(err);
+            }
+          })
       } else {
-        console.log('Please connect to a wallet.');
+        window.open('https://metamask.io/', '_self')
       }
     },
-    closeShareHandle(data) {
+    closeShareHandle (data) {
       this.isShowShare = false
       if (data) {
         window.location.href = this.funcUrlDel('address')
@@ -775,7 +1012,7 @@ export default {
     /**
      * 格式化钱包地址
      */
-    shortenAddress(address, chars, type) {
+    shortenAddress (address, chars, type) {
       let label = '...'
       if (type == 1) {
         label = '...'
@@ -787,7 +1024,7 @@ export default {
     /**
      * 删除url的参数
      */
-    funcUrlDel(paramKey) {
+    funcUrlDel (paramKey) {
       var url = window.location.href;    //页面url
       var urlParam = window.location.search.substr(1);   //页面参数
       var beforeUrl = url.substr(0, url.indexOf("?"));   //页面主地址（参数之前地址）
@@ -795,22 +1032,22 @@ export default {
 
       var arr = new Array();
       if (urlParam != "") {
-          var urlParamArr = urlParam.split("&"); //将参数按照&符分成数组
-          for (var i = 0; i < urlParamArr.length; i++) {
-              var paramArr = urlParamArr[i].split("="); //将参数键，值拆开
-              //如果键雨要删除的不一致，则加入到参数中
-              if (paramArr[0] != paramKey) {
-                  arr.push(urlParamArr[i]);
-              }
+        var urlParamArr = urlParam.split("&"); //将参数按照&符分成数组
+        for (var i = 0; i < urlParamArr.length; i++) {
+          var paramArr = urlParamArr[i].split("="); //将参数键，值拆开
+          //如果键雨要删除的不一致，则加入到参数中
+          if (paramArr[0] != paramKey) {
+            arr.push(urlParamArr[i]);
           }
+        }
       }
       if (arr.length > 0) {
-          nextUrl = "?" + arr.join("&");
+        nextUrl = "?" + arr.join("&");
       }
       url = beforeUrl + nextUrl;
       return url;
     },
-    invitedSuccHandle() {
+    invitedSuccHandle () {
       this.userAddress = this.shortenAddress(this.shareAddress, 4)
       this.isInvited = true
       this.isShowTip = true
@@ -818,24 +1055,23 @@ export default {
     /**
      * 获取url参数
      */
-    getRequest() {
+    getRequest () {
       let url = location.href; //获取url中"?"符后的字串
       let theRequest = {};
-      console.log(url)
       if (url.indexOf('?') !== -1) {
-          let ind = url.indexOf('?');
-          let str = url.substr(ind + 1);
-          let strs = str.split('&');
-          for (var i = 0; i < strs.length; i++) {
-              theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
-          }
+        let ind = url.indexOf('?');
+        let str = url.substr(ind + 1);
+        let strs = str.split('&');
+        for (var i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
+        }
       }
       return theRequest;
     },
     /**
      * 检查邀请链接
      */
-    checkShare() {
+    checkShare () {
       let shareAddress = this.getRequest().address
       if (shareAddress) {
         this.shareAddress = shareAddress
@@ -884,7 +1120,7 @@ export default {
             }
           `
           request(endpoint, query).then((res) => {
-            if (res.relationShip && res.relationShip.owner  && res.relationShip.owner != '0x0000000000000000000000000000000000000000') {
+            if (res.relationShip && res.relationShip.owner && res.relationShip.owner != '0x0000000000000000000000000000000000000000') {
               this.userAddress = this.shortenAddress(res.relationShip.owner, 4)
               this.isInvited = true
             } else {
@@ -900,7 +1136,7 @@ export default {
     /**
      * graph请求邀请数量
      */
-    getInviteData() {
+    getInviteData () {
       let formatAddress = this.account.toLowerCase()
       const endpoint = process.env.VUE_APP_API_GRAPHQL_URL
       const query = gql`
@@ -928,7 +1164,7 @@ export default {
     /**
      * 获取挖矿合约实例
      */
-    getContract() {
+    getContract () {
       const contractAddress = process.env.VUE_APP_MINING_CONTRACT
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(contractAddress, abi, provider)
@@ -938,7 +1174,7 @@ export default {
     /**
      * 获取邀请收益
      */
-    async getInviteBenefit() {
+    async getInviteBenefit () {
       let contract = await this.getContract()
       contract.rewardInfos(this.account).then(data => {
         let inviteBenefit = ethers.utils.formatUnits(data.receiveReward.toString(), 6)
@@ -968,29 +1204,29 @@ export default {
       }
       this.isShowInviteUrl = true
     },
-    closeInviteUrlHandle() {
+    closeInviteUrlHandle () {
       this.isShowInviteUrl = false
     },
     /**
      * 获取当前YOU的价格
      */
-    getYouPrice() {
-      const endpoint = process.env.VUE_APP_MING_ROPSTEN
-      const query = gql`
-        {
-          token(id: "${process.env.VUE_APP_YOU_ADDRESS.toLowerCase()}") {
-            derivedETH
-          }
-          bundle(id: "1") {
-            ethPrice
-          } 
-        }`
-      request(endpoint, query).then((res) => {
-        if (res.bundle) {
-          this.youPrice = res.bundle.ethPrice * res.token.derivedETH
-        }
-      })
-    },
+    // getYouPrice() {
+    //   const endpoint = process.env.VUE_APP_MING_ROPSTEN
+    //   const query = gql`
+    //     {
+    //       token(id: "${process.env.VUE_APP_YOU_ADDRESS.toLowerCase()}") {
+    //         derivedETH
+    //       }
+    //       bundle(id: "1") {
+    //         ethPrice
+    //       } 
+    //     }`
+    //   request(endpoint, query).then((res) => {
+    //     if (res.bundle) {
+    //       this.youPrice = res.bundle.ethPrice * res.token.derivedETH
+    //     }
+    //   })
+    // },
     /**
      * 激活
      */
@@ -1001,23 +1237,23 @@ export default {
       }
       this.isShowActivate = true
     },
-    updateAccountHandle() {
+    updateAccountHandle () {
       this.initBalance()
     },
-    closeActivateHandle() {
+    closeActivateHandle () {
       this.isShowActivate = false
     },
-    setLangHandle(data) {
+    setLangHandle (data) {
       this.lang = data
     },
-    switchShowToast(id) {
+    switchShowToast (id) {
       if (id == 1) {
         this.isShowShareToast = !this.isShowShareToast
       } else {
         this.isShowActivateToast = !this.isShowActivateToast
       }
     },
-    hideToastHandle() {
+    hideToastHandle () {
       this.isShowShareToast = false
       this.isShowActivateToast = false
     }
@@ -1032,7 +1268,7 @@ export default {
   .content {
     width: 100%;
     height: 100%;
-    background-color: #F8FCFF;
+    background-color: #f8fcff;
     padding-bottom: 54px;
     .content-wrapper {
       width: 1200px;
@@ -1052,7 +1288,7 @@ export default {
         min-width: 500px;
         height: 60px;
         padding: 0 10px;
-        background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
+        background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
         border-radius: 20px;
         z-index: 100;
         .data-show {
@@ -1061,7 +1297,7 @@ export default {
             font-size: 24px;
             font-family: DINPro-Medium, DINPro;
             font-weight: 500;
-            color: #FFFFFF;
+            color: #ffffff;
             line-height: 31px;
           }
         }
@@ -1073,13 +1309,13 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: rgba(6, 38, 60, .5);
+          color: rgba(6, 38, 60, 0.5);
           line-height: 24px;
           & > span {
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #06999F;
+            color: #06999f;
             line-height: 16px;
             text-decoration: underline;
             cursor: pointer;
@@ -1101,14 +1337,14 @@ export default {
             width: 120px;
             height: 45px;
             border-radius: 23px 0 0 23px;
-            border: 1px solid #06263C;
+            border: 1px solid #06263c;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
-            color: #06263C;
+            color: #06263c;
             cursor: pointer;
             border-right: none;
           }
@@ -1119,14 +1355,14 @@ export default {
             width: 120px;
             height: 45px;
             border-radius: 0 23px 23px 0;
-            border: 1px solid #06263C;
+            border: 1px solid #06263c;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
-            color: #06263C;
+            color: #06263c;
             cursor: pointer;
             border-left: none;
           }
@@ -1134,23 +1370,23 @@ export default {
             opacity: 0.8;
           }
           .active {
-            background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
             border: none;
-            color: #FFFFFF;
+            color: #ffffff;
           }
         }
       }
       .tab-box {
         height: 33px;
         display: flex;
-        &>div {
+        & > div {
           position: relative;
           margin: 0 30px;
           span {
             display: inline-block;
-            font-size: 24px;
+            font-size: 20px;
             font-family: PingFangSC-Medium, PingFang SC;
-            color: #06263C;
+            color: #06263c;
             cursor: pointer;
           }
         }
@@ -1158,11 +1394,11 @@ export default {
           position: absolute;
           left: 0;
           bottom: -14px;
-          content: '';
+          content: "";
           display: block;
           width: 100%;
           height: 4px;
-          background: #35BDB1;
+          background: #35bdb1;
           border-radius: 3px;
         }
       }
@@ -1170,7 +1406,7 @@ export default {
         display: flex;
         align-items: center;
         line-height: 30px;
-        >span {
+        > span {
           padding-left: 8px;
         }
         .startHeightImg {
@@ -1186,18 +1422,18 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
-  background: #F8FCFF;
+  background: #f8fcff;
   padding-bottom: 60px;
   overflow-x: hidden;
   .top-box {
     width: 100%;
     height: 40px;
-    
+
     background: #06263c;
-    
+
     .bg-box {
       padding: 20px 15px 0;
-      background: #F8FCFF;
+      background: #f8fcff;
       border-radius: 20px 20px 0px 0px;
     }
     .total-value {
@@ -1206,13 +1442,13 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
+      background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
       border-radius: 8px;
       white-space: nowrap;
       font-size: 14px;
       font-family: DINPro-Medium, DINPro;
       font-weight: 500;
-      color: #FFFFFF;
+      color: #ffffff;
       line-height: 21px;
       z-index: 11;
     }
@@ -1225,14 +1461,14 @@ export default {
       font-size: 14px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
-      color: #82929D;
+      color: #82929d;
       line-height: 24px;
       margin-top: 30px;
       & > span:last-child {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: #35BDB1;
+        color: #35bdb1;
         line-height: 16px;
         text-decoration: underline;
       }
@@ -1260,7 +1496,7 @@ export default {
           font-size: 14px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-          color: #6A7D8A;
+          color: #6a7d8a;
           line-height: 20px;
         }
         .item-top-box {
@@ -1270,7 +1506,7 @@ export default {
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #82929D;
+            color: #82929d;
             line-height: 20px;
           }
           .toast-box {
@@ -1288,7 +1524,7 @@ export default {
               right: -13px;
               bottom: 26px;
               width: 180px;
-              background: #FFFFFF;
+              background: #ffffff;
               box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
               border-radius: 10px;
               padding: 10px;
@@ -1317,7 +1553,7 @@ export default {
           font-size: 20px;
           font-family: DINPro-Medium, DINPro;
           font-weight: 500;
-          color: #06263C;
+          color: #06263c;
           line-height: 20px;
         }
       }
@@ -1335,7 +1571,7 @@ export default {
               font-size: 14px;
               font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;
-              color: #82929D;
+              color: #82929d;
               line-height: 20px;
             }
             .en-version {
@@ -1356,7 +1592,7 @@ export default {
                 left: -13px;
                 bottom: 26px;
                 width: 200px;
-                background: #FFFFFF;
+                background: #ffffff;
                 box-shadow: 0px 0px 9px 0px rgba(197, 199, 203, 0.5);
                 border-radius: 10px;
                 padding: 10px;
@@ -1389,7 +1625,7 @@ export default {
             margin-top: 10px;
             width: 35vw;
             height: 45px;
-            background: linear-gradient(80deg, #35BEB1 0%, #0C979C 100%);
+            background: linear-gradient(80deg, #35beb1 0%, #0c979c 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -1397,34 +1633,35 @@ export default {
             font-size: 14px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
-            color: #FFFFFF;
+            color: #ffffff;
             line-height: 20px;
             text-align: center;
           }
           .bottom-btn.disabled {
-            background: #F1F2F5;
-            color: rgba(6, 38, 60, .2);
+            background: #f1f2f5;
+            color: rgba(6, 38, 60, 0.2);
           }
         }
       }
     }
     .tab-wrapper {
       width: 100%;
-      margin: 25px 0 10px;
+      margin: 40px 0 10px;
       display: flex;
       justify-content: center;
       position: relative;
       .tab-box {
         display: flex;
-        &>div {
+        & > div {
           position: relative;
           margin: 0 10px;
           span {
             display: inline-block;
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
-            color: #06263C;
+            color: #06263c;
             cursor: pointer;
+            line-height: 16px;
           }
         }
         .cur {
@@ -1432,18 +1669,18 @@ export default {
             font-size: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
-            color: #35BDB1;
+            color: #35bdb1;
           }
         }
         .cur:after {
           position: absolute;
           left: 0;
           bottom: -8px;
-          content: '';
+          content: "";
           display: block;
           width: 100%;
           height: 2px;
-          background: #35BDB1;
+          background: #35bdb1;
           border-radius: 3px;
         }
       }
@@ -1458,7 +1695,7 @@ export default {
       align-items: center;
       line-height: 30px;
       color: #fff;
-      >span {
+      > span {
         padding-left: 8px;
       }
       .startHeightImg {
@@ -1468,5 +1705,4 @@ export default {
     }
   }
 }
-  
 </style>

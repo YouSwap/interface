@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "local": "vue-cli-service serve --mode local",
     "dev": "vue-cli-service serve --mode development",
     "prod": "vue-cli-service serve --mode production",
     "preprod": "vue-cli-service serve --mode preprod",
@@ -29,7 +30,7 @@
     "vue-router": "^3.5.1",
     "vue-simple-progress": "^1.1.1",
     "vuex": "^3.6.2",
-    "youswap-header": "^1.1.16"
+    "youswap-header": "^2.0.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

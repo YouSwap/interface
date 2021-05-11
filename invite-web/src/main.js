@@ -13,12 +13,16 @@ Vue.prototype.$post = post
 import less from 'less'
 Vue.use(less)
 
-import { Button, Notification } from 'element-ui'
-Vue.use(Button)
+import { Button, Notification, Input } from 'element-ui'
+
 Vue.prototype.$notify = Notification
 import { message } from './assets/script/resetMessage'
 Vue.prototype.$message = message
 import './assets/style/customElement.css'
+import YouswapHeader from 'youswap-header'
+Vue.use(Button)
+Vue.use(Input)
+import 'element-ui/lib/theme-chalk/index.css';
 
 import i18n from "./lang"; // 引入国际化
 
@@ -26,6 +30,7 @@ import i18n from "./lang"; // 引入国际化
 // new vconsole();
 
 Vue.config.productionTip = false
+Vue.use(YouswapHeader)
 
 new Vue({
   router,

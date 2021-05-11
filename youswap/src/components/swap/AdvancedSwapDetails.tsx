@@ -42,9 +42,9 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <TYPE.black color={theme.text1} fontSize={14}>
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
-                '-'
+                  '-'
                 : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
-                '-'}
+                  '-'}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
@@ -91,7 +91,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
-              <RowBetween style={{ padding: '0 18px 0 20px' }}>
+              <RowBetween style={{ padding: '0 16px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     {t('Route')}

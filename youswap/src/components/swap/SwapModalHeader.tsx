@@ -12,7 +12,6 @@ import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
-import { useTranslation } from 'react-i18next'
 
 export default function SwapModalHeader({
   trade,
@@ -27,7 +26,6 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const { t } = useTranslation()
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     trade,
     allowedSlippage
@@ -69,8 +67,8 @@ export default function SwapModalHeader({
               priceImpactSeverity > 2
                 ? theme.red1
                 : showAcceptChanges && trade.tradeType === TradeType.EXACT_INPUT
-                  ? theme.primary1
-                  : ''
+                ? theme.primary1
+                : ''
             }
           >
             {trade.outputAmount.toSignificant(6)}
@@ -101,11 +99,11 @@ export default function SwapModalHeader({
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
-            {`${t('estimateError1')}`}
+            {`Output is estimated. You will receive at least `}
             <b>
               {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {trade.outputAmount.currency.symbol}
             </b>
-            {`${t('estimateError2')}`}
+            {' or the transaction will revert.'}
           </TYPE.italic>
         ) : (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
