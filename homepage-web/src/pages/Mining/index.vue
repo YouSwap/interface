@@ -6,6 +6,20 @@
                   :title="$t('title')"
                   :titleDesc="$t('titleDesc')"
                   @connectWallet="connectWallet" />
+    <div class="entry-img-wrap"
+         @mousedown="down"
+         @touchstart="down"
+         @mousemove="move"
+         @touchmove="move"
+         @mouseup="end"
+         @touchend="end"
+         ref="moveDiv"
+         @click="handleImgClick">
+      <img class="entry-img"
+           :src="entryImg"
+           alt="">
+    </div>
+
     <div class="content-wrapper">
       <div class="content-center">
         <PledgeCard :pledgeObj="pledgeObj"
@@ -102,6 +116,10 @@ export default {
   },
   data () {
     return {
+      flags: false,
+      position: { x: 0, y: 0 },
+      nx: '', ny: '', dx: '', dy: '', xPum: '', yPum: '',
+      message: '1111',
       network: true,
       account: '',
       isConnected: false,
@@ -136,6 +154,7 @@ export default {
       },
       digImgUrl1: require('../../assets/mining-img/dig_img1.png'),
       digImgUrl2: require('../../assets/mining-img/dig_img2.png'),
+      entryImg: require('../../assets/entry.gif'),
       getYouList: [],
       youTotal: 0,
       cardLists: [],
@@ -165,6 +184,49 @@ export default {
     },
   },
   methods: {
+    // 实现移动端拖拽
+    down () {
+      let moveDiv = this.$refs.moveDiv
+      this.flags = true;
+      var touch;
+      if (event.touches) {
+        touch = event.touches[0];
+      } else {
+        touch = event;
+      }
+      this.position.x = touch.clientX;
+      this.position.y = touch.clientY;
+      this.dx = moveDiv.offsetLeft;
+      this.dy = moveDiv.offsetTop;
+    },
+    move () {
+      let moveDiv = this.$refs.moveDiv
+      if (this.flags) {
+        var touch;
+        if (event.touches) {
+          touch = event.touches[0];
+        } else {
+          touch = event;
+        }
+        this.nx = touch.clientX - this.position.x;
+        this.ny = touch.clientY - this.position.y;
+        this.xPum = this.dx + this.nx;
+        this.yPum = this.dy + this.ny;
+        moveDiv.style.left = this.xPum + "px";
+        moveDiv.style.top = this.yPum + "px";
+        //阻止页面的滑动默认事件；如果碰到滑动问题，1.2 请注意是否获取到 touchmove
+        document.addEventListener("touchmove", function () {
+          event.preventDefault();
+        }, false);
+      }
+    },
+    //鼠标释放时候的函数
+    end () {
+      this.flags = false;
+    },
+    handleImgClick () {
+      this.$router.push('/create/coin')
+    },
     // 判断是否是PC端
     IsPC () {
       let userAgentInfo = navigator.userAgent;
@@ -511,7 +573,11 @@ export default {
               if (this.currentBlockNumber >= endblockheigh) {
                 pool.isfinshed = true
               } else {
-                pool.isfinshed = false
+                if (pool.isfinshed) {
+                  pool.isfinshed = true
+                } else {
+                  pool.isfinshed = false
+                }
               }
               if (pool.reserveUSD) {
                 if (pool.type == 2) { // 2为单币种，1为币对
@@ -785,7 +851,7 @@ export default {
     },
     closeNetHandle () {
       this.isShowNet = false
-    }
+    },
   }
 }
 
@@ -793,6 +859,20 @@ export default {
 <style lang='less' scoped>
 .mining-container {
   width: 100%;
+  background: #f8fcff;
+  .entry-img-wrap {
+    position: fixed;
+    right: 80px;
+    bottom: 200px;
+    touch-action: none;
+    cursor: pointer;
+    z-index: 10000;
+    .entry-img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
   .content-wrapper {
     width: 100%;
     display: flex;
@@ -907,5 +987,28 @@ export default {
       }
     }
   }
+}
+.xuanfu {
+  height: 4.5rem;
+  width: 4.5rem;
+  /* 如果碰到滑动问题，1.3 请检查 z-index。z-index需比web大一级*/
+  z-index: 999;
+  position: fixed;
+  top: 4.2rem;
+  right: 3.2rem;
+  border-radius: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+.yuanqiu {
+  height: 2.7rem;
+  width: 2.7rem;
+  border: 0.3rem solid rgba(140, 136, 136, 0.5);
+  margin: 0.65rem auto;
+  color: #000000;
+  font-size: 1.6rem;
+  line-height: 2.7rem;
+  text-align: center;
+  border-radius: 100%;
+  background-color: #ffffff;
 }
 </style>

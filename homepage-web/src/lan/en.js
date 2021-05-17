@@ -217,5 +217,12 @@ module.exports = {
   stackTitle: 'Staking',
   stackDes: 'Stake token to earn YOU',
   docs: 'Docs',
-  navDocs: 'Docs'
+  navDocs: 'Docs',
+  boomBoxTitle: 'BoomBox App',
+  boomBoxSlogn1: 'BoomBox is an innovative model, selected strategic cooperation Dapp,',
+  boomBoxSlogn2: 'let you go one step further from the world of Defi.',
+  enter: 'Enter',
+  cardDes1: 'Coinlaunch is a platform for creating tokens, ',
+  cardDes2: 'and issuing tokens through the platform with one click.',
+  expect: 'Coming soon'
 }

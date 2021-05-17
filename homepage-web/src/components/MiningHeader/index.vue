@@ -1,8 +1,9 @@
 <!-- 头部导航栏 -->
 <template>
-  <div class="container">
+  <div :class="type === 'createCoin' ? 'coin-container' : 'container'">
     <div class="head-container">
-      <div class="title-wrapper">
+      <div class="title-wrapper"
+           v-if="type !== 'createCoin'">
         <div class="title1">{{title}}</div>
         <div class="title2">{{titleDesc}}</div>
       </div>
@@ -60,7 +61,7 @@ export default {
   components: {
     loading
   },
-  props: ["isConnected", "balance", "account", "title", "titleDesc"],
+  props: ["isConnected", "balance", "account", "title", "titleDesc", "type"],
   data () {
     return {
       logoUrl: require('../../assets/logo@2x.png'),
@@ -206,6 +207,12 @@ export default {
   height: 360px;
   z-index: 100;
   background: url("../../assets/mining-img/top-bg.png") center no-repeat;
+  background-size: 100% 100%;
+  position: relative;
+}
+.coin-container {
+  width: 100%;
+  z-index: 100;
   background-size: 100% 100%;
   position: relative;
 }
@@ -371,7 +378,6 @@ export default {
       left: 0;
       top: 43px;
       width: 100%;
-      height: 76px;
       background: #fff;
       border-radius: 8px;
       a {

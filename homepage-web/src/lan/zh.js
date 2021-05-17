@@ -218,5 +218,12 @@ module.exports = {
   stackTitle: '质押挖矿',
   stackDes: '质押Token赚取YOU奖励',
   docs: '文档',
-  navDocs: '教程'
+  navDocs: '教程',
+  boomBoxTitle: 'BoomBox应用程序',
+  boomBoxSlogn1: 'BoomBox是一种创新模式，精选战略合作Dapp，',
+  boomBoxSlogn2: '让你离Defi世界更进一步。',
+  enter: '进入',
+  cardDes1: 'Coinlaunch是一个Token创建平台，',
+  cardDes2: '通过平台一键发币。',
+  expect: '敬请期待'
 }
