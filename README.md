@@ -8,3 +8,5 @@ invite
 homepage
 
 youswap
+
+create-coin
