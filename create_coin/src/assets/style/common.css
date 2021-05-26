@@ -1,0 +1,172 @@
+#app > div {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* text-align: center; */
+}
+/* 中英文模式样式 */
+
+.styleChinese {
+  font-family: "PingFangSC-regular", "Open Sans", "PingFang SC",
+    "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei",
+    monospace, serif;
+}
+
+.styleEnglish {
+  font-family: "Helvetica Neue,Lucida Grande,Microsoft YaHei,Arial,Liberation Sans,FreeSans,Hiragino Sans GB,sans-serif" !important;
+}
+
+/* 公共数字字体 */
+.c_num {
+  font-family: "DINAlternate-Bold", "PingFangSC-regular", "Open Sans",
+    "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei",
+    "WenQuanYi Micro Hei", monospace, serif;
+}
+
+/* 公共字体粗细 */
+
+.weight-border {
+  font-weight: bold;
+}
+
+.weight-normal {
+  font-weight: normal;
+}
+
+.weight-thin {
+  font-weight: 300;
+}
+
+/* 公共字体大小 */
+
+.font-12 {
+  font-size: 0.12rem;
+}
+
+.font-14 {
+  font-size: 0.14rem;
+}
+
+.font-16 {
+  font-size: 0.16rem;
+}
+
+.font-w400 {
+  font-weight: 400;
+}
+
+.font-w500 {
+  font-weight: 500;
+}
+
+.font-w600 {
+  font-weight: 600;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.align-c {
+  text-align: center;
+}
+.align-l {
+  text-align: left !important;
+}
+.align-r {
+  text-align: right !important;
+}
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+.fc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*清除浮动*/
+
+.clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  line-height: 0;
+  clear: both;
+}
+input::-webkit-input-placeholder {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  color: rgba(6, 38, 60, .5);
+}
+input::-ms-input-placeholder {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  color: rgba(6, 38, 60, .5);
+}
+input::-moz-input-placeholder {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  color: rgba(6, 38, 60, .5);
+}
+/* 
+.toast {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  height: 40px;
+  z-index: 999;
+  text-align: center;
+}
+
+.toast .toast-content {
+  background: rgba(26, 35, 51, 1);
+  border-radius: 4px;
+  color: #cffbff;
+  text-align: center;
+  display: inline-block;
+  padding: 0.68rem 0.9rem;
+  font-size: 0.32rem;
+}
+
+.toast .icon-statu {
+  width: 0.4rem;
+  height: 0.4rem;
+  display: block;
+  margin: 0 auto;
+  vertical-align: middle;
+  margin-bottom: 0.2rem;
+}
+.toast .nomal .icon-statu {
+  display: none;
+}
+.toast .success .icon-statu {
+  background: url("../imgs/icon-ok.png") no-repeat center/contain;
+}
+.toast .error .icon-statu {
+  background: url("../imgs/icon-error.png") no-repeat center/contain;
+} */
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ellipsis2 {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

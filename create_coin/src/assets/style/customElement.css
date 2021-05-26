@@ -1,0 +1,193 @@
+
+.el-input__inner {
+  height: 32px;
+  border: 1px solid rgba(78,91,133,0.4)!important;
+  padding: 0 10px;
+}
+
+.el-input {
+  width: 130px;
+  margin-right: 14px;
+}
+
+.el-input .el-input__inner, .el-select .el-input__inner {
+  height: 32px;
+  padding: 0 10px;
+}
+
+.el-date-editor.el-input, .el-date-editor .el-input__inner {
+  width: 160px;
+  height: 32px;
+}
+
+.el-date-editor .el-input__inner {
+  padding-left: 30px;
+}
+
+.el-input__icon {
+  line-height: 32px;
+}
+
+.el-input__inner::-webkit-input-placeholder {
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: rgba(78,91,133,.5);
+}
+
+.el-message {
+  min-width: 100px;
+  padding: 10px 10px;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  pointer-events: all;
+  border-color: transparent;
+}
+.el-message .el-message__icon {
+  position: relative;
+  font-size: 18px;
+  margin-right: 7px;
+}
+.el-message .el-message__icon::before {
+  position: relative;
+  top: -.5px;
+}
+.el-message .el-message__content {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+
+/* 分页  */
+
+.btn-next,
+.btn-prev,
+.el-pagination.is-background .el-pager li {
+  background: rgba(255,255,255,1) !important;
+  border: 1px solid rgba(78,91,133,0.4) !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px;
+  border-radius: 6px !important;
+  color: rgba(78,91,133,.5) !important;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+}
+
+.el-pagination.is-background .el-pager li:hover {
+  /*color: #fff !important;*/
+}
+
+.el-table tr:hover td {
+  background: none !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background: rgba(45,5,221,1) !important;
+  color: rgba(255,255,255,1) !important;
+  font-family: HelveticaNeue;
+  font-size: 14px;
+}
+
+.el-icon-arrow-left:before,
+.el-icon-arrow-right:before,
+.el-icon-d-arrow-left:before,
+.el-icon-d-arrow-right:before {
+  color: rgba(78,91,133,.5) !important;
+}
+
+.el-loading-parent--hidden {
+  overflow: auto !important;
+}
+
+
+/* swiper */
+
+.swiper-pagination-bullet {
+  background: rgba(255，255，255，0.15) !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #FFDB65 !important;
+}
+
+.el-loading-spinner {
+  width: 100px;
+  height: 100px;
+  background: rgba(17, 20, 33, 1);
+  border-radius: 4px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+
+.el-loading-spinner .el-icon-loading {
+  margin: 20px 0 0 0;
+  color: #fff;
+  font-size: 30px;
+}
+
+.el-loading-spinner .el-loading-text {
+  margin: 14px 0 0 0;
+  color: #fff;
+}
+
+.el-loading-mask {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+input {
+  color: #4E5B85!important;
+}
+
+input::-webkit-input-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+
+input::-webkit-input-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+input:-moz-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+input::-moz-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+input:-ms-input-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+
+textarea::-webkit-input-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+textarea:-moz-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+textarea::-moz-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
+textarea:-ms-input-placeholder {
+  font-family: PingFangSC-Regular;
+  color:rgba(78,91,133,.5);
+  font-size: 14px;
+}
